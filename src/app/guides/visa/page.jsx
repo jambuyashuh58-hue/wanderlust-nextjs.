@@ -182,27 +182,27 @@ const RELATED_RESOURCES = [
   {
     category: 'Legal Stay & Visas',
     links: [
-      'How to Avoid the "10-Day Conditional Entry" Visa Trap in Istanbul',
-      'How to Apply for the Türkiye Digital Nomad Visa Online (GoTürkiye Walkthrough)',
-      'Closed Neighborhoods in Istanbul: The 25% Foreigner Quota List',
-      'How to Cancel Your Turkish Residence Permit When You Leave',
+      { label: 'How to Avoid the "10-Day Conditional Entry" Visa Trap in Istanbul', href: '/guides/10-day-conditional-entry-trap' },
+      { label: 'How to Apply for the Türkiye Digital Nomad Visa Online (GoTürkiye Walkthrough)', href: '/guides/digital-nomad-visa-application' },
+      { label: 'Closed Neighborhoods in Istanbul: The 25% Foreigner Quota List', href: '/guides/closed-neighborhoods-istanbul' },
+      { label: 'How to Cancel Your Turkish Residence Permit When You Leave', href: '/guides/cancel-residence-permit' },
     ],
   },
   {
     category: 'Banking & Financial Logistics',
     links: [
-      'How to Open a Turkish Bank Account Without an İkamet Card',
-      'How to Avoid Excessive ATM Conversion Fees in Istanbul',
-      'Is the Türkiye Digital Nomad Visa Tax-Free? Remote Tax Guide',
+      { label: 'How to Open a Turkish Bank Account Without an İkamet Card', href: '/guides/bank-account-without-ikamet' },
+      { label: 'How to Avoid Excessive ATM Conversion Fees in Istanbul', href: '/guides/avoid-atm-conversion-fees' },
+      { label: 'Is the Türkiye Digital Nomad Visa Tax-Free? Remote Tax Guide', href: '/guides/digital-nomad-visa-tax-guide' },
     ],
   },
   {
     category: 'Housing & Settle-In Support',
     links: [
-      'Renting an Apartment in Istanbul: Notary Rules & Lease Registration',
-      'How to Avoid Rental Scams on sahibinden.com as a Foreigner',
-      'Kadıköy vs. Beşiktaş: The Best Neighborhoods for Expats',
-      'Monthly Cost of Living in Istanbul for Expats & Nomads',
+      { label: 'Renting an Apartment in Istanbul: Notary Rules & Lease Registration', href: '/guides/renting-apartment-notary-rules' },
+      { label: 'How to Avoid Rental Scams on sahibinden.com as a Foreigner', href: '/guides/avoid-rental-scams-sahibinden' },
+      { label: 'Kadıköy vs. Beşiktaş: The Best Neighborhoods for Expats', href: '/guides/kadikoy-vs-besiktas' },
+      { label: 'Monthly Cost of Living in Istanbul for Expats & Nomads', href: '/guides/cost-of-living' },
     ],
   },
 ];
@@ -413,7 +413,9 @@ export default function GuideVisaPage() {
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3">{group.category}</p>
               <ul className="space-y-2.5">
                 {group.links.map((l) => (
-                  <li key={l} className="text-sm text-foreground/80 leading-relaxed">{l}</li>
+                  <li key={l.href}>
+                    <Link href={l.href} className="text-sm text-foreground/80 leading-relaxed hover:text-primary hover:underline transition-colors">{l.label}</Link>
+                  </li>
                 ))}
               </ul>
             </div>
