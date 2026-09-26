@@ -253,7 +253,29 @@ export default function GuideHousingPage() {
       {/* District comparison table */}
       <section id="districts">
         <h2 className="text-2xl font-bold mb-4">Average Rental Costs Across Popular Expat Districts (2026)</h2>
-        <div className="overflow-x-auto rounded-2xl border border-border">
+
+        {/* Mobile / narrow layout: stacked cards, nothing gets clipped */}
+        <div className="lg:hidden space-y-3">
+          {DISTRICTS.map((row) => (
+            <div key={row.district} className="rounded-2xl border border-border bg-card p-4">
+              <p className="font-semibold text-sm mb-1">{row.district}</p>
+              <p className="text-xs text-muted-foreground leading-relaxed mb-3">{row.vibe}</p>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <p className="text-[11px] uppercase tracking-wide text-muted-foreground mb-0.5">Avg 1+1 Rent</p>
+                  <p className="text-sm font-medium">{row.rent}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] uppercase tracking-wide text-muted-foreground mb-0.5">e-İkamet Status</p>
+                  <p className="text-sm font-medium">{row.status}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Wide layout: full table, only shown once there's room for it */}
+        <div className="hidden lg:block overflow-x-auto rounded-2xl border border-border">
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-muted/50 text-left">

@@ -264,7 +264,38 @@ export default function GuideVisaPage() {
       {/* Comparison table */}
       <section id="pathways">
         <h2 className="text-2xl font-bold mb-4">Comparison of Primary Residence Permit Pathways</h2>
-        <div className="overflow-x-auto rounded-2xl border border-border">
+
+        {/* Mobile / narrow layout: stacked cards, nothing gets clipped */}
+        <div className="lg:hidden space-y-3">
+          {PATHWAYS.map((row) => (
+            <div key={row.category} className="rounded-2xl border border-border bg-card p-4">
+              <p className="font-semibold text-sm mb-2">{row.category}</p>
+              <dl className="space-y-2 text-sm">
+                <div>
+                  <dt className="text-[11px] uppercase tracking-wide text-muted-foreground mb-0.5">Target Audience</dt>
+                  <dd className="text-foreground/80">{row.audience}</dd>
+                </div>
+                <div>
+                  <dt className="text-[11px] uppercase tracking-wide text-muted-foreground mb-0.5">Primary Requirement</dt>
+                  <dd className="text-foreground/80">{row.requirement}</dd>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <dt className="text-[11px] uppercase tracking-wide text-muted-foreground mb-0.5">Stay Granted</dt>
+                    <dd className="text-foreground/80">{row.stay}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-[11px] uppercase tracking-wide text-muted-foreground mb-0.5">Work Rights?</dt>
+                    <dd className="text-foreground/80">{row.workRights}</dd>
+                  </div>
+                </div>
+              </dl>
+            </div>
+          ))}
+        </div>
+
+        {/* Wide layout: full table, only shown once there's room for it */}
+        <div className="hidden lg:block overflow-x-auto rounded-2xl border border-border">
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-muted/50 text-left">

@@ -220,7 +220,51 @@ export default function GuideCostOfLivingPage() {
       <section id="breakdown">
         <h2 className="text-2xl font-bold mb-2">Detailed 2026 Cost Breakdown Table</h2>
         <p className="text-foreground/80 leading-relaxed mb-4">Monthly averages in USD across three expat lifestyle tiers.</p>
-        <div className="overflow-x-auto rounded-2xl border border-border">
+
+        {/* Mobile / narrow layout: stacked cards, nothing gets clipped */}
+        <div className="lg:hidden space-y-3">
+          {COSTS.map((row) => (
+            <div key={row.category} className="rounded-2xl border border-border bg-card p-4">
+              <p className="font-semibold text-sm mb-3">{row.category}</p>
+              <div className="grid grid-cols-3 gap-2 mb-3">
+                <div>
+                  <p className="text-[11px] uppercase tracking-wide text-muted-foreground mb-0.5">Budget</p>
+                  <p className="text-sm font-medium">{row.budget}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] uppercase tracking-wide text-muted-foreground mb-0.5">Comfortable</p>
+                  <p className="text-sm font-medium">{row.comfortable}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] uppercase tracking-wide text-muted-foreground mb-0.5">Premium</p>
+                  <p className="text-sm font-medium">{row.premium}</p>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed">{row.tip}</p>
+            </div>
+          ))}
+          <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4">
+            <p className="font-bold text-sm mb-3">ESTIMATED MONTHLY TOTAL</p>
+            <div className="grid grid-cols-3 gap-2 mb-3">
+              <div>
+                <p className="text-[11px] uppercase tracking-wide text-muted-foreground mb-0.5">Budget</p>
+                <p className="text-sm font-bold">{COST_TOTAL.budget}</p>
+              </div>
+              <div>
+                <p className="text-[11px] uppercase tracking-wide text-muted-foreground mb-0.5">Comfortable</p>
+                <p className="text-sm font-bold">{COST_TOTAL.comfortable}</p>
+              </div>
+              <div>
+                <p className="text-[11px] uppercase tracking-wide text-muted-foreground mb-0.5">Premium</p>
+                <p className="text-sm font-bold">{COST_TOTAL.premium}</p>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">{COST_TOTAL.tip}</p>
+          </div>
+        </div>
+
+        {/* Wide layout: full table, only shown once there's room for it */}
+        <div className="hidden lg:block overflow-x-auto rounded-2xl border border-border">
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-muted/50 text-left">
