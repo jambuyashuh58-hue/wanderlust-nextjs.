@@ -9,6 +9,7 @@ import CityCard from '@/components/CityCard';
 import ActivityCard from '@/components/ActivityCard';
 import HomeHero from '@/components/HomeHero';
 import WhyWanderlust from '@/components/WhyWanderlust';
+import TrustBadges from '@/components/TrustBadges';
 import CategoryTiles from '@/components/CategoryTiles';
 import VideoBlogs from '@/components/VideoBlogs';
 import RankBadge from '@/components/RankBadge';
@@ -54,6 +55,8 @@ export default async function HomePage() {
         </section>
 
         <WhyWanderlust />
+
+        <TrustBadges />
 
         <CategoryTiles />
 
