@@ -5,6 +5,7 @@ import { ArrowLeft } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { getCollectionBySlug } from '@/lib/supabaseServer';
 import ActivityCard from '@/components/ActivityCard';
+import GuideBody from '@/components/GuideBody';
 
 export const revalidate = 3600;
 
@@ -22,6 +23,7 @@ export default async function CollectionDetailPage({ params }) {
   if (!collection) notFound();
 
   const activities = collection.activities || [];
+  const isGuide = collection.display_style === 'guide';
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -47,7 +49,7 @@ export default async function CollectionDetailPage({ params }) {
               <Image src={collection.hero_image_url} alt={collection.title} fill priority sizes="100vw" className="object-cover" unoptimized />
             </div>
           )}
-          {collection.intro && (
+          {collection.intro && !isGuide && (
             <div className="prose prose-sm sm:prose-base max-w-3xl mt-6
               prose-headings:font-bold prose-headings:text-foreground prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3
               prose-p:text-foreground/80 prose-p:leading-relaxed
@@ -67,7 +69,9 @@ export default async function CollectionDetailPage({ params }) {
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {activities.length === 0 ? (
+        {isGuide ? (
+          <GuideBody intro={collection.intro} bodyImages={collection.body_images || []} guideTitle={collection.title} />
+        ) : activities.length === 0 ? (
           <p className="text-center text-muted-foreground py-16">No experiences in this collection yet.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
