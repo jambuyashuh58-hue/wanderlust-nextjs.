@@ -21,11 +21,19 @@ export default async function DashboardPage() {
 
   return (
     <div className="pt-16 md:pt-20 min-h-screen">
-      <div className="bg-gradient-to-br from-primary/5 via-background to-secondary/5 border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4"><Home className="w-4 h-4" /> Relocation Dashboard</span>
+      <div className="relative overflow-hidden border-b border-border">
+        <div className="absolute inset-0 -z-10">
+          <img
+            src="https://images.pexels.com/photos/6180674/pexels-photo-6180674.jpeg?auto=compress&cs=tinysrgb&w=1920"
+            alt="Istanbul apartment interior"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/55 to-black/40" />
+        </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-white">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 text-sm font-medium mb-4"><Home className="w-4 h-4" /> Relocation Dashboard</span>
           <h1 className="text-3xl md:text-4xl font-bold mb-3">Istanbul Apartment Listings</h1>
-          <p className="text-foreground/80 max-w-2xl leading-relaxed">
+          <p className="text-white/85 max-w-2xl leading-relaxed">
             Real example listings showing genuine current rent ranges across {Object.keys(byDistrict).length} Istanbul neighborhoods. These reflect live market patterns rather than single available units — use the listing link to see what&apos;s currently on the market in that area.
           </p>
         </div>

@@ -21,10 +21,18 @@ const CONCIERGE_TIERS = [
 export default function ConciergeServicePage() {
   return (
     <div className="pt-16 md:pt-20 min-h-screen">
-      <div className="bg-gradient-to-br from-primary/5 via-background to-secondary/5 border-b border-border">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+      <div className="relative overflow-hidden border-b border-border">
+        <div className="absolute inset-0 -z-10">
+          <img
+            src="https://base44.app/api/apps/6a697a35fbcb1e615bc6ff55/files/mp/public/6a697a35fbcb1e615bc6ff55/c59e88994_Woman_holding_coffee_on_rooftop_2K_20260922172140.jpeg"
+            alt="Settling in on an Istanbul rooftop"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/55 to-black/40" />
+        </div>
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center text-white">
           <h1 className="text-3xl md:text-5xl font-bold mb-4">Move to Türkiye, handled.</h1>
-          <p className="text-foreground/80 max-w-2xl mx-auto leading-relaxed">We help remote workers relocate -- visa paperwork, apartment hunting, and your first-month setup, done right.</p>
+          <p className="text-white/85 max-w-2xl mx-auto leading-relaxed">We help remote workers relocate -- visa paperwork, apartment hunting, and your first-month setup, done right.</p>
         </div>
       </div>
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
