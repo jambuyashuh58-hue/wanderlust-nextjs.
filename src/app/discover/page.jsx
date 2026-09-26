@@ -13,7 +13,7 @@ export const metadata = {
 export default async function DiscoverPage({ searchParams }) {
   const q = searchParams?.q || '';
   const category = searchParams?.category || '';
-  const activities = await searchActivities({ q, category, limit: 200 });
+  const activities = await searchActivities({ q, category, limit: 2000 });
 
   return (
     <div className="pt-16 md:pt-20">
