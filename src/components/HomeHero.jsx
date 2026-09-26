@@ -11,11 +11,12 @@ export default function HomeHero() {
     <section className="relative overflow-hidden -mt-16 md:-mt-20 pt-16 md:pt-20">
       <div className="absolute inset-0 -z-10">
         <img
-          src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?q=80&w=2000&auto=format&fit=crop"
-          alt="Istanbul skyline at sunset"
+          src="https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?q=80&w=2000&auto=format&fit=crop"
+          alt="Hagia Sophia, Istanbul"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-background" />
+        <div className="absolute top-0 left-0 right-0 h-32 md:h-40 bg-gradient-to-b from-black/70 to-transparent" />
       </div>
 
       <div className="relative max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20 md:pt-36 md:pb-28 text-white">
