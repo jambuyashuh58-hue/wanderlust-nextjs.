@@ -10,7 +10,8 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabaseServer';
 
-const MODEL = 'claude-sonnet-4-5-20250929';
+const ANTHROPIC_MODEL = 'claude-sonnet-4-5-20250929';
+const GEMINI_MODEL = 'gemini-2.5-flash';
 const MAX_CANDIDATES = 60;
 
 function buildSystemPrompt() {
@@ -53,10 +54,7 @@ function extractJson(text) {
   return JSON.parse(trimmed);
 }
 
-async function callClaude(system, user) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) throw new Error('ANTHROPIC_API_KEY is not configured');
-
+async function callClaude(system, user, apiKey) {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -65,7 +63,7 @@ async function callClaude(system, user) {
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
-      model: MODEL,
+      model: ANTHROPIC_MODEL,
       max_tokens: 3000,
       system,
       messages: [{ role: 'user', content: user }],
@@ -81,6 +79,42 @@ async function callClaude(system, user) {
   const text = data?.content?.find((b) => b.type === 'text')?.text;
   if (!text) throw new Error('Anthropic response had no text content');
   return extractJson(text);
+}
+
+async function callGemini(system, user, apiKey) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: system }] },
+      contents: [{ role: 'user', parts: [{ text: user }] }],
+      generationConfig: { responseMimeType: 'application/json', maxOutputTokens: 4000 },
+    }),
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => '');
+    throw new Error(`Gemini API error (${res.status}): ${errText.slice(0, 500)}`);
+  }
+
+  const data = await res.json();
+  const text = data?.candidates?.[0]?.content?.parts?.find((p) => p.text)?.text;
+  if (!text) {
+    const blockReason = data?.promptFeedback?.blockReason;
+    throw new Error(blockReason ? `Gemini blocked the request (${blockReason})` : 'Gemini response had no text content');
+  }
+  return extractJson(text);
+}
+
+// Prefers Gemini (free tier, no billing) when configured; falls back to
+// Anthropic if only that key is set. Throws if neither is configured.
+async function callLLM(system, user) {
+  const geminiKey = process.env.GEMINI_API_KEY;
+  const anthropicKey = process.env.ANTHROPIC_API_KEY;
+  if (geminiKey) return callGemini(system, user, geminiKey);
+  if (anthropicKey) return callClaude(system, user, anthropicKey);
+  throw new Error('No LLM API key configured (set GEMINI_API_KEY or ANTHROPIC_API_KEY)');
 }
 
 async function generateItinerary(params) {
@@ -127,7 +161,7 @@ async function generateItinerary(params) {
 
   let aiResult;
   try {
-    aiResult = await callClaude(system, user);
+    aiResult = await callLLM(system, user);
   } catch (err) {
     return { status: 502, body: { error: `AI generation failed: ${err.message}` } };
   }
