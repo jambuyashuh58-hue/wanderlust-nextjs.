@@ -25,7 +25,7 @@ function SectionHeader({ eyebrow, title, href }) {
         {eyebrow && <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">{eyebrow}</p>}
         <h2 className="text-2xl md:text-3xl font-bold">{title}</h2>
       </div>
-      {href && <Link href={href} className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-primary hover:gap-1.5 transition-all shrink-0">See all <ArrowRight className="w-4 h-4" /></Link>}
+      {href && <Link href={href} className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:gap-1.5 transition-all shrink-0">See all <ArrowRight className="w-4 h-4" /></Link>}
     </div>
   );
 }
@@ -50,7 +50,13 @@ export default async function HomePage() {
         <section>
           <SectionHeader eyebrow="Destinations" title="Choose Your City" href="/discover" />
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {cities.slice(0, 12).map((city) => <CityCard key={city.id} city={city} />)}
+            {/* Only the first 6 show on a phone (2 cols x 3 rows) so the
+                homepage doesn't turn into an endless scroll of city tiles
+                before reaching the rest of the page -- "See all" (above)
+                takes mobile users to the full list on /discover. */}
+            {cities.slice(0, 12).map((city, i) => (
+              <div key={city.id} className={i >= 6 ? 'hidden sm:block' : ''}><CityCard city={city} /></div>
+            ))}
           </div>
         </section>
 
@@ -62,7 +68,9 @@ export default async function HomePage() {
         <section>
           <SectionHeader eyebrow="Trending Now" title="Most Popular Experiences" href="/discover" />
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {allActivities.map((a) => <ActivityCard key={a.id} activity={a} />)}
+            {allActivities.map((a, i) => (
+              <div key={a.id} className={i >= 6 ? 'hidden sm:block' : ''}><ActivityCard activity={a} /></div>
+            ))}
           </div>
         </section>
 
@@ -112,7 +120,8 @@ export default async function HomePage() {
                     </div>
                   </Link>
                 );
-                return i < 6 ? <RankBadge key={c.id} rank={i + 1}>{card}</RankBadge> : <div key={c.id}>{card}</div>;
+                const wrapperClass = i >= 6 ? 'hidden sm:block' : undefined;
+                return i < 6 ? <RankBadge key={c.id} rank={i + 1}>{card}</RankBadge> : <div key={c.id} className={wrapperClass}>{card}</div>;
               })}
             </div>
           </section>

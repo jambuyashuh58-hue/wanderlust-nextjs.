@@ -18,6 +18,13 @@ export default function Navbar() {
   const pathname = usePathname();
 
   useEffect(() => { const onScroll = () => setScrolled(window.scrollY > 20); window.addEventListener('scroll', onScroll); return () => window.removeEventListener('scroll', onScroll); }, []);
+  // Lock body scroll while the mobile menu is open, and close it on route
+  // change -- otherwise the page underneath keeps scrolling behind the menu.
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+  useEffect(() => { setMobileOpen(false); }, [pathname]);
   const isActive = (path) => pathname === path;
 
   return (
@@ -43,9 +50,14 @@ export default function Navbar() {
         </div>
       </header>
       {mobileOpen && (
-        <div className="fixed top-16 left-0 right-0 z-40 md:hidden glass border-t border-border">
+        // Solid (not translucent) full-height panel -- a glass/blur
+        // background here let the page content bleed through and read as
+        // broken, since (unlike the slim header bar) this covers most of
+        // the screen. overflow-y-auto lets a tall link list scroll on its
+        // own if it ever exceeds the viewport height.
+        <div className="fixed inset-x-0 top-16 bottom-0 z-40 md:hidden bg-background border-t border-border overflow-y-auto">
           <nav className="flex flex-col p-4 gap-1">
-            {NAV_LINKS.map(link => <Link key={link.path} href={link.path} className="px-4 py-3 rounded-xl font-medium hover:bg-muted transition-colors">{link.label}</Link>)}
+            {NAV_LINKS.map(link => <Link key={link.path} href={link.path} className={`px-4 py-3 rounded-xl font-medium transition-colors ${isActive(link.path) ? 'text-primary bg-primary/10' : 'hover:bg-muted'}`}>{link.label}</Link>)}
             <Link href="/onboarding" className="mt-1 inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl bg-gradient-primary text-white font-semibold">
               <Sparkles className="w-4 h-4" /> Plan My Trip
             </Link>
