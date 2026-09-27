@@ -18,8 +18,8 @@ export default function RelocationQuizCTA() {
         viewport={{ once: true }}
         className="relative overflow-hidden rounded-3xl bg-card border border-border p-8 md:p-12"
       >
-        <div className="max-w-2xl">
-          <div className="flex items-center gap-2 mb-3">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="flex items-center justify-center gap-2 mb-3">
             <HelpCircle className="w-4 h-4 text-primary" />
             <span className="text-sm font-semibold text-primary uppercase tracking-wider">Not sure where to start?</span>
           </div>

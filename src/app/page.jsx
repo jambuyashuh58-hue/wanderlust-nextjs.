@@ -56,8 +56,6 @@ export default async function HomePage() {
 
         <WhyWanderlust />
 
-        <TrustBadges />
-
         <CategoryTiles />
 
         {/* Most popular right now */}
@@ -143,6 +141,8 @@ export default async function HomePage() {
             ))}
           </div>
         </section>
+
+        <TrustBadges />
       </div>
     </div>
   );
