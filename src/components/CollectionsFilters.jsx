@@ -95,9 +95,13 @@ export default function CollectionsFilters({ collections, cities }) {
                   </div>
                   {c.city_name && <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-sm text-foreground text-xs font-semibold"><MapPin className="w-3 h-3" /> {c.city_name}</span>}
                 </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-foreground line-clamp-2 mb-1 group-hover:text-primary transition-colors">{c.title}</h3>
-                  {c.meta_description && <p className="text-sm text-muted-foreground line-clamp-2">{c.meta_description}</p>}
+                {/* Same compact text treatment as the homepage's Curated
+                    Collections cards and ActivityCard (p-2.5, text-xs,
+                    line-clamp-2) so typography is consistent everywhere and
+                    the photo keeps most of the card's visual weight. */}
+                <div className="p-2.5">
+                  <h3 className="text-xs sm:text-sm font-semibold leading-snug line-clamp-2 mb-1 group-hover:text-primary transition-colors">{c.title}</h3>
+                  {c.meta_description && <p className="text-xs text-muted-foreground line-clamp-2">{c.meta_description}</p>}
                 </div>
               </Link>
             );

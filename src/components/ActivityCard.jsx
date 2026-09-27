@@ -17,17 +17,17 @@ export default function ActivityCard({ activity }) {
           {activity.free ? <span className="absolute bottom-4 left-4 px-3 py-1 rounded-full bg-success/90 backdrop-blur-sm text-xs font-semibold text-white">Free</span>
             : activity.price != null ? <span className="absolute bottom-4 left-4 px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm text-xs font-bold text-foreground">₺{activity.price}</span> : null}
         </div>
-        <div className="p-4">
-          {/* No line-clamp here on purpose -- these are real product names
-              (Viator/GetYourGuide listings) that can run long, and cutting
-              them off mid-word with "..." hid what the activity actually
-              is. Cards in a row may end up different heights when titles
-              differ in length, which is fine -- showing the whole name
-              matters more than perfectly even card heights. */}
-          <h3 className="font-semibold text-sm sm:text-base leading-snug mb-1 group-hover:text-primary transition-colors">{activity.title}</h3>
-          <div className="flex items-center gap-1 text-sm text-muted-foreground mb-2"><MapPin className="w-3.5 h-3.5" /><span>{activity.city_name}</span></div>
+        {/* Same compact treatment as the Collections/Guide cards (p-2.5,
+            text-xs, line-clamp-2) so typography is consistent across every
+            card style on the site, and the photo -- the part people
+            actually judge a listing by -- keeps a generous, consistent
+            share of the card instead of being crowded out by a tall,
+            unclamped title. */}
+        <div className="p-2.5">
+          <h3 className="text-xs sm:text-sm font-semibold leading-snug mb-1 line-clamp-2 group-hover:text-primary transition-colors">{activity.title}</h3>
+          <div className="flex items-center gap-1 text-xs text-muted-foreground mb-1"><MapPin className="w-3 h-3 shrink-0" /><span className="truncate">{activity.city_name}</span></div>
           {activity.rating != null && (
-            <div className="flex items-center gap-1"><Star className="w-4 h-4 fill-accent text-accent" /><span className="text-sm font-medium">{Number(activity.rating).toFixed(1)}</span>{activity.review_count != null && <span className="text-xs text-muted-foreground">({activity.review_count})</span>}</div>
+            <div className="flex items-center gap-1"><Star className="w-3.5 h-3.5 fill-accent text-accent shrink-0" /><span className="text-xs font-medium">{Number(activity.rating).toFixed(1)}</span>{activity.review_count != null && <span className="text-xs text-muted-foreground">({activity.review_count})</span>}</div>
           )}
         </div>
       </Link>
