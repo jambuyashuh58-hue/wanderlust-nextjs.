@@ -13,16 +13,30 @@ export function getSupabaseServer() {
   if (!url || !key) {
     throw new Error('Missing SUPABASE_URL or SUPABASE_SECRET_KEY environment variables.');
   }
+  return createClient(url, key, { auth: { persistSession: false } });
+}
+
+// supabase-js calls the PostgREST API via fetch() under the hood, and Next.js
+// patches global fetch() so that, on a page with `export const revalidate`,
+// the response gets cached for that same window -- meaning a direct DB
+// content edit can render stale even after the page's own ISR cache is
+// force-revalidated (revalidatePath busts the rendered-HTML cache, not this
+// underlying data-fetch cache). Use this client -- instead of the default
+// getSupabaseServer() -- ONLY for by-slug detail lookups on pages that get
+// hand-edited directly in Supabase (country guides, collection-backed
+// guides): those routes have no generateStaticParams, so they're never
+// attempted during `next build`'s static generation pass, and forcing
+// cache: 'no-store' there is safe. Do NOT use this for list/index pages --
+// those ARE prerendered at build time, and a no-store fetch during static
+// generation throws "Dynamic server usage" and fails the build.
+function getSupabaseServerFresh() {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) {
+    throw new Error('Missing SUPABASE_URL or SUPABASE_SECRET_KEY environment variables.');
+  }
   return createClient(url, key, {
     auth: { persistSession: false },
-    // supabase-js calls the PostgREST API via fetch() under the hood. Next.js
-    // patches global fetch() and, on a page with `export const revalidate`,
-    // silently caches that response for the same duration -- so a direct DB
-    // edit can render stale even after the page's own ISR cache is busted
-    // (revalidatePath only invalidates the rendered HTML, not this data
-    // fetch). Forcing cache: 'no-store' here means every Supabase call is
-    // always live; the page-level `revalidate` export is what still controls
-    // how long the rendered HTML itself is cached.
     global: { fetch: (input, init) => fetch(input, { ...init, cache: 'no-store' }) },
   });
 }
@@ -92,7 +106,7 @@ export async function searchActivities({ q, category, limit = 100 } = {}) {
 }
 
 export async function getCollectionBySlug(slug) {
-  const supabase = getSupabaseServer();
+  const supabase = getSupabaseServerFresh();
   const { data: collection, error } = await supabase
     .from('collection')
     .select('*')
@@ -135,7 +149,7 @@ export async function getCountryGuides() {
 }
 
 export async function getCountryGuideBySlug(slug) {
-  const supabase = getSupabaseServer();
+  const supabase = getSupabaseServerFresh();
   const { data, error } = await supabase
     .from('country_guide')
     .select('*')
