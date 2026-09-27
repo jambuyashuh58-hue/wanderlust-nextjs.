@@ -83,14 +83,7 @@ async function callClaude(system, user) {
   return extractJson(text);
 }
 
-export async function POST(request) {
-  let body;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
-  }
-
+async function generateItinerary(params) {
   const {
     city,
     days,
@@ -101,10 +94,10 @@ export async function POST(request) {
     accessibility,
     firstName,
     email,
-  } = body || {};
+  } = params || {};
 
   if (!city || !days) {
-    return NextResponse.json({ error: 'city and days are required' }, { status: 400 });
+    return { status: 400, body: { error: 'city and days are required' } };
   }
 
   const supabase = getSupabaseServer();
@@ -119,14 +112,14 @@ export async function POST(request) {
     .limit(MAX_CANDIDATES);
 
   if (activitiesError) {
-    return NextResponse.json({ error: activitiesError.message }, { status: 500 });
+    return { status: 500, body: { error: activitiesError.message } };
   }
 
   if (!activities || activities.length === 0) {
-    return NextResponse.json(
-      { error: `No activities found for ${city} yet -- try browsing the full list instead.` },
-      { status: 404 }
-    );
+    return {
+      status: 404,
+      body: { error: `No activities found for ${city} yet -- try browsing the full list instead.` },
+    };
   }
 
   const system = buildSystemPrompt();
@@ -136,7 +129,7 @@ export async function POST(request) {
   try {
     aiResult = await callClaude(system, user);
   } catch (err) {
-    return NextResponse.json({ error: `AI generation failed: ${err.message}` }, { status: 502 });
+    return { status: 502, body: { error: `AI generation failed: ${err.message}` } };
   }
 
   const activityById = new Map(activities.map((a) => [a.id, a]));
@@ -185,5 +178,34 @@ export async function POST(request) {
     // Non-critical -- the itinerary still returns to the user.
   }
 
-  return NextResponse.json(responsePayload);
+  return { status: 200, body: responsePayload };
+}
+
+export async function POST(request) {
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+  }
+  const { status, body: responseBody } = await generateItinerary(body);
+  return NextResponse.json(responseBody, { status });
+}
+
+// GET variant (query params instead of a JSON body) -- lets the endpoint be
+// smoke-tested with a plain URL and gives a shareable/debuggable link.
+// e.g. /api/generate-itinerary?city=Istanbul&days=2&interests=Museums,Food%20Experiences
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const params = {
+    city: searchParams.get('city'),
+    days: Number(searchParams.get('days')) || undefined,
+    interests: searchParams.get('interests')?.split(',').map((s) => s.trim()).filter(Boolean) || [],
+    pace: searchParams.get('pace') || undefined,
+    budget: searchParams.get('budget') ? Number(searchParams.get('budget')) : undefined,
+    travellingAs: searchParams.get('travellingAs') || undefined,
+    accessibility: searchParams.get('accessibility') || undefined,
+  };
+  const { status, body: responseBody } = await generateItinerary(params);
+  return NextResponse.json(responseBody, { status });
 }
