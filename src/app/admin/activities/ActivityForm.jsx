@@ -1,7 +1,7 @@
 import { Field, TextInput, NumberInput, TextArea, SelectInput, CheckboxInput, SaveButton } from '@/components/admin/fields';
 import ImageUploadField from '@/components/admin/ImageUploadField';
 import DeleteButton from '@/components/admin/DeleteButton';
-import { ACTIVITY_CATEGORIES } from './actions';
+import { ACTIVITY_CATEGORIES } from './constants';
 
 export default function ActivityForm({ activity, action, deleteAction }) {
   const a = activity || {};

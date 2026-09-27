@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import { Sparkles, Loader2 } from 'lucide-react';
 import { Field, TextInput, TextArea, SelectInput, SaveButton } from '@/components/admin/fields';
 import DeleteButton from '@/components/admin/DeleteButton';
-import { POST_TYPES, POST_STATUSES } from './actions';
+import { POST_TYPES, POST_STATUSES } from './constants';
 
 export default function InstagramPostForm({ post, action, deleteAction }) {
   const p = post || {};

@@ -5,8 +5,6 @@ import { revalidatePath } from 'next/cache';
 import { getSupabaseServer } from '@/lib/supabaseServer';
 import { isAdminRequest } from '@/lib/adminAuth';
 
-export const ACTIVITY_CATEGORIES = ['Museums', 'Historic Sites', 'Art Galleries', 'Guided Tours', 'Food Experiences', 'Boat Tours', 'Family Activities', 'Hidden Gems', 'Night Activities', 'Festivals', 'Local Experiences', 'City Passes', 'Walking Tours'];
-
 function toArray(v) {
   if (!v) return [];
   return String(v).split(',').map((s) => s.trim()).filter(Boolean);

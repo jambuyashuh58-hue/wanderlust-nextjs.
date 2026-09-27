@@ -5,8 +5,6 @@ import { revalidatePath } from 'next/cache';
 import { getSupabaseServer } from '@/lib/supabaseServer';
 import { isAdminRequest } from '@/lib/adminAuth';
 
-export const DISPLAY_STYLES = ['editorial', 'ranking', 'guide'];
-
 function toArray(v) {
   if (!v) return [];
   return String(v).split(',').map((s) => s.trim()).filter(Boolean);

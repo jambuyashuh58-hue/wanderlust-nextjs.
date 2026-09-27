@@ -2,7 +2,7 @@ import { Field, TextInput, NumberInput, TextArea, SelectInput, CheckboxInput, Sa
 import ImageUploadField from '@/components/admin/ImageUploadField';
 import ActivityPicker from '@/components/admin/ActivityPicker';
 import DeleteButton from '@/components/admin/DeleteButton';
-import { DISPLAY_STYLES } from './actions';
+import { DISPLAY_STYLES } from './constants';
 
 export default function CollectionForm({ collection, allActivities, action, deleteAction }) {
   const c = collection || {};

@@ -4,9 +4,6 @@ import { redirect } from 'next/navigation';
 import { getSupabaseServer } from '@/lib/supabaseServer';
 import { isAdminRequest } from '@/lib/adminAuth';
 
-export const POST_TYPES = ['single', 'carousel', 'reel', 'story'];
-export const POST_STATUSES = ['draft', 'scheduled', 'posted'];
-
 function parse(formData) {
   const mediaUrlsRaw = (formData.get('media_urls') || '').toString();
   const media_urls = mediaUrlsRaw
