@@ -18,8 +18,8 @@ export default async function CountryGuidesPage() {
       <div className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0 -z-10">
           <img
-            src="https://base44.app/api/apps/6a697a35fbcb1e615bc6ff55/files/mp/public/6a697a35fbcb1e615bc6ff55/bd58c891a_Woman_holding_passport_and_laptop_2K_20260911120704.jpeg"
-            alt="Traveler holding a passport and laptop"
+            src="https://images.pexels.com/photos/32642485/pexels-photo-32642485.jpeg?auto=compress&cs=tinysrgb&w=1920"
+            alt="Passport, credit cards, and boarding pass laid out for travel"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/55 to-black/40" />

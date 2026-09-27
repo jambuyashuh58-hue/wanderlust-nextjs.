@@ -24,8 +24,8 @@ export default function ConciergeServicePage() {
       <div className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0 -z-10">
           <img
-            src="https://base44.app/api/apps/6a697a35fbcb1e615bc6ff55/files/mp/public/6a697a35fbcb1e615bc6ff55/c59e88994_Woman_holding_coffee_on_rooftop_2K_20260922172140.jpeg"
-            alt="Settling in on an Istanbul rooftop"
+            src="https://images.pexels.com/photos/6460253/pexels-photo-6460253.jpeg?auto=compress&cs=tinysrgb&w=1920"
+            alt="Street cafe terrace"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/55 to-black/40" />
