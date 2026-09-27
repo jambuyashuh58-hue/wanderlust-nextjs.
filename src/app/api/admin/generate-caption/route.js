@@ -53,22 +53,36 @@ Requirements:
 Respond ONLY as strict JSON, no markdown fences, in this exact shape:
 {"caption": "...", "hashtags": "#tag1 #tag2 ..."}`;
 
+  // Gemini model names get retired periodically; try a short list in order
+  // instead of hardcoding one, so a future retirement doesn't hard-break this
+  // route the way gemini-2.0-flash's shutdown did.
+  const MODEL_CANDIDATES = ['gemini-3.8-flash', 'gemini-flash-latest', 'gemini-2.5-flash'];
+
   try {
-    const resp = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.9, responseMimeType: 'application/json' },
-        }),
-      }
-    );
+    let resp;
+    let lastErrText = '';
+    for (const model of MODEL_CANDIDATES) {
+      resp = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { temperature: 0.9, responseMimeType: 'application/json' },
+          }),
+        }
+      );
+      if (resp.ok) break;
+      lastErrText = await resp.text();
+      // Only fall through to the next candidate if this one is gone/not found;
+      // any other error (bad key, quota, etc.) should surface immediately.
+      const isModelMissing = resp.status === 404 || /not found|no longer available/i.test(lastErrText);
+      if (!isModelMissing) break;
+    }
 
     if (!resp.ok) {
-      const errText = await resp.text();
-      return NextResponse.json({ error: `Gemini API error: ${errText}` }, { status: 502 });
+      return NextResponse.json({ error: `Gemini API error: ${lastErrText}` }, { status: 502 });
     }
 
     const data = await resp.json();
