@@ -18,7 +18,13 @@ export default function ActivityCard({ activity }) {
             : activity.price != null ? <span className="absolute bottom-4 left-4 px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm text-xs font-bold text-foreground">₺{activity.price}</span> : null}
         </div>
         <div className="p-4">
-          <h3 className="font-semibold text-sm sm:text-base leading-snug mb-1 group-hover:text-primary transition-colors line-clamp-3">{activity.title}</h3>
+          {/* No line-clamp here on purpose -- these are real product names
+              (Viator/GetYourGuide listings) that can run long, and cutting
+              them off mid-word with "..." hid what the activity actually
+              is. Cards in a row may end up different heights when titles
+              differ in length, which is fine -- showing the whole name
+              matters more than perfectly even card heights. */}
+          <h3 className="font-semibold text-sm sm:text-base leading-snug mb-1 group-hover:text-primary transition-colors">{activity.title}</h3>
           <div className="flex items-center gap-1 text-sm text-muted-foreground mb-2"><MapPin className="w-3.5 h-3.5" /><span>{activity.city_name}</span></div>
           {activity.rating != null && (
             <div className="flex items-center gap-1"><Star className="w-4 h-4 fill-accent text-accent" /><span className="text-sm font-medium">{Number(activity.rating).toFixed(1)}</span>{activity.review_count != null && <span className="text-xs text-muted-foreground">({activity.review_count})</span>}</div>
