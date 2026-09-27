@@ -128,7 +128,7 @@ export default async function ActivityDetailPage({ params }) {
           </div>
 
           <div className="lg:col-span-1">
-            <div className="sticky top-24 rounded-2xl border border-border p-6 bg-card">
+            <div className="lg:sticky lg:top-24 rounded-2xl border border-border p-6 bg-card">
               <div className="text-3xl font-bold mb-1">{activity.free ? 'Free Entry' : (activity.price != null ? `₺${activity.price}` : '—')}</div>
               {!activity.free && <p className="text-sm text-muted-foreground mb-4">per person</p>}
               {activity.booking_url ? (

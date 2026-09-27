@@ -42,7 +42,7 @@ export default function CollectionsFilters({ collections, cities }) {
           <button
             key={id}
             onClick={() => setTypeFilter(id)}
-            className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-colors ${
+            className={`inline-flex items-center gap-1.5 min-h-[40px] px-4 py-2 rounded-full text-sm font-semibold border transition-colors ${
               typeFilter === id ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted-foreground hover:border-primary/30'
             }`}
           >
@@ -55,7 +55,7 @@ export default function CollectionsFilters({ collections, cities }) {
         <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1 mb-8">
           <button
             onClick={() => setCityFilter(null)}
-            className={`shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+            className={`shrink-0 min-h-[40px] flex items-center px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
               !cityFilter ? 'bg-primary text-white' : 'border border-border text-muted-foreground hover:border-primary/30'
             }`}
           >
@@ -65,7 +65,7 @@ export default function CollectionsFilters({ collections, cities }) {
             <button
               key={city.id ?? city.name}
               onClick={() => setCityFilter(cityFilter === city.name ? null : city.name)}
-              className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`shrink-0 min-h-[40px] flex items-center px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 cityFilter === city.name ? 'bg-primary text-white' : 'border border-border text-muted-foreground hover:border-primary/30'
               }`}
             >

@@ -41,17 +41,17 @@ export default function DiscoverFilters({ initialSearch, initialCategory }) {
             className="w-full bg-transparent outline-none text-sm"
           />
           {search && (
-            <button type="button" onClick={() => { setSearch(''); updateUrl('', initialCategory); }} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted/60">
+            <button type="button" onClick={() => { setSearch(''); updateUrl('', initialCategory); }} className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-muted/60 -mr-2 shrink-0">
               <X className="w-4 h-4" />
             </button>
           )}
         </form>
-        <div className="flex flex-wrap gap-2 overflow-x-auto no-scrollbar pb-1">
+        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
           {ALL_CATEGORIES.map((cat) => (
             <button
               key={cat}
               onClick={() => toggleCategory(cat)}
-              className={`shrink-0 px-3 py-2 rounded-full text-xs font-medium border transition-all ${
+              className={`shrink-0 min-h-[40px] flex items-center px-3.5 py-2 rounded-full text-xs font-medium border transition-all ${
                 initialCategory === cat ? 'border-primary bg-primary/10 text-primary' : 'border-border hover:border-primary/30'
               }`}
             >
