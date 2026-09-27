@@ -17,7 +17,7 @@ export async function generateMetadata({ params }) {
   const guide = await getCollectionBySlug(params.slug);
   if (!guide || guide.display_style !== 'guide') return { title: 'Guide not found' };
   return {
-    title: `${guide.title} | Wanderlust`,
+    title: `${guide.title} | Move to Istanbul`,
     description: guide.meta_description || undefined,
   };
 }

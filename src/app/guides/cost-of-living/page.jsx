@@ -4,7 +4,7 @@ import GuideLayout from '@/components/GuideLayout';
 import GuideFAQ from '@/components/GuideFAQ';
 
 export const metadata = {
-  title: 'Monthly Cost of Living in Istanbul for Expats & Digital Nomads (2026) | Wanderlust',
+  title: 'Monthly Cost of Living in Istanbul for Expats & Digital Nomads (2026) | Move to Istanbul',
   description: 'Real numbers on housing, food, transportation, and monthly expenses.',
 };
 

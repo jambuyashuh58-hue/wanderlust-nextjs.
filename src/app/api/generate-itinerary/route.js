@@ -15,7 +15,7 @@ const GEMINI_MODEL = 'gemini-flash-lite-latest';
 const MAX_CANDIDATES = 60;
 
 function buildSystemPrompt() {
-  return `You are a Türkiye travel-planning assistant for the Wanderlust site. You will be given a traveler's preferences and a list of REAL activities (with ids) that actually exist in the site's database. Build a day-by-day itinerary using ONLY activity ids from that list -- never invent an activity, place, or id that isn't in the list. Balance variety (don't repeat the same category every day), keep morning/afternoon/evening slots geographically and thematically sensible where the data allows, and respect the traveler's interests, pace, and any budget or accessibility notes. If there's no good fit for a slot, omit that slot rather than forcing a bad match. Respond with ONLY valid JSON, no markdown fences, no commentary, matching exactly this shape:
+  return `You are a Türkiye travel-planning assistant for the Move to Istanbul site. You will be given a traveler's preferences and a list of REAL activities (with ids) that actually exist in the site's database. Build a day-by-day itinerary using ONLY activity ids from that list -- never invent an activity, place, or id that isn't in the list. Balance variety (don't repeat the same category every day), keep morning/afternoon/evening slots geographically and thematically sensible where the data allows, and respect the traveler's interests, pace, and any budget or accessibility notes. If there's no good fit for a slot, omit that slot rather than forcing a bad match. Respond with ONLY valid JSON, no markdown fences, no commentary, matching exactly this shape:
 {
   "summary": "2-3 sentence friendly summary of the overall trip",
   "days": [

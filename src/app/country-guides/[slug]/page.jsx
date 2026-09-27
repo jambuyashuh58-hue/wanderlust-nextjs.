@@ -9,7 +9,7 @@ export const revalidate = 3600;
 export async function generateMetadata({ params }) {
   const guide = await getCountryGuideBySlug(params.slug);
   if (!guide) return { title: 'Guide not found' };
-  return { title: `${guide.title} — Country Guide | Wanderlust` };
+  return { title: `${guide.title} — Country Guide | Move to Istanbul` };
 }
 
 export default async function CountryGuideDetailPage({ params }) {

@@ -11,7 +11,7 @@ export async function generateMetadata({ params }) {
   const city = await getCityByName(params.cityName);
   if (!city) return { title: 'City not found' };
   return {
-    title: `${city.name} — Things to Do | Wanderlust`,
+    title: `${city.name} — Things to Do | Move to Istanbul`,
     description: city.description,
   };
 }

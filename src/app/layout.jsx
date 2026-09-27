@@ -3,8 +3,8 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
 export const metadata = {
-  title: 'Wanderlust — Discover Türkiye with AI',
-  description: 'Wanderlust — AI-powered travel discovery for Türkiye. Find museums, hidden gems, and cultural experiences across Istanbul, Cappadocia, Antalya and beyond.',
+  title: 'Move to Istanbul — Discover Türkiye with AI',
+  description: 'Move to Istanbul — AI-powered travel discovery for Türkiye. Find museums, hidden gems, and cultural experiences across Istanbul, Cappadocia, Antalya and beyond.',
 };
 
 export default function RootLayout({ children }) {

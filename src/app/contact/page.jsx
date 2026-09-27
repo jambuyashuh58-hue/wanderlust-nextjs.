@@ -1,11 +1,11 @@
 import { Mail, Instagram } from 'lucide-react';
 
-const CONTACT_EMAIL = 'hello@wanderlust.travel';
+const CONTACT_EMAIL = 'hello@movetoistanbul.online';
 const CONCIERGE_URL = 'https://www.instagram.com/move_istanbul';
 
 export const metadata = {
-  title: 'Contact Us | Wanderlust',
-  description: 'Get in touch with the Wanderlust team.',
+  title: 'Contact Us | Move to Istanbul',
+  description: 'Get in touch with the Move to Istanbul team.',
 };
 
 export default function ContactPage() {

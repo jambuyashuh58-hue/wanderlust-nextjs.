@@ -4,7 +4,7 @@ import CollectionsFilters from '@/components/CollectionsFilters';
 export const revalidate = 3600;
 
 export const metadata = {
-  title: 'Browse Türkiye Travel Collections | Wanderlust',
+  title: 'Browse Türkiye Travel Collections | Move to Istanbul',
   description: 'Curated collections of the best experiences across Istanbul, Cappadocia, Antalya and more.',
 };
 

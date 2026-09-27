@@ -14,7 +14,7 @@ export default function Footer() {
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
               <div className="w-9 h-9 rounded-xl bg-gradient-primary flex items-center justify-center"><Compass className="w-5 h-5 text-white" /></div>
-              <span className="text-lg font-bold">Wanderlust</span>
+              <span className="text-lg font-bold">Move to Istanbul</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed mb-3">AI-powered travel recommendations for Türkiye&apos;s museums, hidden gems, and cultural adventures.</p>
             <Link href="/guides" className="block text-sm font-medium text-primary hover:underline mb-1">Turkey Long Stay Guides →</Link>
@@ -64,7 +64,7 @@ export default function Footer() {
         </div>
         <Destinations />
         <div className="pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} Wanderlust. All rights reserved.</p>
+          <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} Move to Istanbul. All rights reserved.</p>
           <p className="text-xs text-muted-foreground text-center sm:text-right max-w-md">{AFFILIATE_DISCLOSURE}</p>
         </div>
       </div>

@@ -54,8 +54,8 @@ export async function GET() {
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Site Directory — Wanderlust</title>
-<meta name="description" content="Every page on Wanderlust: cities, collections and activities across Türkiye." />
+<title>Site Directory — Move to Istanbul</title>
+<meta name="description" content="Every page on Move to Istanbul: cities, collections and activities across Türkiye." />
 <meta name="robots" content="index,follow" />
 <style>
   body { font-family: system-ui, sans-serif; max-width: 960px; margin: 0 auto; padding: 2rem 1.25rem; line-height: 1.6; color: #1e293b; }
@@ -69,7 +69,7 @@ export async function GET() {
 </head>
 <body>
   <h1>Site Directory</h1>
-  <p>Every page on Wanderlust, in one place.</p>
+  <p>Every page on Move to Istanbul, in one place.</p>
   <h2>Main pages</h2>
   <ul>${staticPages}</ul>
   <h2>Cities (${(cities || []).length})</h2>

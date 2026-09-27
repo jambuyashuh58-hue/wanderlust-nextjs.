@@ -13,7 +13,7 @@ import { getCities, getAllActivities } from '@/lib/supabaseServer';
 import OnboardingWizard from '@/components/OnboardingWizard';
 
 export const metadata = {
-  title: 'Plan My Trip — Wanderlust',
+  title: 'Plan My Trip — Move to Istanbul',
   description: 'Answer a few questions and get a personalized Türkiye itinerary.',
 };
 

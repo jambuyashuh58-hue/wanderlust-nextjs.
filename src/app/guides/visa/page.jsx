@@ -4,7 +4,7 @@ import GuideLayout from '@/components/GuideLayout';
 import GuideFAQ from '@/components/GuideFAQ';
 
 export const metadata = {
-  title: 'Türkiye Visa & Residence Permit Guide 2026 | Wanderlust',
+  title: 'Türkiye Visa & Residence Permit Guide 2026 | Move to Istanbul',
   description: "e-Visa, tourist entry, and short-term residence permits, with official sources.",
 };
 

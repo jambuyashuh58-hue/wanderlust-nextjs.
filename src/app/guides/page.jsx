@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Stamp, Home, Wallet, ArrowRight, BookOpen, LayoutGrid } from 'lucide-react';
 
 export const metadata = {
-  title: 'Türkiye Long-Stay Guides | Wanderlust',
+  title: 'Türkiye Long-Stay Guides | Move to Istanbul',
   description: 'Free relocation guides for moving to Türkiye — visas, housing, and cost of living.',
 };
 

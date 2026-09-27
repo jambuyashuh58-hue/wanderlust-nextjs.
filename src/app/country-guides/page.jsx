@@ -6,7 +6,7 @@ import { getCountryGuides } from '@/lib/supabaseServer';
 export const revalidate = 3600;
 
 export const metadata = {
-  title: 'Country Relocation Guides | Wanderlust',
+  title: 'Country Relocation Guides | Move to Istanbul',
   description: 'Nationality-specific guides for moving to Türkiye.',
 };
 

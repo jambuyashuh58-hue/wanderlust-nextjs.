@@ -6,7 +6,7 @@ import { getCollections } from '@/lib/supabaseServer';
 import RelocationQuizClient from '@/components/RelocationQuizClient';
 
 export const metadata = {
-  title: 'Relocation Quiz — Wanderlust',
+  title: 'Relocation Quiz — Move to Istanbul',
   description: 'Answer a few quick questions and get pointed to exactly what\'s useful for your Türkiye trip or move.',
 };
 

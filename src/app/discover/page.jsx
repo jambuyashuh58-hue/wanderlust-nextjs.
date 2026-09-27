@@ -6,7 +6,7 @@ import DiscoverFilters from '@/components/DiscoverFilters';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Discover Experiences in Türkiye | Wanderlust',
+  title: 'Discover Experiences in Türkiye | Move to Istanbul',
   description: 'Search and filter 700+ activities, museums, tours, and hidden gems across 17 Turkish cities.',
 };
 

@@ -13,7 +13,7 @@ export async function generateMetadata({ params }) {
   const collection = await getCollectionBySlug(params.slug);
   if (!collection) return { title: 'Collection not found' };
   return {
-    title: `${collection.title} | Wanderlust`,
+    title: `${collection.title} | Move to Istanbul`,
     description: collection.meta_description || collection.intro?.slice(0, 160),
   };
 }

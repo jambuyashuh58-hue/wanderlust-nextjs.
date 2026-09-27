@@ -13,7 +13,7 @@ export async function generateMetadata({ params }) {
   const activity = await getActivityById(params.id);
   if (!activity) return { title: 'Activity not found' };
   return {
-    title: `${activity.title} — Prices, Duration & Booking | Wanderlust`,
+    title: `${activity.title} — Prices, Duration & Booking | Move to Istanbul`,
     description: activity.description?.slice(0, 160),
   };
 }
