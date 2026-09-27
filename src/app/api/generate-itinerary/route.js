@@ -11,7 +11,7 @@ import { NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabaseServer';
 
 const ANTHROPIC_MODEL = 'claude-sonnet-4-5-20250929';
-const GEMINI_MODEL = 'gemini-3.8-flash';
+const GEMINI_MODEL = 'gemini-flash-lite-latest';
 const MAX_CANDIDATES = 60;
 
 function buildSystemPrompt() {
@@ -83,22 +83,39 @@ async function callClaude(system, user, apiKey) {
 
 async function callGemini(system, user, apiKey) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`;
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: system }] },
-      contents: [{ role: 'user', parts: [{ text: user }] }],
-      generationConfig: { responseMimeType: 'application/json', maxOutputTokens: 4000 },
-    }),
-  });
+  const attempt = async () => {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: system }] },
+        contents: [{ role: 'user', parts: [{ text: user }] }],
+        generationConfig: { responseMimeType: 'application/json', maxOutputTokens: 4000 },
+      }),
+    });
+    if (!res.ok) {
+      const errText = await res.text().catch(() => '');
+      const err = new Error(`Gemini API error (${res.status}): ${errText.slice(0, 500)}`);
+      err.status = res.status;
+      throw err;
+    }
+    return res.json();
+  };
 
-  if (!res.ok) {
-    const errText = await res.text().catch(() => '');
-    throw new Error(`Gemini API error (${res.status}): ${errText.slice(0, 500)}`);
+  // The free-tier "-latest" aliases occasionally return a transient 503
+  // ("high demand") -- worth one short retry before surfacing the error.
+  let data;
+  try {
+    data = await attempt();
+  } catch (err) {
+    if (err.status === 503) {
+      await new Promise((r) => setTimeout(r, 1500));
+      data = await attempt();
+    } else {
+      throw err;
+    }
   }
 
-  const data = await res.json();
   const text = data?.candidates?.[0]?.content?.parts?.find((p) => p.text)?.text;
   if (!text) {
     const blockReason = data?.promptFeedback?.blockReason;
