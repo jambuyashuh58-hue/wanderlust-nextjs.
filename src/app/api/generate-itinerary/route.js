@@ -11,7 +11,7 @@ import { NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabaseServer';
 
 const ANTHROPIC_MODEL = 'claude-sonnet-4-5-20250929';
-const GEMINI_MODEL = 'gemini-2.5-flash';
+const GEMINI_MODEL = 'gemini-3.8-flash';
 const MAX_CANDIDATES = 60;
 
 function buildSystemPrompt() {
