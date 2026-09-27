@@ -1,10 +1,29 @@
 'use client';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Star, MapPin } from 'lucide-react';
+import { Star, MapPin, Heart } from 'lucide-react';
+import { isActivitySaved, toggleSavedActivity } from '@/lib/savedActivities';
 
 export default function ActivityCard({ activity }) {
+  const [saved, setSaved] = useState(false);
+
+  // Read the wishlist state after mount only -- localStorage isn't available
+  // during server rendering, and reading it during render would mismatch
+  // the server-rendered HTML (hydration error).
+  useEffect(() => {
+    if (activity?.id) setSaved(isActivitySaved(activity.id));
+  }, [activity?.id]);
+
   if (!activity) return null;
+
+  const handleToggleSave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const nowSaved = toggleSavedActivity(activity);
+    setSaved(nowSaved);
+  };
+
   return (
     <div className="group relative bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl hover:shadow-black/5 transition-all duration-300">
       <Link href={`/activity/${activity.id}`} className="block">
@@ -14,6 +33,17 @@ export default function ActivityCard({ activity }) {
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
           <div className="absolute top-4 left-4"><span className="px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm text-xs font-semibold text-foreground">{activity.category}</span></div>
+          {/* Wishlist heart -- feeds the Dashboard's "Experiences budget" card.
+              Saved client-side (localStorage) since the site has no login yet. */}
+          <button
+            type="button"
+            onClick={handleToggleSave}
+            aria-label={saved ? 'Remove from saved experiences' : 'Save experience'}
+            aria-pressed={saved}
+            className="absolute top-3 right-3 w-9 h-9 flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm hover:bg-white transition-colors"
+          >
+            <Heart className={`w-4 h-4 ${saved ? 'fill-destructive text-destructive' : 'text-foreground'}`} />
+          </button>
           {activity.free ? <span className="absolute bottom-4 left-4 px-3 py-1 rounded-full bg-success/90 backdrop-blur-sm text-xs font-semibold text-white">Free</span>
             : activity.price != null ? <span className="absolute bottom-4 left-4 px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm text-xs font-bold text-foreground">₺{activity.price}</span> : null}
         </div>
