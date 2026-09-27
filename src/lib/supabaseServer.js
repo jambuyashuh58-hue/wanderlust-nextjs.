@@ -13,7 +13,18 @@ export function getSupabaseServer() {
   if (!url || !key) {
     throw new Error('Missing SUPABASE_URL or SUPABASE_SECRET_KEY environment variables.');
   }
-  return createClient(url, key, { auth: { persistSession: false } });
+  return createClient(url, key, {
+    auth: { persistSession: false },
+    // supabase-js calls the PostgREST API via fetch() under the hood. Next.js
+    // patches global fetch() and, on a page with `export const revalidate`,
+    // silently caches that response for the same duration -- so a direct DB
+    // edit can render stale even after the page's own ISR cache is busted
+    // (revalidatePath only invalidates the rendered HTML, not this data
+    // fetch). Forcing cache: 'no-store' here means every Supabase call is
+    // always live; the page-level `revalidate` export is what still controls
+    // how long the rendered HTML itself is cached.
+    global: { fetch: (input, init) => fetch(input, { ...init, cache: 'no-store' }) },
+  });
 }
 
 // -------------------- Data-fetching helpers used by Server Components --------------------
