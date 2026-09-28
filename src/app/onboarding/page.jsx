@@ -1,13 +1,9 @@
-// New page -- ports the old site's /onboarding "Plan My Trip" wizard.
-// SCOPE NOTE: the old wizard was 14 steps and ended with a real LLM call
-// (InvokeLLM) to generate the itinerary. This version is a shorter,
-// functionally-equivalent wizard (destination, trip length, interests,
-// pace) that builds the itinerary with a rule-based picker from real
-// Supabase activity data instead of an LLM call, because there's no LLM
-// endpoint wired up yet in this stack. If/when a backend LLM route exists,
-// swap the client-side `buildItinerary()` call in OnboardingWizard.jsx for
-// a fetch to it -- everything else (the wizard steps, the redirect to
-// /itinerary) stays the same.
+// Ports the old Base44 site's full /onboarding "Plan My Trip" wizard
+// (13 steps: name, gender, age group, travel type, children, interests,
+// pace, budget, current location, destination, travel dates, accessibility,
+// contact). Now that /api/generate-itinerary (a real Claude/Gemini-backed
+// LLM route) exists, the wizard submits every answer there; it falls back
+// to a rule-based local picker only if that call errors out.
 
 import { getCities, getAllActivities } from '@/lib/supabaseServer';
 import OnboardingWizard from '@/components/OnboardingWizard';

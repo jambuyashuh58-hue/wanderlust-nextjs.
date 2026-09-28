@@ -49,6 +49,7 @@ export default function ItineraryPage() {
         <span className="text-sm font-semibold uppercase tracking-wider">Your AI-planned itinerary</span>
       </div>
       <h1 className="text-3xl font-bold mb-3">
+        {itinerary.firstName ? `${itinerary.firstName}'s ` : ''}
         {itinerary.days} {itinerary.days === 1 ? 'day' : 'days'} in {itinerary.city}
       </h1>
       {itinerary.summary && (

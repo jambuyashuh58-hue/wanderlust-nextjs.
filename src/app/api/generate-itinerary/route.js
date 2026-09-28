@@ -145,6 +145,14 @@ async function generateItinerary(params) {
     accessibility,
     firstName,
     email,
+    gender,
+    ageGroup,
+    hasChildren,
+    numChildren,
+    childrenAges,
+    currentLocation,
+    travelDates,
+    newsletterOptIn,
   } = params || {};
 
   if (!city || !days) {
@@ -213,12 +221,20 @@ async function generateItinerary(params) {
     await supabase.from('travel_preference').insert({
       first_name: firstName || null,
       email: email || null,
+      gender: gender || null,
+      age_group: ageGroup || null,
+      has_children: typeof hasChildren === 'boolean' ? hasChildren : null,
+      num_children: numChildren || null,
+      children_ages: childrenAges || null,
+      current_location: currentLocation || null,
       destination: city,
       trip_length: `${days} day${days === 1 ? '' : 's'}`,
+      travel_dates: travelDates || null,
       interests,
       budget: budget || null,
       travelling_as: travellingAs || null,
       accessibility: accessibility || null,
+      newsletter_opt_in: !!newsletterOptIn,
     });
     await supabase.from('shareable_itinerary').insert({
       summary: responsePayload.summary,
