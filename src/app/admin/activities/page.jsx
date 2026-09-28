@@ -7,9 +7,15 @@ export const dynamic = 'force-dynamic';
 export default async function AdminActivitiesPage({ searchParams }) {
   const q = searchParams?.q?.trim() || '';
   const supabase = getSupabaseServer();
-  let query = supabase.from('activity').select('id, title, category, city_name, price, rating, trending').order('title').limit(100);
+  let query = supabase
+    .from('activity')
+    .select('id, title, description, category, city_name, country, price, rating, review_count, duration, indoor, family_friendly, free, trending')
+    .order('title')
+    .limit(100);
   if (q) query = query.ilike('title', `%${q}%`);
   const { data, error } = await query;
+
+  const yn = (v) => (v ? '✓' : '');
 
   return (
     <div>
@@ -21,11 +27,18 @@ export default async function AdminActivitiesPage({ searchParams }) {
         rowHref={(row) => `/admin/activities/${row.id}`}
         columns={[
           { key: 'title', label: 'Title' },
+          { key: 'description', label: 'Description', render: (r) => r.description ? `${r.description.slice(0, 60)}${r.description.length > 60 ? '…' : ''}` : '—' },
           { key: 'category', label: 'Category' },
           { key: 'city_name', label: 'City' },
+          { key: 'country', label: 'Country' },
           { key: 'price', label: 'Price', render: (r) => r.price != null ? `₺${r.price}` : '—' },
           { key: 'rating', label: 'Rating' },
-          { key: 'trending', label: 'Trending', render: (r) => r.trending ? 'Yes' : '' },
+          { key: 'review_count', label: 'Reviews' },
+          { key: 'duration', label: 'Duration' },
+          { key: 'indoor', label: 'Indoor', render: (r) => yn(r.indoor) },
+          { key: 'family_friendly', label: 'Family', render: (r) => yn(r.family_friendly) },
+          { key: 'free', label: 'Free', render: (r) => yn(r.free) },
+          { key: 'trending', label: 'Trending', render: (r) => yn(r.trending) },
         ]}
         rows={data || []}
       />
