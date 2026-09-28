@@ -13,21 +13,28 @@ import { getSupabaseServer } from '@/lib/supabaseServer';
 const ANTHROPIC_MODEL = 'claude-sonnet-4-5-20250929';
 const GEMINI_MODEL = 'gemini-flash-lite-latest';
 const MAX_CANDIDATES = 60;
+// Hard cap on trip length: keeps the LLM call fast (bigger day counts need
+// more output tokens, which is the main source of slow generations) and
+// keeps the itinerary page from becoming an unreasonably long scroll. 14
+// days is already a long trip; anything past that isn't a realistic single
+// itinerary anyway.
+const MAX_DAYS = 14;
 
-function buildSystemPrompt() {
-  return `You are a Türkiye travel-planning assistant for the Move to Istanbul site. You will be given a traveler's preferences and a list of REAL activities (with ids) that actually exist in the site's database. Build a day-by-day itinerary using ONLY activity ids from that list -- never invent an activity, place, or id that isn't in the list. Balance variety (don't repeat the same category every day), keep morning/afternoon/evening slots geographically and thematically sensible where the data allows, and respect the traveler's interests, pace, and any budget or accessibility notes. If there's no good fit for a slot, omit that slot rather than forcing a bad match. Respond with ONLY valid JSON, no markdown fences, no commentary, matching exactly this shape:
+function buildSystemPrompt(days) {
+  return `You are a Türkiye travel-planning assistant for the Move to Istanbul site. You will be given a traveler's preferences and a list of REAL activities (with ids) that actually exist in the site's database. Build a day-by-day itinerary using ONLY activity ids from that list -- never invent an activity, place, or id that isn't in the list. Balance variety (don't repeat the same category every day), keep morning/afternoon/evening slots geographically and thematically sensible where the data allows, and respect the traveler's interests, pace, and any budget or accessibility notes. If there's no good fit for a specific slot, omit that slot rather than forcing a bad match -- but the "days" array itself MUST always contain exactly ${days} entries, one per day in order (day 1 through day ${days}), even if that means reusing a category or an activity across more than one day when the destination doesn't have ${days} days' worth of unique options. Never stop early and never omit a trailing day. Respond with ONLY valid JSON, no markdown fences, no commentary, matching exactly this shape:
 {
   "summary": "2-3 sentence friendly summary of the overall trip",
   "days": [
     {
       "day": 1,
+      "theme": "3-5 word evocative title for this day, e.g. 'Welcome to Antalya Coast'",
       "morning": { "activity_id": "...", "note": "short reason this fits here" },
       "afternoon": { "activity_id": "...", "note": "..." },
       "evening": { "activity_id": "...", "note": "..." }
     }
   ]
 }
-Any slot may be omitted (leave the key out) if nothing fits. "days" must have exactly the requested number of entries.`;
+Any slot may be omitted (leave the key out) if nothing fits, but "days" must have exactly ${days} entries.`;
 }
 
 function buildUserPrompt({ city, days, interests, pace, budget, travellingAs, accessibility }, candidates) {
@@ -54,7 +61,7 @@ function extractJson(text) {
   return JSON.parse(trimmed);
 }
 
-async function callClaude(system, user, apiKey) {
+async function callClaude(system, user, apiKey, maxTokens) {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -64,7 +71,7 @@ async function callClaude(system, user, apiKey) {
     },
     body: JSON.stringify({
       model: ANTHROPIC_MODEL,
-      max_tokens: 3000,
+      max_tokens: maxTokens,
       system,
       messages: [{ role: 'user', content: user }],
     }),
@@ -81,7 +88,7 @@ async function callClaude(system, user, apiKey) {
   return extractJson(text);
 }
 
-async function callGemini(system, user, apiKey) {
+async function callGemini(system, user, apiKey, maxTokens) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`;
   const attempt = async () => {
     const res = await fetch(url, {
@@ -90,7 +97,7 @@ async function callGemini(system, user, apiKey) {
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: system }] },
         contents: [{ role: 'user', parts: [{ text: user }] }],
-        generationConfig: { responseMimeType: 'application/json', maxOutputTokens: 4000 },
+        generationConfig: { responseMimeType: 'application/json', maxOutputTokens: maxTokens },
       }),
     });
     if (!res.ok) {
@@ -126,11 +133,15 @@ async function callGemini(system, user, apiKey) {
 
 // Prefers Gemini (free tier, no billing) when configured; falls back to
 // Anthropic if only that key is set. Throws if neither is configured.
-async function callLLM(system, user) {
+// maxTokens scales with trip length so a longer itinerary doesn't get its
+// JSON cut off mid-day (which silently shrinks the returned trip), while a
+// short one stays fast by not over-requesting tokens it won't use.
+async function callLLM(system, user, days) {
+  const maxTokens = Math.min(8000, Math.max(2000, 350 + days * 260));
   const geminiKey = process.env.GEMINI_API_KEY;
   const anthropicKey = process.env.ANTHROPIC_API_KEY;
-  if (geminiKey) return callGemini(system, user, geminiKey);
-  if (anthropicKey) return callClaude(system, user, anthropicKey);
+  if (geminiKey) return callGemini(system, user, geminiKey, maxTokens);
+  if (anthropicKey) return callClaude(system, user, anthropicKey, maxTokens);
   throw new Error('No LLM API key configured (set GEMINI_API_KEY or ANTHROPIC_API_KEY)');
 }
 
@@ -159,6 +170,8 @@ async function generateItinerary(params) {
     return { status: 400, body: { error: 'city and days are required' } };
   }
 
+  const requestedDays = Math.min(Math.max(1, Number(days) || 1), MAX_DAYS);
+
   const supabase = getSupabaseServer();
 
   // Pull real candidate activities for this city -- best-rated/most-popular
@@ -181,12 +194,12 @@ async function generateItinerary(params) {
     };
   }
 
-  const system = buildSystemPrompt();
-  const user = buildUserPrompt({ city, days, interests, pace, budget, travellingAs, accessibility }, activities);
+  const system = buildSystemPrompt(requestedDays);
+  const user = buildUserPrompt({ city, days: requestedDays, interests, pace, budget, travellingAs, accessibility }, activities);
 
   let aiResult;
   try {
-    aiResult = await callLLM(system, user);
+    aiResult = await callLLM(system, user, requestedDays);
   } catch (err) {
     return { status: 502, body: { error: `AI generation failed: ${err.message}` } };
   }
@@ -194,7 +207,7 @@ async function generateItinerary(params) {
   const activityById = new Map(activities.map((a) => [a.id, a]));
   const PERIODS = ['morning', 'afternoon', 'evening'];
 
-  const dayPlans = (aiResult.days || []).slice(0, days).map((d) => {
+  const dayPlans = (aiResult.days || []).slice(0, requestedDays).map((d) => {
     const slots = PERIODS.map((period) => {
       const slot = d[period];
       if (!slot?.activity_id) return null;
@@ -202,23 +215,37 @@ async function generateItinerary(params) {
       if (!activity) return null; // guard against a hallucinated id
       return { period, note: slot.note || '', activity };
     }).filter(Boolean);
-    return { day: d.day, slots };
+    return { day: d.day, theme: d.theme || '', slots };
   });
+
+  // Trust what the AI actually returned, not the request -- if it came back
+  // short (a small city without enough unique activities, or a truncated
+  // response), the page must say how many days it actually got, not the
+  // number that was asked for.
+  const actualDays = dayPlans.length || requestedDays;
 
   const responsePayload = {
     city,
-    days,
+    days: actualDays,
+    requestedDays,
     interests,
     pace,
     summary: aiResult.summary || '',
     dayPlans,
     generatedAt: new Date().toISOString(),
   };
+  if (actualDays < requestedDays) {
+    responsePayload.note = `Generated ${actualDays} of the ${requestedDays} days you asked for -- ${city} may not have enough unique activities for a longer trip yet.`;
+  }
 
   // Best-effort persistence -- mirrors the old Base44 TravelPreference /
-  // ShareableItinerary entities. Never blocks the response on failure.
-  try {
-    await supabase.from('travel_preference').insert({
+  // ShareableItinerary entities. Fired concurrently rather than sequentially
+  // (halves this step's contribution to response time); still awaited
+  // because Vercel's serverless runtime can freeze the function as soon as
+  // the response is sent, so a true fire-and-forget risks the insert never
+  // completing.
+  await Promise.allSettled([
+    supabase.from('travel_preference').insert({
       first_name: firstName || null,
       email: email || null,
       gender: gender || null,
@@ -228,22 +255,22 @@ async function generateItinerary(params) {
       children_ages: childrenAges || null,
       current_location: currentLocation || null,
       destination: city,
-      trip_length: `${days} day${days === 1 ? '' : 's'}`,
+      trip_length: `${requestedDays} day${requestedDays === 1 ? '' : 's'}`,
       travel_dates: travelDates || null,
       interests,
       budget: budget || null,
       travelling_as: travellingAs || null,
       accessibility: accessibility || null,
       newsletter_opt_in: !!newsletterOptIn,
-    });
-    await supabase.from('shareable_itinerary').insert({
+    }),
+    supabase.from('shareable_itinerary').insert({
       summary: responsePayload.summary,
       itinerary: dayPlans,
-      preferences: { city, days, interests, pace, budget, travellingAs, accessibility },
-    });
-  } catch {
+      preferences: { city, days: actualDays, interests, pace, budget, travellingAs, accessibility },
+    }),
+  ]).catch(() => {
     // Non-critical -- the itinerary still returns to the user.
-  }
+  });
 
   return { status: 200, body: responsePayload };
 }

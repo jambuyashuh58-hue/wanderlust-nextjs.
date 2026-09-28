@@ -20,14 +20,19 @@ const TRAVELLING_AS_OPTIONS = ['Solo', 'Couple', 'Family', 'Friends', 'Business'
 const ACCESSIBILITY_OPTIONS = ['No Preference', 'Family Friendly', 'Reduced Mobility'];
 const GENDER_OPTIONS = ['Female', 'Male', 'Non-binary', 'Prefer not to say'];
 const AGE_GROUPS = ['18-24', '25-34', '35-44', '45-54', '55+'];
-const QUICK_DAY_OPTIONS = [1, 2, 3, 5, 7, 10];
+const QUICK_DAY_OPTIONS = [1, 2, 3, 5, 7, 10, 14];
+// Keep in sync with MAX_DAYS in /api/generate-itinerary/route.js -- the API
+// clamps to this too, but capping it here as well means the wizard is
+// honest about it up front rather than silently shortening the trip later.
+const MAX_DAYS = 14;
 
 function daysBetween(start, end) {
   if (!start || !end) return null;
   const s = new Date(start);
   const e = new Date(end);
   const diff = Math.round((e - s) / (1000 * 60 * 60 * 24)) + 1;
-  return diff > 0 ? diff : null;
+  if (diff <= 0) return null;
+  return Math.min(diff, MAX_DAYS);
 }
 
 // Rule-based fallback, used only if the AI call errors out.
@@ -417,7 +422,7 @@ export default function OnboardingWizard({ cities = [], activities = [] }) {
       {current === 'dates' && (
         <>
           <h1 className="text-2xl md:text-3xl font-bold mb-2">When are you travelling?</h1>
-          <p className="text-sm text-muted-foreground mb-4">Not sure yet? Just pick a trip length.</p>
+          <p className="text-sm text-muted-foreground mb-4">Not sure yet? Just pick a trip length. Trips are capped at {MAX_DAYS} days so the AI can plan every day in detail.</p>
           <div className="flex flex-wrap gap-3 mb-6">
             {QUICK_DAY_OPTIONS.map((n) => (
               <button
