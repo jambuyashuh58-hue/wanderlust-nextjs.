@@ -88,7 +88,7 @@ export default function ConciergeInteractive() {
       </div>
 
       {/* Intake form + Instagram alternative, side by side */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         {/* Intake form */}
         <div className="rounded-2xl border border-border p-8 bg-card h-fit">
           <h2 className="text-xl font-bold mb-6">Tell us about your move</h2>
