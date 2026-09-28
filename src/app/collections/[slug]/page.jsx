@@ -6,6 +6,8 @@ import ReactMarkdown from 'react-markdown';
 import { getCollectionBySlug } from '@/lib/supabaseServer';
 import ActivityCard from '@/components/ActivityCard';
 import GuideBody from '@/components/GuideBody';
+import CollectionRoadmap from '@/components/CollectionRoadmap';
+import RankingList from '@/components/RankingList';
 
 export const revalidate = 3600;
 
@@ -24,6 +26,7 @@ export default async function CollectionDetailPage({ params }) {
 
   const activities = collection.activities || [];
   const isGuide = collection.display_style === 'guide';
+  const isRanking = collection.display_style === 'ranking';
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -73,6 +76,11 @@ export default async function CollectionDetailPage({ params }) {
           <GuideBody intro={collection.intro} bodyImages={collection.body_images || []} guideTitle={collection.title} />
         ) : activities.length === 0 ? (
           <p className="text-center text-muted-foreground py-16">No experiences in this collection yet.</p>
+        ) : isRanking ? (
+          <>
+            <CollectionRoadmap roadmap={collection.roadmap} cityName={collection.city_name} />
+            <RankingList activities={activities} />
+          </>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {activities.map((a) => <ActivityCard key={a.id} activity={a} />)}
