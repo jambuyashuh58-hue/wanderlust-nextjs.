@@ -127,7 +127,7 @@ export default async function HomePage() {
           </section>
         )}
 
-        <VideoBlogs collections={collections} />
+        <VideoBlogs />
 
         <RelocationQuizCTA />
 
