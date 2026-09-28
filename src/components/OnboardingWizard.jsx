@@ -20,45 +20,76 @@ const TRAVELLING_AS_OPTIONS = ['Solo', 'Couple', 'Family', 'Friends', 'Business'
 const ACCESSIBILITY_OPTIONS = ['No Preference', 'Family Friendly', 'Reduced Mobility'];
 const GENDER_OPTIONS = ['Female', 'Male', 'Non-binary', 'Prefer not to say'];
 const AGE_GROUPS = ['18-24', '25-34', '35-44', '45-54', '55+'];
-const QUICK_DAY_OPTIONS = [1, 2, 3, 5, 7, 10, 14];
-// Keep in sync with MAX_DAYS in /api/generate-itinerary/route.js -- the API
-// clamps to this too, but capping it here as well means the wizard is
-// honest about it up front rather than silently shortening the trip later.
-const MAX_DAYS = 14;
+// A single-city trip is capped at MAX_DAYS_PER_CITY; a multi-city trip
+// (auto-split across the cities picked on the destination step) can run
+// longer -- up to MAX_TOTAL_DAYS overall -- since each city still only ever
+// gets its own MAX_DAYS_PER_CITY-sized slice, which is what actually keeps
+// each leg's AI call fast. Keep both in sync with route.js.
+const MAX_DAYS_PER_CITY = 14;
+const MAX_TOTAL_DAYS = 60;
+const QUICK_DAY_OPTIONS_BASE = [1, 2, 3, 5, 7, 10, 14, 21, 30, 45, 60];
 
-function daysBetween(start, end) {
+function maxAllowedDays(cityCount) {
+  return Math.min(MAX_TOTAL_DAYS, Math.max(1, cityCount) * MAX_DAYS_PER_CITY);
+}
+
+function daysBetween(start, end, cap) {
   if (!start || !end) return null;
   const s = new Date(start);
   const e = new Date(end);
   const diff = Math.round((e - s) / (1000 * 60 * 60 * 24)) + 1;
   if (diff <= 0) return null;
-  return Math.min(diff, MAX_DAYS);
+  return Math.min(diff, cap);
 }
 
-// Rule-based fallback, used only if the AI call errors out.
-function buildFallbackItinerary({ city, days, interests, pace, activities }) {
+// Splits a total trip length evenly across N cities (in the order picked),
+// giving any remainder days to the earlier cities. Every city gets at least
+// one day, even if that means the total grows slightly (e.g. 2 days split
+// across 3 cities becomes 1/1/1 = 3 days, not a city with zero days).
+function splitDaysAcrossCities(totalDays, cityNames) {
+  const n = cityNames.length;
+  const effectiveTotal = Math.max(totalDays, n);
+  const base = Math.floor(effectiveTotal / n);
+  const remainder = effectiveTotal % n;
+  return cityNames.map((city, i) => ({ city, days: base + (i < remainder ? 1 : 0) }));
+}
+
+// Rule-based fallback, used only if the AI call errors out. Builds the same
+// { legs: [...] } shape the API returns so the itinerary page can render
+// either one uniformly.
+function buildFallbackItinerary({ cityLegs, interests, pace, activities, days: totalDays }) {
   const perDay = PACE_OPTIONS.find((p) => p.value === pace)?.perDay || 3;
-  const cityLower = (city || '').toLowerCase();
   const periods = ['morning', 'afternoon', 'evening'];
 
-  const pool = (activities || []).filter((a) => {
-    const cityMatch = !a.city_name || a.city_name.toLowerCase() === cityLower;
-    const interestMatch = interests.length === 0 || interests.includes(a.category);
-    return cityMatch && interestMatch;
-  });
-  const sorted = [...pool].sort((a, b) => (b.rating || 0) - (a.rating || 0));
+  const legs = cityLegs.map(({ city, days }) => {
+    const cityLower = (city || '').toLowerCase();
+    const pool = (activities || []).filter((a) => {
+      const cityMatch = !a.city_name || a.city_name.toLowerCase() === cityLower;
+      const interestMatch = interests.length === 0 || interests.includes(a.category);
+      return cityMatch && interestMatch;
+    });
+    const sorted = [...pool].sort((a, b) => (b.rating || 0) - (a.rating || 0));
 
-  const dayPlans = [];
-  let cursor = 0;
-  for (let d = 1; d <= days; d++) {
-    const picks = sorted.slice(cursor, cursor + perDay);
-    cursor += perDay;
-    const slots = picks.map((activity, i) => ({ period: periods[i] || 'evening', note: '', activity }));
-    dayPlans.push({ day: d, slots });
-  }
+    const dayPlans = [];
+    let cursor = 0;
+    for (let d = 1; d <= days; d++) {
+      const picks = sorted.slice(cursor, cursor + perDay);
+      cursor += perDay;
+      const slots = picks.map((activity, i) => ({ period: periods[i] || 'evening', note: '', activity }));
+      dayPlans.push({ day: d, slots });
+    }
+    return {
+      city, days,
+      summary: `A ${pace} ${days}-day stretch in ${city}, built from the best-rated activities available.`,
+      dayPlans,
+    };
+  });
+
   return {
-    city, days, interests, pace, dayPlans,
-    summary: `A ${pace} ${days}-day itinerary in ${city}, built from the best-rated activities available.`,
+    cities: cityLegs.map((l) => l.city),
+    days: totalDays,
+    interests, pace, legs,
+    summary: legs.map((l) => l.summary).join(' '),
     generatedAt: new Date().toISOString(),
   };
 }
@@ -74,7 +105,7 @@ export default function OnboardingWizard({ cities = [], activities = [] }) {
     interests: [], pace: 'balanced',
     budget: 2000,
     currentLocation: '', locating: false,
-    city: '', days: 3, dateStart: '', dateEnd: '',
+    cities: [], days: 3, dateStart: '', dateEnd: '',
     accessibility: 'No Preference',
     email: '', newsletterOptIn: false,
   });
@@ -93,6 +124,17 @@ export default function OnboardingWizard({ cities = [], activities = [] }) {
     }));
   }
 
+  function toggleCity(name) {
+    setForm((f) => {
+      const cities = f.cities.includes(name)
+        ? f.cities.filter((c) => c !== name)
+        : [...f.cities, name];
+      // Re-clamp the already-picked trip length to the new city count's cap.
+      const cap = maxAllowedDays(cities.length);
+      return { ...f, cities, days: Math.min(f.days, cap) };
+    });
+  }
+
   function pickDays(n) {
     setForm((f) => ({ ...f, days: n, dateStart: '', dateEnd: '' }));
   }
@@ -100,9 +142,11 @@ export default function OnboardingWizard({ cities = [], activities = [] }) {
   function setDate(which, value) {
     setForm((f) => {
       const next = { ...f, [which]: value };
+      const cap = maxAllowedDays(f.cities.length);
       const computed = daysBetween(
         which === 'dateStart' ? value : f.dateStart,
-        which === 'dateEnd' ? value : f.dateEnd
+        which === 'dateEnd' ? value : f.dateEnd,
+        cap
       );
       if (computed) next.days = computed;
       return next;
@@ -138,6 +182,7 @@ export default function OnboardingWizard({ cities = [], activities = [] }) {
     setError('');
 
     const travelDates = form.dateStart && form.dateEnd ? `${form.dateStart} to ${form.dateEnd}` : '';
+    const cityLegs = splitDaysAcrossCities(form.days, form.cities);
 
     let itinerary;
     try {
@@ -145,8 +190,7 @@ export default function OnboardingWizard({ cities = [], activities = [] }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          city: form.city,
-          days: form.days,
+          cities: cityLegs,
           interests: form.interests,
           pace: form.pace,
           travellingAs: form.travellingAs || undefined,
@@ -173,7 +217,7 @@ export default function OnboardingWizard({ cities = [], activities = [] }) {
       // AI call failed -- fall back to the rule-based picker rather than
       // stranding the user, but surface the failure so it's visible.
       setError(`AI planning is temporarily unavailable (${err.message}) — showing a quick pick instead.`);
-      itinerary = buildFallbackItinerary({ ...form, activities });
+      itinerary = buildFallbackItinerary({ ...form, cityLegs, activities });
     }
 
     itinerary.firstName = form.firstName || undefined;
@@ -402,66 +446,89 @@ export default function OnboardingWizard({ cities = [], activities = [] }) {
 
       {current === 'destination' && (
         <>
-          <h1 className="text-2xl md:text-3xl font-bold mb-6">Where are you heading?</h1>
+          <h1 className="text-2xl md:text-3xl font-bold mb-2">Where are you heading?</h1>
+          <p className="text-sm text-muted-foreground mb-6">
+            Pick one city, or several for a multi-stop trip (e.g. Istanbul → Izmir) — your trip length splits evenly across whatever you pick.
+          </p>
           <div className="grid grid-cols-2 gap-3">
             {cities.map((c) => (
               <button
                 key={c.id || c.name}
-                onClick={() => setForm((f) => ({ ...f, city: c.name }))}
+                onClick={() => toggleCity(c.name)}
                 className={`px-4 py-3 rounded-xl border text-left font-medium transition-colors ${
-                  form.city === c.name ? 'border-primary bg-primary/10' : 'border-border bg-card hover:border-primary'
+                  form.cities.includes(c.name) ? 'border-primary bg-primary/10' : 'border-border bg-card hover:border-primary'
                 }`}
               >
                 {c.name}
               </button>
             ))}
           </div>
-        </>
-      )}
-
-      {current === 'dates' && (
-        <>
-          <h1 className="text-2xl md:text-3xl font-bold mb-2">When are you travelling?</h1>
-          <p className="text-sm text-muted-foreground mb-4">Not sure yet? Just pick a trip length. Trips are capped at {MAX_DAYS} days so the AI can plan every day in detail.</p>
-          <div className="flex flex-wrap gap-3 mb-6">
-            {QUICK_DAY_OPTIONS.map((n) => (
-              <button
-                key={n}
-                onClick={() => pickDays(n)}
-                className={`px-6 py-3 rounded-xl border font-semibold transition-colors ${
-                  form.days === n && !form.dateStart ? 'border-primary bg-primary/10' : 'border-border bg-card hover:border-primary'
-                }`}
-              >
-                {n} {n === 1 ? 'day' : 'days'}
-              </button>
-            ))}
-          </div>
-          <p className="text-sm font-semibold mb-3">Or set exact dates</p>
-          <div className="flex flex-wrap gap-3">
-            <div>
-              <label className="text-xs text-muted-foreground mb-1 block">Start</label>
-              <input
-                type="date"
-                value={form.dateStart}
-                onChange={(e) => setDate('dateStart', e.target.value)}
-                className="px-4 py-3 rounded-xl border border-border bg-card font-medium focus:outline-none focus:border-primary"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-muted-foreground mb-1 block">End</label>
-              <input
-                type="date"
-                value={form.dateEnd}
-                onChange={(e) => setDate('dateEnd', e.target.value)}
-                className="px-4 py-3 rounded-xl border border-border bg-card font-medium focus:outline-none focus:border-primary"
-              />
-            </div>
-          </div>
-          {form.dateStart && form.dateEnd && (
-            <p className="text-sm text-muted-foreground mt-3">That's {form.days} {form.days === 1 ? 'day' : 'days'}.</p>
+          {form.cities.length > 1 && (
+            <p className="text-sm text-muted-foreground mt-4">
+              {form.cities.length} cities selected, in this order: {form.cities.join(' → ')}.
+            </p>
           )}
         </>
       )}
+
+      {current === 'dates' && (() => {
+        const cap = maxAllowedDays(form.cities.length);
+        const quickOptions = QUICK_DAY_OPTIONS_BASE.filter((n) => n <= cap);
+        if (quickOptions[quickOptions.length - 1] !== cap) quickOptions.push(cap);
+        return (
+          <>
+            <h1 className="text-2xl md:text-3xl font-bold mb-2">When are you travelling?</h1>
+            <p className="text-sm text-muted-foreground mb-4">
+              Not sure yet? Just pick a trip length.{' '}
+              {form.cities.length > 1
+                ? `Split evenly across your ${form.cities.length} cities, capped at ${cap} days total.`
+                : `Capped at ${cap} days so the AI can plan every day in detail.`}
+            </p>
+            <div className="flex flex-wrap gap-3 mb-6">
+              {quickOptions.map((n) => (
+                <button
+                  key={n}
+                  onClick={() => pickDays(n)}
+                  className={`px-6 py-3 rounded-xl border font-semibold transition-colors ${
+                    form.days === n && !form.dateStart ? 'border-primary bg-primary/10' : 'border-border bg-card hover:border-primary'
+                  }`}
+                >
+                  {n} {n === 1 ? 'day' : 'days'}
+                </button>
+              ))}
+            </div>
+            <p className="text-sm font-semibold mb-3">Or set exact dates</p>
+            <div className="flex flex-wrap gap-3">
+              <div>
+                <label className="text-xs text-muted-foreground mb-1 block">Start</label>
+                <input
+                  type="date"
+                  value={form.dateStart}
+                  onChange={(e) => setDate('dateStart', e.target.value)}
+                  className="px-4 py-3 rounded-xl border border-border bg-card font-medium focus:outline-none focus:border-primary"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground mb-1 block">End</label>
+                <input
+                  type="date"
+                  value={form.dateEnd}
+                  onChange={(e) => setDate('dateEnd', e.target.value)}
+                  className="px-4 py-3 rounded-xl border border-border bg-card font-medium focus:outline-none focus:border-primary"
+                />
+              </div>
+            </div>
+            {form.dateStart && form.dateEnd && (
+              <p className="text-sm text-muted-foreground mt-3">That's {form.days} {form.days === 1 ? 'day' : 'days'}.</p>
+            )}
+            {form.cities.length > 1 && (
+              <p className="text-sm text-muted-foreground mt-3">
+                {splitDaysAcrossCities(form.days, form.cities).map((l) => `${l.city}: ${l.days}d`).join(' · ')}
+              </p>
+            )}
+          </>
+        );
+      })()}
 
       {current === 'accessibility' && (
         <>
@@ -517,7 +584,7 @@ export default function OnboardingWizard({ cities = [], activities = [] }) {
         ) : <span />}
         <button
           onClick={next}
-          disabled={(current === 'destination' && !form.city) || submitting}
+          disabled={(current === 'destination' && form.cities.length === 0) || submitting}
           className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-primary text-white font-semibold disabled:opacity-50"
         >
           {submitting ? (

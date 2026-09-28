@@ -1,9 +1,10 @@
 // AI trip-itinerary generator -- the Next.js equivalent of the old Base44
 // site's onboarding wizard's InvokeLLM call. Takes the wizard's answers,
-// pulls real candidate activities out of Supabase for the chosen city, asks
-// Claude to build a day-by-day plan using ONLY those real activities (never
-// inventing places), then maps the AI's picks back to full activity records
-// before returning them to the client.
+// pulls real candidate activities out of Supabase for the chosen city (or
+// cities, for a multi-stop trip), asks Claude to build a day-by-day plan
+// using ONLY those real activities (never inventing places), then maps the
+// AI's picks back to full activity records before returning them to the
+// client.
 //
 // This is a dynamic API route (not a cached page), so there's no ISR/Data
 // Cache staleness concern here -- every request runs fresh.
@@ -13,17 +14,21 @@ import { getSupabaseServer } from '@/lib/supabaseServer';
 const ANTHROPIC_MODEL = 'claude-sonnet-4-5-20250929';
 const GEMINI_MODEL = 'gemini-flash-lite-latest';
 const MAX_CANDIDATES = 60;
-// Hard cap on trip length: keeps the LLM call fast (bigger day counts need
-// more output tokens, which is the main source of slow generations) and
-// keeps the itinerary page from becoming an unreasonably long scroll. 14
-// days is already a long trip; anything past that isn't a realistic single
-// itinerary anyway.
-const MAX_DAYS = 14;
+// A single city is capped at MAX_DAYS_PER_CITY (keeps that leg's LLM call
+// fast -- a bigger day count needs more output tokens, the main source of
+// slow generations -- and keeps its section of the itinerary from becoming
+// an unreasonable scroll). A multi-city trip can run longer in total, up to
+// MAX_TOTAL_DAYS, because it's still just N legs each individually capped
+// at MAX_DAYS_PER_CITY, generated in parallel. Keep both in sync with
+// OnboardingWizard.jsx.
+const MAX_DAYS_PER_CITY = 14;
+const MAX_TOTAL_DAYS = 60;
+const MAX_CITIES = 8;
 
 function buildSystemPrompt(days) {
   return `You are a Türkiye travel-planning assistant for the Move to Istanbul site. You will be given a traveler's preferences and a list of REAL activities (with ids) that actually exist in the site's database. Build a day-by-day itinerary using ONLY activity ids from that list -- never invent an activity, place, or id that isn't in the list. Balance variety (don't repeat the same category every day), keep morning/afternoon/evening slots geographically and thematically sensible where the data allows, and respect the traveler's interests, pace, and any budget or accessibility notes. If there's no good fit for a specific slot, omit that slot rather than forcing a bad match -- but the "days" array itself MUST always contain exactly ${days} entries, one per day in order (day 1 through day ${days}), even if that means reusing a category or an activity across more than one day when the destination doesn't have ${days} days' worth of unique options. Never stop early and never omit a trailing day. Respond with ONLY valid JSON, no markdown fences, no commentary, matching exactly this shape:
 {
-  "summary": "2-3 sentence friendly summary of the overall trip",
+  "summary": "2-3 sentence friendly summary of this leg of the trip",
   "days": [
     {
       "day": 1,
@@ -40,7 +45,7 @@ Any slot may be omitted (leave the key out) if nothing fits, but "days" must hav
 function buildUserPrompt({ city, days, interests, pace, budget, travellingAs, accessibility }, candidates) {
   const prefLines = [
     `Destination city: ${city}`,
-    `Trip length: ${days} day${days === 1 ? '' : 's'}`,
+    `Trip length in this city: ${days} day${days === 1 ? '' : 's'}`,
     `Pace: ${pace}`,
     interests?.length ? `Interests: ${interests.join(', ')}` : `Interests: no strong preference -- pick a well-rounded mix`,
     travellingAs ? `Travelling as: ${travellingAs}` : null,
@@ -145,37 +150,14 @@ async function callLLM(system, user, days) {
   throw new Error('No LLM API key configured (set GEMINI_API_KEY or ANTHROPIC_API_KEY)');
 }
 
-async function generateItinerary(params) {
-  const {
-    city,
-    days,
-    interests = [],
-    pace = 'balanced',
-    budget,
-    travellingAs,
-    accessibility,
-    firstName,
-    email,
-    gender,
-    ageGroup,
-    hasChildren,
-    numChildren,
-    childrenAges,
-    currentLocation,
-    travelDates,
-    newsletterOptIn,
-  } = params || {};
+// Builds one city's leg of the trip: pulls its real candidate activities,
+// asks the AI for a day-by-day plan, and maps the result back to full
+// activity records. Returns either a populated leg or one carrying `error`
+// (never throws) so one bad city doesn't take down the whole multi-city
+// request -- the other legs still come back.
+async function generateLeg(supabase, { city, days, interests, pace, budget, travellingAs, accessibility }) {
+  const requestedDays = Math.min(Math.max(1, Number(days) || 1), MAX_DAYS_PER_CITY);
 
-  if (!city || !days) {
-    return { status: 400, body: { error: 'city and days are required' } };
-  }
-
-  const requestedDays = Math.min(Math.max(1, Number(days) || 1), MAX_DAYS);
-
-  const supabase = getSupabaseServer();
-
-  // Pull real candidate activities for this city -- best-rated/most-popular
-  // first so the prompt stays small even for a city with hundreds of rows.
   const { data: activities, error: activitiesError } = await supabase
     .from('activity')
     .select('id, title, category, city_name, rating, price, duration, how_long, family_friendly, free, image_url, booking_url, address')
@@ -184,14 +166,10 @@ async function generateItinerary(params) {
     .limit(MAX_CANDIDATES);
 
   if (activitiesError) {
-    return { status: 500, body: { error: activitiesError.message } };
+    return { city, days: requestedDays, requestedDays, error: activitiesError.message, dayPlans: [] };
   }
-
   if (!activities || activities.length === 0) {
-    return {
-      status: 404,
-      body: { error: `No activities found for ${city} yet — try browsing the full list instead.` },
-    };
+    return { city, days: requestedDays, requestedDays, error: `No activities found for ${city} yet.`, dayPlans: [] };
   }
 
   const system = buildSystemPrompt(requestedDays);
@@ -201,7 +179,7 @@ async function generateItinerary(params) {
   try {
     aiResult = await callLLM(system, user, requestedDays);
   } catch (err) {
-    return { status: 502, body: { error: `AI generation failed: ${err.message}` } };
+    return { city, days: requestedDays, requestedDays, error: `AI generation failed: ${err.message}`, dayPlans: [] };
   }
 
   const activityById = new Map(activities.map((a) => [a.id, a]));
@@ -224,18 +202,97 @@ async function generateItinerary(params) {
   // number that was asked for.
   const actualDays = dayPlans.length || requestedDays;
 
-  const responsePayload = {
+  const leg = {
     city,
     days: actualDays,
     requestedDays,
-    interests,
-    pace,
     summary: aiResult.summary || '',
     dayPlans,
-    generatedAt: new Date().toISOString(),
   };
   if (actualDays < requestedDays) {
-    responsePayload.note = `Generated ${actualDays} of the ${requestedDays} days you asked for -- ${city} may not have enough unique activities for a longer trip yet.`;
+    leg.note = `Generated ${actualDays} of the ${requestedDays} days asked for -- ${city} may not have enough unique activities for a longer stay yet.`;
+  }
+  return leg;
+}
+
+async function generateItinerary(params) {
+  const {
+    city,
+    cities,
+    days,
+    interests = [],
+    pace = 'balanced',
+    budget,
+    travellingAs,
+    accessibility,
+    firstName,
+    email,
+    gender,
+    ageGroup,
+    hasChildren,
+    numChildren,
+    childrenAges,
+    currentLocation,
+    travelDates,
+    newsletterOptIn,
+  } = params || {};
+
+  // Accept either the new multi-city shape (`cities: [{city, days}, ...]`)
+  // or the older single-city shape (`city`, `days`) for backward
+  // compatibility with the GET smoke-test route and any old callers.
+  let cityLegs = Array.isArray(cities) && cities.length > 0
+    ? cities.filter((c) => c && c.city).map((c) => ({ city: c.city, days: c.days }))
+    : (city ? [{ city, days }] : []);
+
+  if (cityLegs.length === 0) {
+    return { status: 400, body: { error: 'At least one city is required' } };
+  }
+  cityLegs = cityLegs.slice(0, MAX_CITIES);
+
+  // Cap the combined trip length across every leg, trimming the last legs
+  // first if the request came in over budget (defensive -- the wizard
+  // already caps this client-side).
+  let totalRequested = cityLegs.reduce((sum, l) => sum + (Number(l.days) || 1), 0);
+  if (totalRequested > MAX_TOTAL_DAYS) {
+    let over = totalRequested - MAX_TOTAL_DAYS;
+    for (let i = cityLegs.length - 1; i >= 0 && over > 0; i--) {
+      const reducible = Math.max(0, cityLegs[i].days - 1);
+      const cut = Math.min(reducible, over);
+      cityLegs[i].days -= cut;
+      over -= cut;
+    }
+  }
+
+  const supabase = getSupabaseServer();
+
+  // Every leg's Supabase fetch + LLM call runs concurrently, so a 5-city
+  // trip takes roughly as long as its slowest single leg, not 5x as long.
+  const legs = await Promise.all(
+    cityLegs.map((leg) => generateLeg(supabase, { ...leg, interests, pace, budget, travellingAs, accessibility }))
+  );
+
+  const validLegs = legs.filter((l) => !l.error);
+  if (validLegs.length === 0) {
+    return { status: 502, body: { error: legs[0]?.error || 'AI generation failed for every city in this trip.' } };
+  }
+
+  const actualTotalDays = legs.reduce((sum, l) => sum + (l.dayPlans?.length || 0), 0);
+  const cityNames = cityLegs.map((l) => l.city);
+
+  const responsePayload = {
+    cities: cityNames,
+    city: cityNames.join(' → '), // single-line fallback label
+    days: actualTotalDays,
+    requestedDays: totalRequested,
+    interests,
+    pace,
+    summary: validLegs.map((l) => l.summary).filter(Boolean).join(' '),
+    legs,
+    generatedAt: new Date().toISOString(),
+  };
+  const legNotes = legs.filter((l) => l.note || l.error).map((l) => l.note || l.error);
+  if (legNotes.length > 0) {
+    responsePayload.note = legNotes.join(' ');
   }
 
   // Best-effort persistence -- mirrors the old Base44 TravelPreference /
@@ -254,8 +311,8 @@ async function generateItinerary(params) {
       num_children: numChildren || null,
       children_ages: childrenAges || null,
       current_location: currentLocation || null,
-      destination: city,
-      trip_length: `${requestedDays} day${requestedDays === 1 ? '' : 's'}`,
+      destination: cityNames.join(', '),
+      trip_length: `${totalRequested} day${totalRequested === 1 ? '' : 's'}${cityNames.length > 1 ? ` across ${cityNames.length} cities` : ''}`,
       travel_dates: travelDates || null,
       interests,
       budget: budget || null,
@@ -265,8 +322,8 @@ async function generateItinerary(params) {
     }),
     supabase.from('shareable_itinerary').insert({
       summary: responsePayload.summary,
-      itinerary: dayPlans,
-      preferences: { city, days: actualDays, interests, pace, budget, travellingAs, accessibility },
+      itinerary: legs,
+      preferences: { cities: cityNames, days: actualTotalDays, interests, pace, budget, travellingAs, accessibility },
     }),
   ]).catch(() => {
     // Non-critical -- the itinerary still returns to the user.
@@ -289,11 +346,19 @@ export async function POST(request) {
 // GET variant (query params instead of a JSON body) -- lets the endpoint be
 // smoke-tested with a plain URL and gives a shareable/debuggable link.
 // e.g. /api/generate-itinerary?city=Istanbul&days=2&interests=Museums,Food%20Experiences
+// For a multi-city smoke test, pass cities=Istanbul:5,Izmir:3 instead.
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
+  const citiesParam = searchParams.get('cities');
   const params = {
     city: searchParams.get('city'),
     days: Number(searchParams.get('days')) || undefined,
+    cities: citiesParam
+      ? citiesParam.split(',').map((pair) => {
+          const [name, d] = pair.split(':');
+          return { city: name?.trim(), days: Number(d) || 3 };
+        })
+      : undefined,
     interests: searchParams.get('interests')?.split(',').map((s) => s.trim()).filter(Boolean) || [],
     pace: searchParams.get('pace') || undefined,
     budget: searchParams.get('budget') ? Number(searchParams.get('budget')) : undefined,

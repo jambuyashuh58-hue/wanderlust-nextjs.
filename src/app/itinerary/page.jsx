@@ -1,8 +1,10 @@
 // Reads the AI-generated itinerary (built by /api/generate-itinerary and
-// saved by OnboardingWizard.jsx) out of sessionStorage and displays it
-// day by day, as a card grid (numbered day badge + theme, then a
-// Morning/Afternoon/Evening row of activity cards with photo, price and
-// rating) matching the old Base44 site's itinerary view.
+// saved by OnboardingWizard.jsx) out of sessionStorage and displays it as a
+// mind map: a root "trip" node branching to one node per city (for a
+// multi-stop trip like Istanbul -> Izmir), each city branching to a row of
+// day chips, and clicking a day chip opens that day's Morning/Afternoon/
+// Evening activity cards (photo, price, rating) below the map. A
+// single-city trip is just a one-branch version of the same tree.
 
 'use client';
 import { useEffect, useState } from 'react';
@@ -10,6 +12,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Sparkles, MapPin, ArrowRight, Sun, Sunset, Moon, Star, Clock, Info } from 'lucide-react';
 
+const PERIODS = ['morning', 'afternoon', 'evening'];
 const PERIOD_ICON = { morning: Sun, afternoon: Sunset, evening: Moon };
 const PERIOD_LABEL = { morning: 'Morning', afternoon: 'Afternoon', evening: 'Evening' };
 const EMPTY_SLOT_NOTE = {
@@ -73,15 +76,38 @@ function EmptySlot({ period }) {
   );
 }
 
+// Normalizes either response shape into a flat list of legs:
+// - new multi-city shape: itinerary.legs = [{ city, days, summary, dayPlans }, ...]
+// - older single-city shape (or an itinerary saved before this change):
+//   itinerary.city / itinerary.dayPlans directly.
+function getLegs(itinerary) {
+  if (Array.isArray(itinerary.legs) && itinerary.legs.length > 0) return itinerary.legs;
+  if (Array.isArray(itinerary.dayPlans)) {
+    return [{ city: itinerary.city, days: itinerary.days, summary: itinerary.summary, dayPlans: itinerary.dayPlans }];
+  }
+  return [];
+}
+
 export default function ItineraryPage() {
   const [itinerary, setItinerary] = useState(undefined); // undefined = loading, null = none found
+  const [selectedDay, setSelectedDay] = useState({}); // { [legIndex]: dayNumber }
 
   useEffect(() => {
+    let parsed = null;
     try {
       const raw = sessionStorage.getItem('wanderlust_itinerary');
-      setItinerary(raw ? JSON.parse(raw) : null);
+      parsed = raw ? JSON.parse(raw) : null;
     } catch {
-      setItinerary(null);
+      parsed = null;
+    }
+    setItinerary(parsed);
+    if (parsed) {
+      const legs = getLegs(parsed);
+      const initial = {};
+      legs.forEach((leg, i) => {
+        if (leg.dayPlans?.length) initial[i] = leg.dayPlans[0].day;
+      });
+      setSelectedDay(initial);
     }
   }, []);
 
@@ -105,43 +131,86 @@ export default function ItineraryPage() {
     );
   }
 
-  const periods = ['morning', 'afternoon', 'evening'];
+  const legs = getLegs(itinerary);
+  const multiCity = legs.length > 1;
+  const tripLabel = `${itinerary.firstName ? `${itinerary.firstName}'s ` : ''}${itinerary.days} ${itinerary.days === 1 ? 'day' : 'days'}${multiCity ? ` across ${legs.length} cities` : ` in ${legs[0]?.city || ''}`}`;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-20 pt-32 md:pt-40">
-      <div className="flex items-center gap-2 mb-3 text-primary">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 pt-32 md:pt-40">
+      <div className="flex items-center justify-center gap-2 mb-3 text-primary">
         <Sparkles className="w-4 h-4" />
-        <span className="text-sm font-semibold uppercase tracking-wider">Your AI-planned itinerary</span>
+        <span className="text-sm font-semibold uppercase tracking-wider">Your AI-planned trip map</span>
       </div>
-      <h1 className="text-3xl font-bold mb-3">
-        {itinerary.firstName ? `${itinerary.firstName}'s ` : ''}
-        {itinerary.days} {itinerary.days === 1 ? 'day' : 'days'} in {itinerary.city}
-      </h1>
+      <h1 className="text-3xl font-bold mb-3 text-center">{tripLabel}</h1>
       {itinerary.summary && (
-        <p className="text-foreground/80 text-lg leading-relaxed mb-4">{itinerary.summary}</p>
+        <p className="text-foreground/80 text-lg leading-relaxed mb-4 text-center max-w-2xl mx-auto">{itinerary.summary}</p>
       )}
       {itinerary.note && (
-        <p className="flex items-start gap-2 text-sm text-amber-700 dark:text-amber-400 bg-amber-500/10 rounded-lg px-4 py-3 mb-6">
+        <p className="flex items-start gap-2 text-sm text-amber-700 dark:text-amber-400 bg-amber-500/10 rounded-lg px-4 py-3 mb-6 max-w-2xl mx-auto">
           <Info className="w-4 h-4 shrink-0 mt-0.5" /> {itinerary.note}
         </p>
       )}
 
-      <div className="flex flex-col gap-10 mt-6">
-        {(itinerary.dayPlans || []).map((dp) => {
+      {/* Mind map: Trip -> City -> Day. Click a day chip to open it below. */}
+      <div className="mindmap-scroll overflow-x-auto -mx-4 px-4 mt-10 pb-2">
+        <ul className="tree">
+          <li>
+            <div className="node root-node">
+              <Sparkles className="w-3.5 h-3.5" /> Trip
+            </div>
+            {legs.length > 0 && (
+              <ul>
+                {legs.map((leg, i) => (
+                  <li key={`${leg.city}-${i}`}>
+                    <div className="node city-node">
+                      <MapPin className="w-3.5 h-3.5 text-primary shrink-0" />
+                      <span>
+                        <span className="city-name">{leg.city}</span>
+                        <span className="city-days">{leg.days} {leg.days === 1 ? 'day' : 'days'}</span>
+                      </span>
+                    </div>
+                    {leg.dayPlans?.length > 0 && (
+                      <ul>
+                        {leg.dayPlans.map((dp) => (
+                          <li key={dp.day}>
+                            <button
+                              type="button"
+                              onClick={() => setSelectedDay((s) => ({ ...s, [i]: dp.day }))}
+                              className={`node day-node ${selectedDay[i] === dp.day ? 'day-node--active' : ''}`}
+                            >
+                              Day {dp.day}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        </ul>
+      </div>
+
+      {/* Expanded panel for whichever day is selected in each city branch. */}
+      <div className="flex flex-col gap-10 mt-8">
+        {legs.map((leg, i) => {
+          const dp = (leg.dayPlans || []).find((d) => d.day === selectedDay[i]);
+          if (!dp) return null;
           const slotByPeriod = Object.fromEntries((dp.slots || []).map((s) => [s.period, s]));
           return (
-            <div key={dp.day}>
+            <div key={`${leg.city}-${i}-panel`}>
               <div className="flex items-center gap-3 mb-4">
                 <span className="flex items-center justify-center w-9 h-9 rounded-full bg-primary text-white font-bold text-sm shrink-0">
                   {dp.day}
                 </span>
                 <div>
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Day {dp.day}</p>
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">{leg.city} · Day {dp.day}</p>
                   {dp.theme && <h2 className="text-lg font-bold leading-tight">{dp.theme}</h2>}
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {periods.map((period) => {
+                {PERIODS.map((period) => {
                   const slot = slotByPeriod[period];
                   return slot ? (
                     <ActivityCard key={period} slot={slot} />
@@ -155,7 +224,7 @@ export default function ItineraryPage() {
         })}
       </div>
 
-      <div className="mt-10 flex flex-wrap gap-3">
+      <div className="mt-10 flex flex-wrap gap-3 justify-center">
         <Link
           href="/onboarding"
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-border font-semibold hover:border-primary transition-colors"
@@ -169,6 +238,128 @@ export default function ItineraryPage() {
           Browse all activities
         </Link>
       </div>
+
+      <style jsx>{`
+        .tree, .tree ul, .tree li {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          position: relative;
+        }
+        .tree {
+          display: inline-flex;
+          justify-content: center;
+          min-width: 100%;
+        }
+        .tree ul {
+          display: flex;
+          padding-top: 28px;
+          position: relative;
+        }
+        .tree li {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 28px 14px 0;
+          position: relative;
+        }
+        .tree li::before,
+        .tree li::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 50%;
+          border-top: 1px solid hsl(var(--border));
+          width: 50%;
+          height: 28px;
+        }
+        .tree li::after {
+          right: auto;
+          left: 50%;
+          border-left: 1px solid hsl(var(--border));
+        }
+        .tree li:only-child::after,
+        .tree li:only-child::before {
+          display: none;
+        }
+        .tree li:only-child {
+          padding-top: 0;
+        }
+        .tree li:first-child::before,
+        .tree li:last-child::after {
+          border: 0 none;
+        }
+        .tree li:last-child::before {
+          border-right: 1px solid hsl(var(--border));
+          border-radius: 0 6px 0 0;
+        }
+        .tree li:first-child::after {
+          border-radius: 6px 0 0 0;
+        }
+        .tree ul ul::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 50%;
+          border-left: 1px solid hsl(var(--border));
+          width: 0;
+          height: 28px;
+        }
+        .node {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          white-space: nowrap;
+        }
+        .root-node {
+          padding: 10px 18px;
+          border-radius: 9999px;
+          background: hsl(var(--primary));
+          color: white;
+          font-weight: 700;
+          font-size: 0.875rem;
+        }
+        .city-node {
+          padding: 10px 16px;
+          border-radius: 14px;
+          border: 1px solid hsl(var(--border));
+          background: hsl(var(--card));
+        }
+        .city-node > span {
+          display: flex;
+          flex-direction: column;
+          line-height: 1.2;
+          text-align: left;
+        }
+        .city-name {
+          font-weight: 700;
+          font-size: 0.9rem;
+        }
+        .city-days {
+          font-size: 0.65rem;
+          color: hsl(var(--muted-foreground));
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+        }
+        .day-node {
+          padding: 6px 14px;
+          border-radius: 9999px;
+          border: 1px solid hsl(var(--border));
+          background: hsl(var(--card));
+          font-size: 0.8rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+        }
+        .day-node:hover {
+          border-color: hsl(var(--primary));
+        }
+        .day-node--active {
+          border-color: hsl(var(--primary));
+          background: hsl(var(--primary) / 0.1);
+          color: hsl(var(--primary));
+        }
+      `}</style>
     </div>
   );
 }
