@@ -11,9 +11,22 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabaseServer';
 
+// Vercel kills the function at the platform's own hard limit regardless of
+// what's set here, but declaring it explicitly (a) documents the budget and
+// (b) raises the ceiling on plans where the default is lower than this.
+export const maxDuration = 60;
+
 const ANTHROPIC_MODEL = 'claude-sonnet-4-5-20250929';
 const GEMINI_MODEL = 'gemini-flash-lite-latest';
 const MAX_CANDIDATES = 60;
+// Hard cap on a single LLM call. Without this, a slow/overloaded provider
+// (seen in practice with Gemini's free tier) can leave the client's fetch
+// hanging for minutes with the "Building your trip" spinner spinning and no
+// feedback -- worse than just falling back to the rule-based itinerary.
+// Each leg's LLM call is capped independently, and legs already run in
+// parallel, so a 2-city trip still finishes within roughly one timeout, not
+// two.
+const LLM_TIMEOUT_MS = 20000;
 // A single city is capped at MAX_DAYS_PER_CITY (keeps that leg's LLM call
 // fast -- a bigger day count needs more output tokens, the main source of
 // slow generations -- and keeps its section of the itinerary from becoming
@@ -80,6 +93,7 @@ async function callClaude(system, user, apiKey, maxTokens) {
       system,
       messages: [{ role: 'user', content: user }],
     }),
+    signal: AbortSignal.timeout(LLM_TIMEOUT_MS),
   });
 
   if (!res.ok) {
@@ -104,6 +118,7 @@ async function callGemini(system, user, apiKey, maxTokens) {
         contents: [{ role: 'user', parts: [{ text: user }] }],
         generationConfig: { responseMimeType: 'application/json', maxOutputTokens: maxTokens },
       }),
+      signal: AbortSignal.timeout(LLM_TIMEOUT_MS),
     });
     if (!res.ok) {
       const errText = await res.text().catch(() => '');

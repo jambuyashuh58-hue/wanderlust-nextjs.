@@ -189,6 +189,11 @@ export default function OnboardingWizard({ cities = [], activities = [] }) {
       const res = await fetch('/api/generate-itinerary', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        // Belt-and-suspenders: the API route times out each AI call on its
+        // own (well under a minute), but this guards against the request
+        // hanging on the network layer itself, so the wizard never spins
+        // indefinitely -- it always falls back to the rule-based itinerary.
+        signal: AbortSignal.timeout(65000),
         body: JSON.stringify({
           cities: cityLegs,
           interests: form.interests,
@@ -214,9 +219,13 @@ export default function OnboardingWizard({ cities = [], activities = [] }) {
       }
       itinerary = await res.json();
     } catch (err) {
-      // AI call failed -- fall back to the rule-based picker rather than
-      // stranding the user, but surface the failure so it's visible.
-      setError(`AI planning is temporarily unavailable (${err.message}) — showing a quick pick instead.`);
+      // AI call failed (or, via the timeout above, took too long) -- fall
+      // back to the rule-based picker rather than stranding the user, but
+      // surface the failure so it's visible.
+      const message = err.name === 'TimeoutError' || err.name === 'AbortError'
+        ? 'took too long to respond'
+        : err.message;
+      setError(`AI planning is temporarily unavailable (${message}) — showing a quick pick instead.`);
       itinerary = buildFallbackItinerary({ ...form, cityLegs, activities });
     }
 
