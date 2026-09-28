@@ -20,6 +20,40 @@ function slugifyLabel(label) {
     .replace(/^-+|-+$/g, '');
 }
 
+// guide_data text fields are written as plain strings but sometimes carry
+// inline `[label](/href)` markdown links (e.g. cross-linking to another
+// guide from an intro paragraph). None of the section renderers below ever
+// ran that through a markdown parser, so links were showing up as literal
+// bracket-and-paren text. This turns just that one pattern into real <Link>
+// elements while leaving everything else untouched.
+function renderInlineLinks(text) {
+  if (!text || typeof text !== 'string' || !text.includes('](')) return text;
+  const regex = /\[([^\]]+)\]\(([^)]+)\)/g;
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+  let key = 0;
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) parts.push(text.slice(lastIndex, match.index));
+    const [, label, href] = match;
+    const isExternal = /^https?:\/\//.test(href);
+    parts.push(
+      isExternal ? (
+        <a key={`lnk-${key++}`} href={href} target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:underline">
+          {label}
+        </a>
+      ) : (
+        <Link key={`lnk-${key++}`} href={href} className="text-primary font-medium hover:underline">
+          {label}
+        </Link>
+      )
+    );
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+  return parts;
+}
+
 // Data-driven counterpart to the hand-coded /guides/* pages (e.g. guides/visa).
 // Reads a `guide_data` jsonb blob off a `display_style: 'guide'` collection and
 // renders it with the same sidebar-TOC / stat-card / table / checklist /
@@ -85,7 +119,7 @@ function GuideSection({ section }) {
       return wrap(
         <>
           {(section.paragraphs || []).map((p, i) => (
-            <p key={i} className="text-foreground/80 leading-relaxed mb-4">{p}</p>
+            <p key={i} className="text-foreground/80 leading-relaxed mb-4">{renderInlineLinks(p)}</p>
           ))}
           {section.stats?.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2">
@@ -103,12 +137,12 @@ function GuideSection({ section }) {
     case 'cards':
       return wrap(
         <>
-          {section.intro && <p className="text-foreground/80 leading-relaxed mb-6">{section.intro}</p>}
+          {section.intro && <p className="text-foreground/80 leading-relaxed mb-6">{renderInlineLinks(section.intro)}</p>}
           <div className="space-y-4">
             {(section.items || []).map((item, i) => (
               <div key={i} className="rounded-2xl border border-border bg-card p-5">
                 <p className="font-semibold mb-1.5">{item.title}</p>
-                <p className="text-sm text-foreground/80 leading-relaxed">{item.body}</p>
+                <p className="text-sm text-foreground/80 leading-relaxed">{renderInlineLinks(item.body)}</p>
               </div>
             ))}
           </div>
@@ -120,7 +154,7 @@ function GuideSection({ section }) {
       const rows = section.rows || [];
       return wrap(
         <>
-          {section.intro && <p className="text-foreground/80 leading-relaxed mb-6">{section.intro}</p>}
+          {section.intro && <p className="text-foreground/80 leading-relaxed mb-6">{renderInlineLinks(section.intro)}</p>}
           {/* Mobile: stacked cards */}
           <div className="lg:hidden space-y-3">
             {rows.map((row, i) => (
@@ -165,7 +199,7 @@ function GuideSection({ section }) {
     case 'checklist':
       return wrap(
         <>
-          {section.intro && <p className="text-foreground/80 leading-relaxed mb-6">{section.intro}</p>}
+          {section.intro && <p className="text-foreground/80 leading-relaxed mb-6">{renderInlineLinks(section.intro)}</p>}
           <div className="rounded-2xl border border-border bg-card p-5">
             <ul className="space-y-3">
               {(section.items || []).map((item, i) => (
@@ -182,7 +216,7 @@ function GuideSection({ section }) {
     case 'steps':
       return wrap(
         <>
-          {section.intro && <p className="text-foreground/80 leading-relaxed mb-6">{section.intro}</p>}
+          {section.intro && <p className="text-foreground/80 leading-relaxed mb-6">{renderInlineLinks(section.intro)}</p>}
           <ol className="space-y-6">
             {(section.items || []).map((step, i) => (
               <li key={i} className="rounded-2xl border border-border bg-card p-5">
@@ -223,7 +257,7 @@ function GuideSection({ section }) {
     case 'troubleshooting':
       return wrap(
         <>
-          {section.intro && <p className="text-foreground/80 leading-relaxed mb-6">{section.intro}</p>}
+          {section.intro && <p className="text-foreground/80 leading-relaxed mb-6">{renderInlineLinks(section.intro)}</p>}
           <div className="space-y-5">
             {(section.items || []).map((item, i) => (
               <div key={i} className="rounded-2xl border border-border bg-card p-5">
@@ -245,15 +279,15 @@ function GuideSection({ section }) {
     case 'faq':
       return wrap(
         <>
-          {section.intro && <p className="text-foreground/80 leading-relaxed mb-6">{section.intro}</p>}
-          <GuideFAQ items={section.items || []} />
+          {section.intro && <p className="text-foreground/80 leading-relaxed mb-6">{renderInlineLinks(section.intro)}</p>}
+          <GuideFAQ items={(section.items || []).map((item) => ({ ...item, a: renderInlineLinks(item.a) }))} />
         </>
       );
 
     case 'related':
       return wrap(
         <>
-          {section.intro && <p className="text-foreground/80 leading-relaxed mb-6">{section.intro}</p>}
+          {section.intro && <p className="text-foreground/80 leading-relaxed mb-6">{renderInlineLinks(section.intro)}</p>}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {(section.groups || []).map((group, i) => (
               <div key={i} className="rounded-2xl border border-border bg-card p-4">
