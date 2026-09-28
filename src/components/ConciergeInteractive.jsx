@@ -87,76 +87,82 @@ export default function ConciergeInteractive() {
         </p>
       </div>
 
-      {/* Intake form */}
-      <div className="max-w-lg mx-auto rounded-2xl border border-border p-8 bg-card mb-14">
-        <h2 className="text-xl font-bold mb-6">Tell us about your move</h2>
-        {status === 'success' ? (
-          <p className="text-success font-medium">Thanks! We&apos;ll be in touch within 24 hours.</p>
-        ) : (
-          <form onSubmit={submit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1.5">Name *</label>
-              <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full min-h-[44px] px-4 py-3 rounded-xl border border-border outline-none focus:ring-2 focus:ring-primary" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1.5">Email *</label>
-              <input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full min-h-[44px] px-4 py-3 rounded-xl border border-border outline-none focus:ring-2 focus:ring-primary" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1.5">Instagram handle (optional)</label>
-              <input value={form.instagram_handle} onChange={(e) => setForm({ ...form, instagram_handle: e.target.value })} className="w-full min-h-[44px] px-4 py-3 rounded-xl border border-border outline-none focus:ring-2 focus:ring-primary" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1.5">Nationality</label>
-              <input value={form.nationality} onChange={(e) => setForm({ ...form, nationality: e.target.value })} className="w-full min-h-[44px] px-4 py-3 rounded-xl border border-border outline-none focus:ring-2 focus:ring-primary" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1.5">Budget range (₺/month)</label>
-              <input placeholder="e.g. ₺25,000-35,000" value={form.budget_range} onChange={(e) => setForm({ ...form, budget_range: e.target.value })} className="w-full min-h-[44px] px-4 py-3 rounded-xl border border-border outline-none focus:ring-2 focus:ring-primary" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1.5">Target timeline</label>
-              <input placeholder="e.g. moving in October" value={form.timeline} onChange={(e) => setForm({ ...form, timeline: e.target.value })} className="w-full min-h-[44px] px-4 py-3 rounded-xl border border-border outline-none focus:ring-2 focus:ring-primary" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1.5">Anything else we should know?</label>
-              <textarea rows={4} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-border outline-none focus:ring-2 focus:ring-primary" />
-            </div>
-            <button type="submit" disabled={status === 'loading'} className="w-full py-3.5 rounded-full bg-gradient-primary text-white font-semibold disabled:opacity-60 hover:scale-[1.01] transition-transform">
-              {buttonLabel}
-            </button>
-            {status === 'error' && <p className="text-sm text-destructive text-center">Something went wrong. Please try again.</p>}
-          </form>
-        )}
-      </div>
-
-      {/* Instagram alternative */}
-      <div className="max-w-lg mx-auto mb-14">
-        <h2 className="text-xl font-bold mb-4">Prefer Instagram?</h2>
-        <div className="rounded-2xl border border-border bg-card p-6 text-center">
-          <p className="text-sm text-muted-foreground mb-4">We keep everything async and text-based -- no scheduling calls. DM us directly if that&apos;s easier than the form.</p>
-          <a href={CONCIERGE_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors">
-            <MessageCircle className="w-4 h-4" /> Message us on Instagram
-          </a>
+      {/* Intake form + Instagram alternative, side by side */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        {/* Intake form */}
+        <div className="rounded-2xl border border-border p-8 bg-card h-fit">
+          <h2 className="text-xl font-bold mb-6">Tell us about your move</h2>
+          {status === 'success' ? (
+            <p className="text-success font-medium">Thanks! We&apos;ll be in touch within 24 hours.</p>
+          ) : (
+            <form onSubmit={submit} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">Name *</label>
+                  <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full min-h-[44px] px-4 py-3 rounded-xl border border-border outline-none focus:ring-2 focus:ring-primary" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">Email *</label>
+                  <input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full min-h-[44px] px-4 py-3 rounded-xl border border-border outline-none focus:ring-2 focus:ring-primary" />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">Instagram handle (optional)</label>
+                  <input value={form.instagram_handle} onChange={(e) => setForm({ ...form, instagram_handle: e.target.value })} className="w-full min-h-[44px] px-4 py-3 rounded-xl border border-border outline-none focus:ring-2 focus:ring-primary" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">Nationality</label>
+                  <input value={form.nationality} onChange={(e) => setForm({ ...form, nationality: e.target.value })} className="w-full min-h-[44px] px-4 py-3 rounded-xl border border-border outline-none focus:ring-2 focus:ring-primary" />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">Budget range (₺/month)</label>
+                  <input placeholder="e.g. ₺25,000-35,000" value={form.budget_range} onChange={(e) => setForm({ ...form, budget_range: e.target.value })} className="w-full min-h-[44px] px-4 py-3 rounded-xl border border-border outline-none focus:ring-2 focus:ring-primary" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">Target timeline</label>
+                  <input placeholder="e.g. moving in October" value={form.timeline} onChange={(e) => setForm({ ...form, timeline: e.target.value })} className="w-full min-h-[44px] px-4 py-3 rounded-xl border border-border outline-none focus:ring-2 focus:ring-primary" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1.5">Anything else we should know?</label>
+                <textarea rows={4} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-border outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+              <button type="submit" disabled={status === 'loading'} className="w-full py-3.5 rounded-full bg-gradient-primary text-white font-semibold disabled:opacity-60 hover:scale-[1.01] transition-transform">
+                {buttonLabel}
+              </button>
+              {status === 'error' && <p className="text-sm text-destructive text-center">Something went wrong. Please try again.</p>}
+            </form>
+          )}
         </div>
-      </div>
 
-      {/* How it works */}
-      <div className="max-w-lg mx-auto">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">How it works</p>
-        <ol className="space-y-3">
-          {[
-            'We reply with a short intake -- 5 questions, no call needed',
-            'You confirm your tier and pay via PayPal',
-            'We deliver async -- you get a private status link to track progress',
-            'Weekly check-ins until everything\'s settled',
-          ].map((step, i) => (
-            <li key={i} className="flex items-start gap-3 text-sm">
-              <span className="w-5 h-5 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
-              <span>{step}</span>
-            </li>
-          ))}
-        </ol>
+        {/* Right column: Instagram alternative + How it works */}
+        <div>
+          <h2 className="text-xl font-bold mb-4">Prefer Instagram?</h2>
+          <div className="rounded-2xl border border-border bg-card p-6 text-center mb-8">
+            <p className="text-sm text-muted-foreground mb-4">We keep everything async and text-based -- no scheduling calls. DM us directly if that&apos;s easier than the form.</p>
+            <a href={CONCIERGE_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors">
+              <MessageCircle className="w-4 h-4" /> Message us on Instagram
+            </a>
+          </div>
+
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">How it works</p>
+          <ol className="space-y-3">
+            {[
+              'We reply with a short intake -- 5 questions, no call needed',
+              'You confirm your tier and pay via PayPal',
+              'We deliver async -- you get a private status link to track progress',
+              'Weekly check-ins until everything\'s settled',
+            ].map((step, i) => (
+              <li key={i} className="flex items-start gap-3 text-sm">
+                <span className="w-5 h-5 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
+                <span>{step}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
     </>
   );
