@@ -228,7 +228,7 @@ export default function RelocationDashboard({ listings }) {
   return (
     <div className="pt-16 md:pt-20 min-h-screen">
       <div className="relative overflow-hidden border-b border-border bg-gradient-to-br from-primary/5 to-secondary/5">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <p className="text-sm text-muted-foreground mb-1">Your move to Türkiye</p>
           <div className="flex flex-wrap items-center justify-between gap-4">
             <h1 className="text-3xl md:text-4xl font-bold">Relocation Plan</h1>
@@ -248,7 +248,7 @@ export default function RelocationDashboard({ listings }) {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <SummaryCard icon={Wallet} iconBg="bg-primary/10" iconColor="text-primary" label="One-time relocation costs" value={fmt(oneTimeCosts, plan.currency)} sub="Visa + flight + deposit + experiences" />
           <SummaryCard icon={Home} iconBg="bg-success/10" iconColor="text-success" label="Monthly living estimate" value={fmt(monthlyEstimate, plan.currency)} sub="Rent + daily living costs" />
@@ -256,54 +256,60 @@ export default function RelocationDashboard({ listings }) {
         </div>
         <p className="text-xs text-muted-foreground flex items-center gap-1.5">Estimates you control — edit any number below.</p>
 
-        <SectionCard icon={Plane} iconColor="text-primary" title="Flight" doneCount={flightDone} totalCount={FLIGHT_CHECKLIST.length}>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <TextField label="Route" value={plan.flight.route} placeholder="e.g. BOM → IST" onChange={(v) => update('flight', { route: v })} />
-            <TextField label="Travel date" value={plan.flight.date} placeholder="e.g. 15 Nov 2026" onChange={(v) => update('flight', { date: v })} />
-            <NumberField label={`Ticket price (${plan.currency})`} value={Math.round((plan.flight.price || 0) * CURRENCIES[plan.currency].perTry)} onChange={(v) => update('flight', { price: Math.round(v / CURRENCIES[plan.currency].perTry) })} />
-          </div>
-          <Checklist items={FLIGHT_CHECKLIST} checked={plan.flight.checklist} onToggle={(key) => toggleChecklist('flight', key)} />
-        </SectionCard>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <SectionCard icon={FileCheck} iconColor="text-primary" title="Visa" doneCount={visaDone} totalCount={VISA_CHECKLIST.length}>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <SelectField label="Visa type" value={plan.visa.type} options={VISA_TYPES} onChange={(v) => update('visa', { type: v })} />
+              <SelectField label="Status" value={plan.visa.status} options={VISA_STATUSES} onChange={(v) => update('visa', { status: v })} />
+              <NumberField label={`Visa fee (${plan.currency})`} value={Math.round((plan.visa.fee || 0) * CURRENCIES[plan.currency].perTry)} onChange={(v) => update('visa', { fee: Math.round(v / CURRENCIES[plan.currency].perTry) })} />
+            </div>
+            <Checklist items={VISA_CHECKLIST} checked={plan.visa.checklist} onToggle={(key) => toggleChecklist('visa', key)} />
+          </SectionCard>
 
-        <SectionCard icon={FileCheck} iconColor="text-primary" title="Visa" doneCount={visaDone} totalCount={VISA_CHECKLIST.length}>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <SelectField label="Visa type" value={plan.visa.type} options={VISA_TYPES} onChange={(v) => update('visa', { type: v })} />
-            <SelectField label="Status" value={plan.visa.status} options={VISA_STATUSES} onChange={(v) => update('visa', { status: v })} />
-            <NumberField label={`Visa fee (${plan.currency})`} value={Math.round((plan.visa.fee || 0) * CURRENCIES[plan.currency].perTry)} onChange={(v) => update('visa', { fee: Math.round(v / CURRENCIES[plan.currency].perTry) })} />
-          </div>
-          <Checklist items={VISA_CHECKLIST} checked={plan.visa.checklist} onToggle={(key) => toggleChecklist('visa', key)} />
-        </SectionCard>
+          <SectionCard icon={Plane} iconColor="text-primary" title="Flight" doneCount={flightDone} totalCount={FLIGHT_CHECKLIST.length}>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <TextField label="Route" value={plan.flight.route} placeholder="e.g. BOM → IST" onChange={(v) => update('flight', { route: v })} />
+              <TextField label="Travel date" value={plan.flight.date} placeholder="e.g. 15 Nov 2026" onChange={(v) => update('flight', { date: v })} />
+              <NumberField label={`Ticket price (${plan.currency})`} value={Math.round((plan.flight.price || 0) * CURRENCIES[plan.currency].perTry)} onChange={(v) => update('flight', { price: Math.round(v / CURRENCIES[plan.currency].perTry) })} />
+            </div>
+            <Checklist items={FLIGHT_CHECKLIST} checked={plan.flight.checklist} onToggle={(key) => toggleChecklist('flight', key)} />
+          </SectionCard>
+        </div>
 
         <SectionCard icon={Home} iconColor="text-accent" title="House hunting" doneCount={housingDone} totalCount={HOUSING_CHECKLIST.length}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <NumberField label={`Monthly rent (${plan.currency})`} value={Math.round((plan.housing.rent || 0) * CURRENCIES[plan.currency].perTry)} onChange={(v) => update('housing', { rent: Math.round(v / CURRENCIES[plan.currency].perTry) })} />
-            <NumberField label={`Deposit (${plan.currency})`} value={Math.round((plan.housing.deposit || 0) * CURRENCIES[plan.currency].perTry)} onChange={(v) => update('housing', { deposit: Math.round(v / CURRENCIES[plan.currency].perTry) })} />
-          </div>
-          <Checklist items={HOUSING_CHECKLIST} checked={plan.housing.checklist} onToggle={(key) => toggleChecklist('housing', key)} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <NumberField label={`Monthly rent (${plan.currency})`} value={Math.round((plan.housing.rent || 0) * CURRENCIES[plan.currency].perTry)} onChange={(v) => update('housing', { rent: Math.round(v / CURRENCIES[plan.currency].perTry) })} />
+                <NumberField label={`Deposit (${plan.currency})`} value={Math.round((plan.housing.deposit || 0) * CURRENCIES[plan.currency].perTry)} onChange={(v) => update('housing', { deposit: Math.round(v / CURRENCIES[plan.currency].perTry) })} />
+              </div>
+              <Checklist items={HOUSING_CHECKLIST} checked={plan.housing.checklist} onToggle={(key) => toggleChecklist('housing', key)} />
+            </div>
 
-          {listings?.length > 0 && (
-            <div className="mt-6 pt-5 border-t border-border">
-              <h4 className="text-sm font-semibold mb-3 flex items-center gap-1.5"><BedDouble className="w-4 h-4" /> Browse homes</h4>
-              <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
-                {listings.slice(0, 6).map((l) => (
-                  <div key={l.id} className="shrink-0 w-48 rounded-xl border border-border overflow-hidden bg-background">
-                    <div className="relative aspect-[4/3] bg-muted">
-                      {l.image_url && <Image src={l.image_url} alt={l.title} fill sizes="192px" className="object-cover" unoptimized />}
-                    </div>
-                    <div className="p-2.5">
-                      <h5 className="text-xs font-semibold line-clamp-1 mb-0.5">{l.title}</h5>
-                      <p className="flex items-center gap-1 text-xs text-muted-foreground mb-1.5"><MapPin className="w-3 h-3 shrink-0" /><span className="truncate">{l.neighborhood} · {l.bedrooms}BR{l.furnished ? ' · Furnished' : ''}</span></p>
-                      <p className="text-sm font-bold mb-2">₺{Number(l.monthly_rent).toLocaleString()}<span className="text-xs font-normal text-muted-foreground">/mo</span></p>
-                      <div className="flex items-center gap-2 text-xs font-semibold">
-                        <button onClick={() => selectHome(l)} className="text-primary hover:underline">Select this home</button>
-                        {l.listing_url && <a href={l.listing_url} target="_blank" rel="noopener noreferrer sponsored" className="flex items-center gap-1 text-muted-foreground hover:text-foreground">View listing <ExternalLink className="w-3 h-3" /></a>}
+            {listings?.length > 0 && (
+              <div>
+                <h4 className="text-sm font-semibold mb-3 flex items-center gap-1.5"><BedDouble className="w-4 h-4" /> Browse homes</h4>
+                <div className="flex flex-col gap-3 max-h-[420px] overflow-y-auto pr-1">
+                  {listings.slice(0, 6).map((l) => (
+                    <div key={l.id} className="flex gap-3 rounded-xl border border-border overflow-hidden bg-background p-2.5">
+                      <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-muted shrink-0">
+                        {l.image_url && <Image src={l.image_url} alt={l.title} fill sizes="80px" className="object-cover" unoptimized />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h5 className="text-xs font-semibold line-clamp-1 mb-0.5">{l.title}</h5>
+                        <p className="flex items-center gap-1 text-xs text-muted-foreground mb-1.5"><MapPin className="w-3 h-3 shrink-0" /><span className="truncate">{l.neighborhood} · {l.bedrooms}BR{l.furnished ? ' · Furnished' : ''}</span></p>
+                        <p className="text-sm font-bold mb-1.5">₺{Number(l.monthly_rent).toLocaleString()}<span className="text-xs font-normal text-muted-foreground">/mo</span></p>
+                        <div className="flex items-center gap-2 text-xs font-semibold">
+                          <button onClick={() => selectHome(l)} className="text-primary hover:underline">Select this home</button>
+                          {l.listing_url && <a href={l.listing_url} target="_blank" rel="noopener noreferrer sponsored" className="flex items-center gap-1 text-muted-foreground hover:text-foreground">View listing <ExternalLink className="w-3 h-3" /></a>}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </SectionCard>
 
         <SectionCard icon={ShoppingCart} iconColor="text-primary" title="Monthly living costs" totalCount={null}>
@@ -311,7 +317,7 @@ export default function RelocationDashboard({ listings }) {
             <p className="text-xs text-muted-foreground max-w-sm">Starting estimates for one person in Istanbul — adjust to your lifestyle.</p>
             <span className="px-3 py-1 rounded-full bg-muted text-xs font-semibold text-muted-foreground shrink-0">{fmt(livingMonthlyTotal, plan.currency)}/mo + rent</span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {LIVING_FIELDS.map(([key, label]) => (
               <NumberField key={key} label={`${label} (${plan.currency})`} value={Math.round((plan.living[key] || 0) * CURRENCIES[plan.currency].perTry)} onChange={(v) => update('living', { [key]: Math.round(v / CURRENCIES[plan.currency].perTry) })} />
             ))}
