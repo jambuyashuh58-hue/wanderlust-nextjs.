@@ -3,11 +3,11 @@ import GuideFAQ from '@/components/GuideFAQ';
 const FAQ_ITEMS = [
   {
     q: 'Who is behind Move to Istanbul?',
-    a: 'Move to Istanbul is run by a small, independent team based in and around Türkiye. We’re not a big travel publisher -- every collection, guide, and concierge reply comes from a real person, not a content farm.',
+    a: 'Move to Istanbul is run by a small, independent team based in and around Türkiye. We’re not a big travel publisher — every collection, guide, and concierge reply comes from a real person, not a content farm.',
   },
   {
     q: 'How is Move to Istanbul different from Lonely Planet or TripAdvisor?',
-    a: 'We’re narrower on purpose: Türkiye only, and we mix two things most sites keep separate -- real, bookable activities with live prices and honest ratings, and a genuine long-stay/relocation section for people asking "could I actually live here?" instead of just "what should I see this weekend?"',
+    a: 'We’re narrower on purpose: Türkiye only, and we mix two things most sites keep separate — real, bookable activities with live prices and honest ratings, and a genuine long-stay/relocation section for people asking "could I actually live here?" instead of just "what should I see this weekend?"',
   },
   {
     q: 'How does Move to Istanbul make money?',
@@ -15,7 +15,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Do you have on-the-ground presence in Türkiye?',
-    a: 'Yes -- our relocation guidance and concierge service are informed by people who actually live in and have moved to Türkiye, not just secondhand research.',
+    a: 'Yes — our relocation guidance and concierge service are informed by people who actually live in and have moved to Türkiye, not just secondhand research.',
   },
   {
     q: 'Is your information kept up to date?',

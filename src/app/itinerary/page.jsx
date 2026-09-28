@@ -60,7 +60,7 @@ export default function ItineraryPage() {
           <div key={dp.day}>
             <h2 className="text-lg font-bold mb-3">Day {dp.day}</h2>
             {(!dp.slots || dp.slots.length === 0) ? (
-              <p className="text-sm text-muted-foreground">No matching activities found for this day yet -- browse the full list instead.</p>
+              <p className="text-sm text-muted-foreground">No matching activities found for this day yet — browse the full list instead.</p>
             ) : (
               <div className="flex flex-col gap-3">
                 {dp.slots.map((slot, i) => {

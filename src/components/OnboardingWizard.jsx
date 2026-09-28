@@ -103,7 +103,7 @@ export default function OnboardingWizard({ cities = [], activities = [] }) {
     } catch (err) {
       // AI call failed -- fall back to the rule-based picker rather than
       // stranding the user, but surface the failure so it's visible.
-      setError(`AI planning is temporarily unavailable (${err.message}) -- showing a quick pick instead.`);
+      setError(`AI planning is temporarily unavailable (${err.message}) — showing a quick pick instead.`);
       itinerary = buildFallbackItinerary({ ...form, activities });
     }
 
@@ -172,7 +172,7 @@ export default function OnboardingWizard({ cities = [], activities = [] }) {
       {current === 'interests' && (
         <>
           <h1 className="text-2xl md:text-3xl font-bold mb-2">What are you into?</h1>
-          <p className="text-sm text-muted-foreground mb-6">Pick as many as you like -- or none, for a mixed itinerary.</p>
+          <p className="text-sm text-muted-foreground mb-6">Pick as many as you like — or none, for a mixed itinerary.</p>
           <div className="flex flex-wrap gap-3">
             {INTERESTS.map((cat) => (
               <button

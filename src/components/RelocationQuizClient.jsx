@@ -62,7 +62,7 @@ function getRecommendation(answers, collections) {
   if (priority === 'visa' || visa === 'none' || visa === 'applying') {
     return {
       headline: "Let's sort your visa route first.",
-      body: 'The paperwork is the part that actually blocks people -- everything else can wait.',
+      body: 'The paperwork is the part that actually blocks people — everything else can wait.',
       collection: findCollection(collections, ['visa', 'ikamet', 'residence']),
       guideHref: '/guides/visa',
       concierge: timeframe === 'indefinite' || purpose === 'relocating' ? 'full' : 'paperwork',
@@ -72,7 +72,7 @@ function getRecommendation(answers, collections) {
   if (priority === 'housing') {
     return {
       headline: "Let's find you a place to live.",
-      body: 'Foreigner-friendly housing in Türkiye has its own quirks -- here\'s where to start.',
+      body: 'Foreigner-friendly housing in Türkiye has its own quirks — here\'s where to start.',
       collection: findCollection(collections, ['housing', 'apartment', 'rent']),
       guideHref: '/guides/housing',
       concierge: 'apartment',

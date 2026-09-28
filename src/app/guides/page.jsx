@@ -7,9 +7,9 @@ export const metadata = {
 };
 
 const LONG_STAY_GUIDES = [
-  { slug: 'visa', icon: Stamp, title: 'Türkiye Visas for Remote Workers', description: 'e-Visa vs sticker visa vs residence permit -- what applies to you.', color: 'text-primary' },
+  { slug: 'visa', icon: Stamp, title: 'Türkiye Visas for Remote Workers', description: 'e-Visa vs sticker visa vs residence permit — what applies to you.', color: 'text-primary' },
   { slug: 'housing', icon: Home, title: 'Finding a Home in Istanbul', description: 'Neighborhood breakdown, rent ranges, contracts, and scams to avoid.', color: 'text-secondary' },
-  { slug: 'cost-of-living', icon: Wallet, title: 'Monthly Cost of Living in Istanbul', description: 'A real budget breakdown -- rent, groceries, transport.', color: 'text-accent' },
+  { slug: 'cost-of-living', icon: Wallet, title: 'Monthly Cost of Living in Istanbul', description: 'A real budget breakdown — rent, groceries, transport.', color: 'text-accent' },
 ];
 
 export default function GuidesPage() {
@@ -27,7 +27,7 @@ export default function GuidesPage() {
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-white">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 text-sm font-medium mb-4"><BookOpen className="w-4 h-4" /> Long-Stay Essentials</span>
           <h1 className="text-3xl md:text-4xl font-bold mb-3">Guides for staying in Türkiye</h1>
-          <p className="text-white/85 max-w-2xl leading-relaxed">The essentials every remote worker needs -- visas, housing, and a real monthly budget.</p>
+          <p className="text-white/85 max-w-2xl leading-relaxed">The essentials every remote worker needs — visas, housing, and a real monthly budget.</p>
         </div>
       </div>
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">

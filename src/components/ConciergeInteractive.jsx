@@ -6,7 +6,7 @@ import { Check, ShieldAlert, MessageCircle } from 'lucide-react';
 const CONCIERGE_TIERS = [
   {
     id: 'paperwork', name: 'Visa & Paperwork Guidance', price: 99,
-    tagline: 'A focused 45-minute strategy call to map your exact visa route -- no more guessing.',
+    tagline: 'A focused 45-minute strategy call to map your exact visa route — no more guessing.',
     includes: ['Personalized visa-route checklist for your nationality', 'A 45-minute live call', 'Document review plus up to 3 follow-up emails', 'Help booking your e-ikamet appointment', 'Access to long-stay guides'],
   },
   {
@@ -83,7 +83,7 @@ export default function ConciergeInteractive() {
       <div className="max-w-2xl mx-auto rounded-2xl border border-border bg-muted/50 p-5 mb-14 flex items-start gap-3">
         <ShieldAlert className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
         <p className="text-sm text-muted-foreground leading-relaxed">
-          We are not licensed immigration lawyers or real estate agents. This service is guidance and coordination based on our own research and experience -- not legal representation. For complex cases, always confirm with a licensed professional.
+          We are not licensed immigration lawyers or real estate agents. This service is guidance and coordination based on our own research and experience — not legal representation. For complex cases, always confirm with a licensed professional.
         </p>
       </div>
 
@@ -142,7 +142,7 @@ export default function ConciergeInteractive() {
         <div>
           <h2 className="text-xl font-bold mb-4">Prefer Instagram?</h2>
           <div className="rounded-2xl border border-border bg-card p-6 text-center mb-8">
-            <p className="text-sm text-muted-foreground mb-4">We keep everything async and text-based -- no scheduling calls. DM us directly if that&apos;s easier than the form.</p>
+            <p className="text-sm text-muted-foreground mb-4">We keep everything async and text-based — no scheduling calls. DM us directly if that&apos;s easier than the form.</p>
             <a href={CONCIERGE_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors">
               <MessageCircle className="w-4 h-4" /> Message us on Instagram
             </a>
@@ -151,9 +151,9 @@ export default function ConciergeInteractive() {
           <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">How it works</p>
           <ol className="space-y-3">
             {[
-              'We reply with a short intake -- 5 questions, no call needed',
+              'We reply with a short intake — 5 questions, no call needed',
               'You confirm your tier and pay via PayPal',
-              'We deliver async -- you get a private status link to track progress',
+              'We deliver async — you get a private status link to track progress',
               'Weekly check-ins until everything\'s settled',
             ].map((step, i) => (
               <li key={i} className="flex items-start gap-3 text-sm">

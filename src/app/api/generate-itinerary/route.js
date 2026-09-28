@@ -169,7 +169,7 @@ async function generateItinerary(params) {
   if (!activities || activities.length === 0) {
     return {
       status: 404,
-      body: { error: `No activities found for ${city} yet -- try browsing the full list instead.` },
+      body: { error: `No activities found for ${city} yet — try browsing the full list instead.` },
     };
   }
 
