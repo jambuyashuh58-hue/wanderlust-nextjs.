@@ -7,7 +7,7 @@
 // single-city trip is just a one-branch version of the same tree.
 
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Sparkles, MapPin, ArrowRight, Sun, Sunset, Moon, Star, Clock, Info } from 'lucide-react';
@@ -107,52 +107,10 @@ function branchColor(i, alpha = 1) {
   return `hsl(${c.h} ${c.s}% ${c.l}% / ${alpha})`;
 }
 
-// A gentle inward quadratic curve from (x1,y1) to (x2,y2) -- pulling the
-// control point slightly toward the diagram's center (50,50) is what gives
-// mind-map connectors their organic, non-straight-line look.
-function curvePath(x1, y1, x2, y2) {
-  const mx = (x1 + x2) / 2;
-  const my = (y1 + y2) / 2;
-  const cx = mx + (50 - mx) * 0.25;
-  const cy = my + (50 - my) * 0.25;
-  return `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
-}
-
-// Places every node on a 0-100 x 0-100 circular grid: the trip root sits at
-// the center, city nodes fan out evenly around it (this is what makes it
-// read as a mind map rather than a top-down tree), and each city's day
-// chips fan out further still in a small arc around their city, angled
-// away from the center so they never point back through it.
-function computeRadialLayout(legs) {
-  const n = Math.max(legs.length, 1);
-  const cityRadius = 30;
-  const dayRadius = 46;
-  return legs.map((leg, i) => {
-    const angleCity = (360 / n) * i - 90;
-    const rad = (angleCity * Math.PI) / 180;
-    const cx = 50 + cityRadius * Math.cos(rad);
-    const cy = 50 + cityRadius * Math.sin(rad);
-
-    const days = leg.dayPlans || [];
-    const m = days.length;
-    const spread = Math.min(80, Math.max(26, m * 12));
-    const dayNodes = days.map((dp, j) => {
-      const t = m === 1 ? 0 : j / (m - 1) - 0.5;
-      const angleDay = angleCity + t * spread;
-      const dRad = (angleDay * Math.PI) / 180;
-      return {
-        dp,
-        x: 50 + dayRadius * Math.cos(dRad),
-        y: 50 + dayRadius * Math.sin(dRad),
-      };
-    });
-    return { leg, index: i, cx, cy, dayNodes };
-  });
-}
-
 export default function ItineraryPage() {
   const [itinerary, setItinerary] = useState(undefined); // undefined = loading, null = none found
   const [selectedDay, setSelectedDay] = useState({}); // { [legIndex]: dayNumber }
+  const panelRefs = useRef({}); // { [legIndex]: HTMLElement } -- for city-click "jump to this city's itinerary"
 
   useEffect(() => {
     let parsed = null;
@@ -206,8 +164,15 @@ export default function ItineraryPage() {
     ? `A ${itinerary.days}-day journey through ${legs.map((l) => l.city).join(', ')}.`
     : (legs[0]?.summary ? legs[0].summary.split(/(?<=[.!?])\s+/)[0] : '');
 
-  const layout = computeRadialLayout(legs);
-  const diagramSize = Math.max(560, Math.min(1100, legs.length * 130 + 420));
+  // Clicking a city node jumps straight to that city's itinerary panel
+  // below (making sure a day is actually selected first, in case a leg
+  // somehow has none pre-selected).
+  function handleCityClick(i, leg) {
+    setSelectedDay((s) => (s[i] ? s : { ...s, [i]: leg.dayPlans?.[0]?.day }));
+    requestAnimationFrame(() => {
+      panelRefs.current[i]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 pt-32 md:pt-40">
@@ -233,81 +198,58 @@ export default function ItineraryPage() {
         </p>
       )}
 
-      {/* Radial mind map: Trip at the center, one colored branch per city
-          fanning out around it, and each city's days fanning out further
-          still. The whole map is visible at once (no single-row scroll) --
-          it scales down to fit, and pans/zooms via the browser on very
-          small screens if the trip has many cities. */}
-      <div className="mindmap-wrap mt-10">
-        <div className="mindmap-radial" style={{ width: diagramSize, height: diagramSize }}>
-          <svg className="mindmap-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
-            {layout.map(({ cx, cy, index, dayNodes }) => (
-              <g key={`lines-${index}`}>
-                <path
-                  d={curvePath(50, 50, cx, cy)}
-                  fill="none"
-                  stroke={branchColor(index, 0.85)}
-                  strokeWidth="0.6"
-                  strokeLinecap="round"
-                />
-                {dayNodes.map(({ dp, x, y }) => (
-                  <path
-                    key={`line-${index}-${dp.day}`}
-                    d={curvePath(cx, cy, x, y)}
-                    fill="none"
-                    stroke={branchColor(index, 0.4)}
-                    strokeWidth="0.35"
-                    strokeLinecap="round"
-                  />
-                ))}
-              </g>
-            ))}
-          </svg>
-
-          <div className="mindmap-node mindmap-root" style={{ left: '50%', top: '50%' }}>
-            <Sparkles className="w-4 h-4" /> Trip
-          </div>
-
-          {layout.map(({ leg, index, cx, cy, dayNodes }) => (
-            <div key={`${leg.city}-${index}`}>
-              <div
-                className="mindmap-node mindmap-city"
-                style={{
-                  left: `${cx}%`,
-                  top: `${cy}%`,
-                  borderColor: branchColor(index),
-                  background: branchColor(index, 0.1),
-                }}
-              >
-                <MapPin className="w-3.5 h-3.5 shrink-0" style={{ color: branchColor(index) }} />
-                <span>
-                  <span className="mindmap-city-name">{leg.city}</span>
-                  <span className="mindmap-city-days">{leg.days} {leg.days === 1 ? 'day' : 'days'}</span>
-                </span>
-              </div>
-              {dayNodes.map(({ dp, x, y }) => {
-                const active = selectedDay[index] === dp.day;
-                return (
-                  <button
-                    key={`${leg.city}-${index}-${dp.day}`}
-                    type="button"
-                    onClick={() => setSelectedDay((s) => ({ ...s, [index]: dp.day }))}
-                    className="mindmap-node mindmap-day"
-                    style={{
-                      left: `${x}%`,
-                      top: `${y}%`,
-                      borderColor: branchColor(index, active ? 1 : 0.55),
-                      background: active ? branchColor(index, 0.16) : 'hsl(var(--card))',
-                      color: active ? branchColor(index) : undefined,
-                    }}
-                  >
-                    Day {dp.day}
-                  </button>
-                );
-              })}
-            </div>
-          ))}
+      {/* Vertical mind map: Trip at the top, a colored trunk running down
+          through one branch per city, and each city's days fanning out in a
+          wrapped row right under it. Stacking top-to-bottom (rather than a
+          circular layout) means the whole map is visible with an ordinary
+          vertical scroll -- no panning or zooming needed on a phone.
+          Clicking a city jumps straight to its itinerary panel below. */}
+      <div className="mindmap-vertical mt-10">
+        <div className="mindmap-node mindmap-root-v">
+          <Sparkles className="w-4 h-4" /> Trip
         </div>
+        {legs.length > 0 && <div className="mindmap-trunk" />}
+
+        {legs.map((leg, i) => (
+          <div key={`${leg.city}-${i}`} className="mindmap-branch">
+            <div className="mindmap-branch-stem" style={{ background: branchColor(i) }} />
+            <button
+              type="button"
+              onClick={() => handleCityClick(i, leg)}
+              className="mindmap-node mindmap-city-v"
+              style={{ borderColor: branchColor(i), background: branchColor(i, 0.1) }}
+            >
+              <MapPin className="w-4 h-4 shrink-0" style={{ color: branchColor(i) }} />
+              <span>
+                <span className="mindmap-city-name">{leg.city}</span>
+                <span className="mindmap-city-days">{leg.days} {leg.days === 1 ? 'day' : 'days'} · tap for itinerary</span>
+              </span>
+            </button>
+            {leg.dayPlans?.length > 0 && (
+              <div className="mindmap-day-row" style={{ borderColor: branchColor(i, 0.35) }}>
+                {leg.dayPlans.map((dp) => {
+                  const active = selectedDay[i] === dp.day;
+                  return (
+                    <button
+                      key={dp.day}
+                      type="button"
+                      onClick={() => setSelectedDay((s) => ({ ...s, [i]: dp.day }))}
+                      className="mindmap-node mindmap-day"
+                      style={{
+                        borderColor: branchColor(i, active ? 1 : 0.5),
+                        background: active ? branchColor(i, 0.16) : 'hsl(var(--card))',
+                        color: active ? branchColor(i) : undefined,
+                      }}
+                    >
+                      Day {dp.day}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            {i < legs.length - 1 && <div className="mindmap-trunk" />}
+          </div>
+        ))}
       </div>
 
       {/* Expanded panel for whichever day is selected in each city branch. */}
@@ -317,7 +259,7 @@ export default function ItineraryPage() {
           if (!dp) return null;
           const slotByPeriod = Object.fromEntries((dp.slots || []).map((s) => [s.period, s]));
           return (
-            <div key={`${leg.city}-${i}-panel`}>
+            <div key={`${leg.city}-${i}-panel`} ref={(el) => { panelRefs.current[i] = el; }} className="scroll-mt-28">
               <div className="flex items-center gap-3 mb-4">
                 <span className="flex items-center justify-center w-9 h-9 rounded-full bg-primary text-white font-bold text-sm shrink-0">
                   {dp.day}
@@ -358,72 +300,87 @@ export default function ItineraryPage() {
       </div>
 
       <style jsx>{`
-        /* The diagram is square and sized in px (computed above from the
-           city count) so the 0-100 percent coordinate math produces a true
-           circle. The outer wrap scrolls/centers it -- on a small screen
-           with many cities the user pans and pinch-zooms instead of the
-           diagram being squeezed unreadably thin. */
-        .mindmap-wrap {
-          overflow: auto;
+        /* Everything stacks top-to-bottom and centered, so the whole map is
+           always visible with an ordinary vertical scroll -- no 2D panning
+           or pinch-zooming needed, which is what makes a circular diagram
+           unusable on a phone. */
+        .mindmap-vertical {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
           border: 1px solid hsl(var(--border));
           border-radius: 20px;
           background: hsl(var(--card) / 0.4);
-          padding: 24px;
+          padding: 28px 16px;
+        }
+        .mindmap-trunk {
+          width: 2px;
+          height: 22px;
+          background: hsl(var(--border));
+        }
+        .mindmap-branch {
           display: flex;
-          justify-content: center;
-        }
-        .mindmap-radial {
-          position: relative;
-          flex-shrink: 0;
-        }
-        .mindmap-lines {
-          position: absolute;
-          inset: 0;
+          flex-direction: column;
+          align-items: center;
           width: 100%;
-          height: 100%;
-          overflow: visible;
+        }
+        .mindmap-branch-stem {
+          width: 2px;
+          height: 20px;
         }
         .mindmap-node {
-          position: absolute;
-          transform: translate(-50%, -50%);
           display: inline-flex;
           align-items: center;
           gap: 6px;
           white-space: nowrap;
         }
-        .mindmap-root {
-          padding: 14px 22px;
+        .mindmap-root-v {
+          padding: 12px 22px;
           border-radius: 9999px;
           background: hsl(var(--primary));
           color: white;
           font-weight: 700;
           font-size: 0.95rem;
           box-shadow: 0 6px 20px hsl(var(--primary) / 0.35);
-          z-index: 2;
         }
-        .mindmap-city {
-          padding: 10px 16px;
+        .mindmap-city-v {
+          padding: 10px 18px;
           border-radius: 14px;
           border: 2px solid;
           background: hsl(var(--card));
           box-shadow: 0 2px 10px rgb(0 0 0 / 0.06);
-          z-index: 1;
+          cursor: pointer;
+          transition: transform 0.15s ease;
         }
-        .mindmap-city > span {
+        .mindmap-city-v:hover {
+          transform: scale(1.03);
+        }
+        .mindmap-city-v > span {
           display: flex;
           flex-direction: column;
-          line-height: 1.2;
+          line-height: 1.25;
           text-align: left;
         }
         .mindmap-city-name {
           font-weight: 700;
-          font-size: 0.9rem;
+          font-size: 0.95rem;
         }
         .mindmap-city-days {
           font-size: 0.62rem;
           color: hsl(var(--muted-foreground));
           text-transform: uppercase;
-          letter-spacing: 0.04em;
+          letter-spacing: 0.03em;
+        }
+        .mindmap-day-row {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 8px;
+          max-width: 32rem;
+          margin-top: 16px;
+          padding: 14px;
+          border-radius: 16px;
+          border: 1.5px dashed;
         }
         .mindmap-day {
           padding: 6px 13px;
@@ -435,7 +392,7 @@ export default function ItineraryPage() {
           transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
         }
         .mindmap-day:hover {
-          transform: translate(-50%, -50%) scale(1.08);
+          transform: scale(1.08);
         }
       `}</style>
     </div>
