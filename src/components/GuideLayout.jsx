@@ -3,12 +3,12 @@ import { ArrowLeft, Clock, MessageCircle } from 'lucide-react';
 
 const CONCIERGE_URL = 'https://www.instagram.com/move_istanbul';
 
-export default function GuideLayout({ eyebrow, title, description, readTime, updated, sections = [], children }) {
+export default function GuideLayout({ eyebrow, title, description, readTime, updated, sections = [], backHref = '/guides', backLabel = 'All guides', children }) {
   return (
     <div className="pt-16 md:pt-20 min-h-screen">
       <div className="bg-gradient-to-br from-primary/5 via-background to-secondary/5 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <Link href="/guides" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"><ArrowLeft className="w-4 h-4" /> All guides</Link>
+          <Link href={backHref} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"><ArrowLeft className="w-4 h-4" /> {backLabel}</Link>
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">{eyebrow}</span>
           <h1 className="text-3xl md:text-4xl font-bold mb-3">{title}</h1>
           <p className="text-foreground/80 leading-relaxed max-w-2xl mb-4">{description}</p>

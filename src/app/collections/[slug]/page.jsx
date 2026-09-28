@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import { getCollectionBySlug } from '@/lib/supabaseServer';
 import ActivityCard from '@/components/ActivityCard';
 import GuideBody from '@/components/GuideBody';
+import RichGuideBody from '@/components/RichGuideBody';
 import CollectionRoadmap from '@/components/CollectionRoadmap';
 import RankingList from '@/components/RankingList';
 
@@ -27,6 +28,7 @@ export default async function CollectionDetailPage({ params }) {
   const activities = collection.activities || [];
   const isGuide = collection.display_style === 'guide';
   const isRanking = collection.display_style === 'ranking';
+  const isRichGuide = isGuide && collection.guide_data;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -39,6 +41,15 @@ export default async function CollectionDetailPage({ params }) {
       item: { '@type': 'TouristAttraction', name: a.title, image: a.image_url },
     })),
   };
+
+  if (isRichGuide) {
+    return (
+      <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <RichGuideBody collection={collection} />
+      </>
+    );
+  }
 
   return (
     <div className="pt-16 md:pt-20 min-h-screen">
