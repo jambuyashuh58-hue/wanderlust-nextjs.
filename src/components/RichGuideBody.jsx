@@ -3,6 +3,23 @@ import { CheckCircle2, AlertTriangle, ExternalLink, ArrowRight } from 'lucide-re
 import GuideLayout from '@/components/GuideLayout';
 import GuideFAQ from '@/components/GuideFAQ';
 
+// Turns a related-resource label into a best-guess /collections/<slug> link
+// when the item doesn't carry an explicit href yet. This lets "related"
+// sections always render as real, clickable links even before the target
+// guide has been written — the slug is picked to match the convention this
+// site already uses, so once that guide is published under the same slug,
+// the link starts resolving with no further edits needed here.
+function slugifyLabel(label) {
+  return label
+    .normalize('NFKD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/ı/g, 'i')
+    .replace(/İ/gi, 'i')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 // Data-driven counterpart to the hand-coded /guides/* pages (e.g. guides/visa).
 // Reads a `guide_data` jsonb blob off a `display_style: 'guide'` collection and
 // renders it with the same sidebar-TOC / stat-card / table / checklist /
@@ -244,11 +261,12 @@ function GuideSection({ section }) {
                 <ul className="space-y-2.5">
                   {(group.links || []).map((l, j) => (
                     <li key={j}>
-                      {l.href ? (
-                        <Link href={l.href} className="text-sm text-foreground/80 leading-relaxed hover:text-primary hover:underline transition-colors">{l.label}</Link>
-                      ) : (
-                        <span className="text-sm text-foreground/80 leading-relaxed">{l.label}</span>
-                      )}
+                      <Link
+                        href={l.href || `/collections/${slugifyLabel(l.label)}`}
+                        className="text-sm text-foreground/80 leading-relaxed hover:text-primary hover:underline transition-colors"
+                      >
+                        {l.label}
+                      </Link>
                     </li>
                   ))}
                 </ul>
