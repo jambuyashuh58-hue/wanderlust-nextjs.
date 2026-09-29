@@ -75,11 +75,38 @@ export default async function sitemap() {
     priority: 0.6,
   }));
 
+  // Turkish (/tr) entries -- only for pages that are actually localized.
+  // The country-guides index is fully translated regardless of content, but
+  // an individual guide only gets a /tr URL once its *_tr columns are
+  // filled in (title_tr is the marker); listing an untranslated guide under
+  // /tr would just be the English text again at a duplicate URL, which is a
+  // net negative for SEO, not a positive.
+  const trStaticEntries = [
+    { path: '/tr', priority: 1.0, changeFrequency: 'daily' },
+    { path: '/tr/country-guides', priority: 0.7, changeFrequency: 'weekly' },
+  ].map(({ path, priority, changeFrequency }) => ({
+    url: `${SITE_URL}${path}`,
+    lastModified: now,
+    changeFrequency,
+    priority,
+  }));
+
+  const trCountryGuideEntries = (countryGuides || [])
+    .filter((g) => g.title_tr)
+    .map((g) => ({
+      url: `${SITE_URL}/tr/country-guides/${g.slug}`,
+      lastModified: g.updated_date ? new Date(g.updated_date) : now,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    }));
+
   return [
     ...staticEntries,
     ...collectionEntries,
     ...activityEntries,
     ...cityEntries,
     ...countryGuideEntries,
+    ...trStaticEntries,
+    ...trCountryGuideEntries,
   ];
 }
