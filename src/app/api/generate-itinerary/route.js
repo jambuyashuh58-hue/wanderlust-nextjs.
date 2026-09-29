@@ -245,6 +245,22 @@ function googleFlightsSearchUrl(fromCity, toCity) {
   return `https://www.google.com/travel/flights?${params.toString()}`;
 }
 
+// A handful of "activity" rows (still tagged Guided Tours etc., same
+// affiliate feed as everything else) are actually whole multi-day/multi-
+// night package tours -- e.g. "13 Days Patterns of Turkey Tour from/to
+// Istanbul by Plane" -- not a single morning/afternoon/evening stop. Nothing
+// in the schema flags that difference, so left in the candidate pool the AI
+// happily slotted a 13-day tour in as someone's Day 1 morning activity (and
+// a *different* multi-day tour as that same day's afternoon). Filtering
+// these out of the day-slot pool by parsing "N day(s)"/"N night(s)" out of
+// the title/duration/how_long text is a blunt but reliable fix -- a real
+// single-stop activity never phrases its length that way.
+function isMultiDayPackage(a) {
+  const text = `${a.duration || ''} ${a.how_long || ''} ${a.title || ''}`;
+  const m = text.match(/(\d+)\s*[-\s]?\s*(days?|nights?)\b/i);
+  return !!m && Number(m[1]) >= 2;
+}
+
 // Builds one city's leg of the trip: pulls its real candidate activities,
 // asks the AI for a day-by-day plan, and maps the result back to full
 // activity records. Returns either a populated leg or one carrying `error`
@@ -273,12 +289,13 @@ async function generateLeg(supabase, { city, days, interests, pace, budget, trav
   if (activitiesError) {
     return { city, days: requestedDays, requestedDays, error: activitiesError.message, dayPlans: [] };
   }
-  if (!activities || activities.length === 0) {
+  const singleStopActivities = (activities || []).filter((a) => !isMultiDayPackage(a));
+  if (singleStopActivities.length === 0) {
     return { city, days: requestedDays, requestedDays, error: `No activities found for ${city} yet.`, dayPlans: [] };
   }
 
   const system = buildSystemPrompt(requestedDays);
-  const user = buildUserPrompt({ city, days: requestedDays, interests, pace, budget, travellingAs, accessibility }, activities);
+  const user = buildUserPrompt({ city, days: requestedDays, interests, pace, budget, travellingAs, accessibility }, singleStopActivities);
 
   let aiResult;
   try {

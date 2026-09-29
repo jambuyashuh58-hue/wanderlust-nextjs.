@@ -110,6 +110,16 @@ function sequenceLegByProximity(dayPlans) {
   });
 }
 
+// Same "13 Days Patterns of Turkey Tour" problem as route.js's
+// isMultiDayPackage() -- a handful of activity rows are actually whole
+// multi-day package tours, not a single stop, and have to be kept out of
+// the day-slot pool the same way.
+function isMultiDayPackage(a) {
+  const text = `${a.duration || ''} ${a.how_long || ''} ${a.title || ''}`;
+  const m = text.match(/(\d+)\s*[-\s]?\s*(days?|nights?)\b/i);
+  return !!m && Number(m[1]) >= 2;
+}
+
 // Rule-based fallback, used only if the AI call errors out. Builds the same
 // { legs: [...] } shape the API returns so the itinerary page can render
 // either one uniformly.
@@ -125,7 +135,7 @@ function buildFallbackItinerary({ cityLegs, interests, pace, activities, days: t
       const cityMatch = !a.city_name || a.city_name.toLowerCase() === cityLower;
       const interestMatch = interests.length === 0 || interests.includes(a.category);
       const notConnector = a.category !== 'Transfers' && a.category !== 'Hotels';
-      return cityMatch && interestMatch && notConnector;
+      return cityMatch && interestMatch && notConnector && !isMultiDayPackage(a);
     });
     const sorted = [...pool].sort((a, b) => (b.rating || 0) - (a.rating || 0));
 
