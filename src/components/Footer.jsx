@@ -64,7 +64,13 @@ export default function Footer() {
         </div>
         <Destinations />
         <div className="pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} Move to Istanbul. All rights reserved.</p>
+          <div className="flex flex-col sm:flex-row items-center gap-x-4 gap-y-1">
+            <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} Move to Istanbul. All rights reserved.</p>
+            <div className="flex items-center gap-3">
+              <Link href="/privacy" className="text-xs text-muted-foreground hover:text-primary">Privacy Policy</Link>
+              <Link href="/terms" className="text-xs text-muted-foreground hover:text-primary">Terms of Service</Link>
+            </div>
+          </div>
           <p className="text-xs text-muted-foreground text-center sm:text-right max-w-md">{AFFILIATE_DISCLOSURE}</p>
         </div>
       </div>
