@@ -173,10 +173,16 @@ async function callLLM(system, user, days) {
 async function generateLeg(supabase, { city, days, interests, pace, budget, travellingAs, accessibility }) {
   const requestedDays = Math.min(Math.max(1, Number(days) || 1), MAX_DAYS_PER_CITY);
 
+  // Transfers (and Hotels, once any exist) aren't a morning/afternoon/evening
+  // "activity" -- they're the connector between two city legs, matched in
+  // separately by matchTransfers() below. Keeping them out of the candidate
+  // pool stops the AI from slotting "Dalaman Airport Transfer" in as
+  // someone's afternoon plan.
   const { data: activities, error: activitiesError } = await supabase
     .from('activity')
     .select('id, title, category, city_name, rating, price, duration, how_long, family_friendly, free, image_url, booking_url, address')
     .ilike('city_name', city)
+    .not('category', 'in', '("Transfers","Hotels")')
     .order('popularity_score', { ascending: false, nullsFirst: false })
     .limit(MAX_CANDIDATES);
 
@@ -228,6 +234,40 @@ async function generateLeg(supabase, { city, days, interests, pace, budget, trav
     leg.note = `Generated ${actualDays} of the ${requestedDays} days asked for -- ${city} may not have enough unique activities for a longer stay yet.`;
   }
   return leg;
+}
+
+// There's no standalone "book a flight" or "book a hotel room" product in the
+// affiliate feed -- only regular activity rows that happen to be an
+// intercity/airport transfer (category='Transfers'), and a handful of
+// multi-day tour packages that bundle a flight or a hotel stay into the tour
+// itself (e.g. "2-Day Cappadocia Trip with Flights and Cave Hotel", still
+// category='Guided Tours' since it's a real day-by-day activity, not a pure
+// connector). So instead of a separate booking step, we look for a real
+// Transfers-category row that connects two consecutive cities on the trip
+// and slot it in between their day plans -- same affiliate booking_url
+// pattern as everything else on the site, just placed differently.
+async function matchTransfer(supabase, fromCity, toCity) {
+  const { data } = await supabase
+    .from('activity')
+    .select('id, title, category, city_name, rating, price, image_url, booking_url, address')
+    .eq('category', 'Transfers')
+    .or(`city_name.ilike.${fromCity},city_name.ilike.${toCity}`)
+    .order('popularity_score', { ascending: false, nullsFirst: false })
+    .limit(20);
+
+  if (!data || data.length === 0) return null;
+
+  // Transfer rows are filed under whichever city offers the pickup, with the
+  // other endpoint (an airport, another city) only named in the title -- e.g.
+  // a Fethiye-filed row titled "...to Dalaman Airport". Prefer a row whose
+  // title actually mentions the other city/leg so "Konya -> Cappadocia"
+  // doesn't grab an unrelated Konya row; fall back to any row tied to either
+  // city if nothing matches by name.
+  const mentions = (title, city) => title.toLowerCase().includes(city.toLowerCase());
+  const best = data.find((a) => mentions(a.title, fromCity) && mentions(a.title, toCity))
+    || data.find((a) => mentions(a.title, toCity) || mentions(a.title, fromCity))
+    || data[0];
+  return best;
 }
 
 async function generateItinerary(params) {
@@ -289,6 +329,22 @@ async function generateItinerary(params) {
   const validLegs = legs.filter((l) => !l.error);
   if (validLegs.length === 0) {
     return { status: 502, body: { error: legs[0]?.error || 'AI generation failed for every city in this trip.' } };
+  }
+
+  // Multi-city trip: find the connecting transfer for each city-to-city hop
+  // and attach it to the earlier leg. Single-city trips have nothing to
+  // connect, and a leg that errored out has no onward plan to connect from.
+  if (legs.length > 1) {
+    const transfers = await Promise.all(
+      legs.slice(0, -1).map((leg, i) => {
+        const nextLeg = legs[i + 1];
+        if (leg.error || nextLeg.error) return null;
+        return matchTransfer(supabase, leg.city, nextLeg.city);
+      })
+    );
+    transfers.forEach((transfer, i) => {
+      if (transfer) legs[i].transferToNext = transfer;
+    });
   }
 
   const actualTotalDays = legs.reduce((sum, l) => sum + (l.dayPlans?.length || 0), 0);

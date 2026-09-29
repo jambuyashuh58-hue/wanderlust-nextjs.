@@ -10,7 +10,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Sparkles, MapPin, ArrowRight, Sun, Sunset, Moon, Star, Clock, Info, CalendarCheck } from 'lucide-react';
+import { Sparkles, MapPin, ArrowRight, Sun, Sunset, Moon, Star, Clock, Info, CalendarCheck, Car } from 'lucide-react';
 
 const PERIODS = ['morning', 'afternoon', 'evening'];
 const PERIOD_ICON = { morning: Sun, afternoon: Sunset, evening: Moon };
@@ -62,6 +62,34 @@ function ActivityCard({ slot }) {
         </div>
         {slot.note && <p className="text-sm text-foreground/70 leading-snug">{slot.note}</p>}
       </div>
+    </Link>
+  );
+}
+
+// There's no standalone "book a flight/hotel" step -- moving between two
+// cities on the trip is fulfilled by a real transfer activity from the same
+// affiliate feed as everything else (matched server-side in
+// /api/generate-itinerary), shown here as the connector between two city
+// panels rather than inside either day's Morning/Afternoon/Evening slots.
+function TransferCard({ transfer, fromCity, toCity }) {
+  const price = transfer.price ?? (transfer.free ? 'Free' : null);
+  return (
+    <Link
+      href={`/activity/${transfer.id}`}
+      className="flex items-center gap-4 rounded-xl border border-dashed border-primary/40 bg-primary/5 hover:border-primary transition-colors px-4 py-3.5 max-w-2xl mx-auto"
+    >
+      <span className="flex items-center justify-center w-9 h-9 rounded-full bg-primary/15 text-primary shrink-0">
+        <Car className="w-4 h-4" />
+      </span>
+      <div className="flex-1 min-w-0">
+        <p className="text-[11px] font-semibold text-primary uppercase tracking-wide mb-0.5">{fromCity} → {toCity}</p>
+        <p className="text-sm font-semibold leading-snug truncate">{transfer.title}</p>
+      </div>
+      {price != null && (
+        <span className="shrink-0 px-2.5 py-1 rounded-full bg-background text-xs font-semibold">
+          {typeof price === 'number' ? `₺${price.toLocaleString()}` : price}
+        </span>
+      )}
     </Link>
   );
 }
@@ -279,6 +307,11 @@ export default function ItineraryPage() {
                   );
                 })}
               </div>
+              {leg.transferToNext && legs[i + 1] && (
+                <div className="mt-6">
+                  <TransferCard transfer={leg.transferToNext} fromCity={leg.city} toCity={legs[i + 1].city} />
+                </div>
+              )}
             </div>
           );
         })}

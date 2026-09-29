@@ -63,10 +63,13 @@ function buildFallbackItinerary({ cityLegs, interests, pace, activities, days: t
 
   const legs = cityLegs.map(({ city, days }) => {
     const cityLower = (city || '').toLowerCase();
+    // Transfers (and Hotels) aren't a morning/afternoon/evening activity --
+    // they're the connector between two cities, matched in separately below.
     const pool = (activities || []).filter((a) => {
       const cityMatch = !a.city_name || a.city_name.toLowerCase() === cityLower;
       const interestMatch = interests.length === 0 || interests.includes(a.category);
-      return cityMatch && interestMatch;
+      const notConnector = a.category !== 'Transfers' && a.category !== 'Hotels';
+      return cityMatch && interestMatch && notConnector;
     });
     const sorted = [...pool].sort((a, b) => (b.rating || 0) - (a.rating || 0));
 
@@ -84,6 +87,24 @@ function buildFallbackItinerary({ cityLegs, interests, pace, activities, days: t
       dayPlans,
     };
   });
+
+  // Same idea as the AI route: there's no standalone flight/hotel booking in
+  // the feed, so a city-to-city hop is filled in with a real Transfers-
+  // category activity from the same pool, when one happens to be in it (this
+  // fallback only sees the top 500 site-wide activities passed down from the
+  // server, so it's best-effort, not exhaustive).
+  const mentions = (title, city) => (title || '').toLowerCase().includes((city || '').toLowerCase());
+  for (let i = 0; i < legs.length - 1; i++) {
+    const fromCity = legs[i].city;
+    const toCity = legs[i + 1].city;
+    const candidates = (activities || []).filter((a) => a.category === 'Transfers'
+      && (mentions(a.city_name, fromCity) || mentions(a.city_name, toCity)));
+    if (candidates.length === 0) continue;
+    const best = candidates.find((a) => mentions(a.title, fromCity) && mentions(a.title, toCity))
+      || candidates.find((a) => mentions(a.title, toCity) || mentions(a.title, fromCity))
+      || candidates[0];
+    legs[i].transferToNext = best;
+  }
 
   return {
     cities: cityLegs.map((l) => l.city),
