@@ -7,10 +7,10 @@ import { buildReturnTo } from '@/lib/adminNav';
 export const dynamic = 'force-dynamic';
 
 // Gap filters: "missing" means the column is null/empty; "has" means it's filled in.
+// "gallery" is handled separately (in JS, after the query) -- see note below.
 const GAP_COLUMNS = {
   image: 'image_url',
   price: 'price',
-  gallery: 'gallery',
   booking_url: 'booking_url',
 };
 
@@ -40,11 +40,14 @@ export default async function AdminActivitiesPage({ searchParams }) {
   const categories = [...new Set((categoryRows || []).map((r) => r.category))].sort();
   const cities = [...new Set((cityRows || []).map((r) => r.city_name))].sort();
 
+  // No .limit() yet -- the gallery filter runs in JS below, after the SQL
+  // filters narrow things down, so it needs the full matching set to filter
+  // correctly rather than an already-truncated page of it.
   let query = supabase
     .from('activity')
     .select('id, title, description, category, city_name, country, price, image_url, gallery, booking_url, rating, review_count, duration, indoor, family_friendly, free, trending')
     .order('title')
-    .limit(500);
+    .limit(2000);
 
   if (q) query = query.ilike('title', `%${q}%`);
   if (category) query = query.eq('category', category);
@@ -53,11 +56,7 @@ export default async function AdminActivitiesPage({ searchParams }) {
   for (const [key, column] of Object.entries(GAP_COLUMNS)) {
     const value = gapFilters[key];
     if (!value) continue;
-    if (column === 'gallery') {
-      // array column: "missing" = null or empty array
-      if (value === 'missing') query = query.or('gallery.is.null,gallery.eq.{}');
-      if (value === 'has') query = query.not('gallery', 'is', null).not('gallery', 'eq', '{}');
-    } else if (key === 'price') {
+    if (key === 'price') {
       // Null price on an activity marked free is correct, not a gap.
       if (value === 'missing') query = query.is('price', null).or('free.is.null,free.eq.false');
       if (value === 'has') query = query.not('price', 'is', null);
@@ -73,10 +72,20 @@ export default async function AdminActivitiesPage({ searchParams }) {
     if (value === 'no') query = query.or(`${key}.is.null,${key}.eq.false`);
   }
 
-  const { data, error } = await query;
+  let { data, error } = await query;
+
+  // Gallery is a Postgres array column. Comparing it to an empty-array
+  // literal through PostgREST's .or()/.not() filter syntax (`gallery.eq.{}`)
+  // is unreliable -- it was matching rows that already had real gallery
+  // data, so activities kept showing up as "missing" after being fixed.
+  // Checking the array length in JS instead sidesteps that entirely.
+  const galleryFilter = searchParams?.gallery || '';
+  if (data && galleryFilter === 'missing') data = data.filter((r) => !r.gallery || r.gallery.length === 0);
+  if (data && galleryFilter === 'has') data = data.filter((r) => r.gallery && r.gallery.length > 0);
+  const displayData = (data || []).slice(0, 500);
 
   const yn = (v) => (v ? '✓' : '');
-  const activeFilterCount = [category, city, ...Object.values(gapFilters), ...Object.values(boolFilters)].filter(Boolean).length;
+  const activeFilterCount = [category, city, galleryFilter, ...Object.values(gapFilters), ...Object.values(boolFilters)].filter(Boolean).length;
 
   // Carry the current search/filters through to the edit and "new" links, so
   // saving or deleting from there can redirect back to this same view
@@ -111,9 +120,9 @@ export default async function AdminActivitiesPage({ searchParams }) {
           { key: 'free', label: 'Free', render: (r) => yn(r.free) },
           { key: 'trending', label: 'Trending', render: (r) => yn(r.trending) },
         ]}
-        rows={data || []}
+        rows={displayData}
       />
-      <p className="text-xs text-muted-foreground mt-3">Showing {data?.length ?? 0} of up to 500 results{q ? ` matching "${q}"` : ''}{activeFilterCount ? ' (filtered)' : ''}.</p>
+      <p className="text-xs text-muted-foreground mt-3">Showing {displayData.length} of up to 500 results{q ? ` matching "${q}"` : ''}{activeFilterCount ? ' (filtered)' : ''}.</p>
     </div>
   );
 }

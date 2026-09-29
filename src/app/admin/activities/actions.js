@@ -7,7 +7,10 @@ import { isAdminRequest } from '@/lib/adminAuth';
 
 function toArray(v) {
   if (!v) return [];
-  return String(v).split(',').map((s) => s.trim()).filter(Boolean);
+  // Accept commas AND newlines as separators -- pasting a list of URLs one
+  // per line is a natural way to fill this in, and previously that saved as
+  // a single garbled string instead of separate array entries.
+  return String(v).split(/[,\n]/).map((s) => s.trim()).filter(Boolean);
 }
 function toNum(v) {
   if (v === null || v === undefined || v === '') return null;

@@ -7,7 +7,8 @@ import { isAdminRequest } from '@/lib/adminAuth';
 
 function toArray(v) {
   if (!v) return [];
-  return String(v).split(',').map((s) => s.trim()).filter(Boolean);
+  // Accept commas AND newlines as separators -- see activities/actions.js.
+  return String(v).split(/[,\n]/).map((s) => s.trim()).filter(Boolean);
 }
 function toNum(v) {
   if (v === null || v === undefined || v === '') return null;
