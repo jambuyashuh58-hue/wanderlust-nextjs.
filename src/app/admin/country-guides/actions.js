@@ -31,6 +31,9 @@ function parse(formData) {
 function revalidate(slug) {
   revalidatePath('/country-guides');
   if (slug) revalidatePath(`/country-guides/${slug}`);
+  // Also invalidate the admin list itself, so a save/delete redirect back to
+  // it doesn't show stale pre-edit data from the client router cache.
+  revalidatePath('/admin/country-guides');
 }
 
 export async function createCountryGuide(formData) {

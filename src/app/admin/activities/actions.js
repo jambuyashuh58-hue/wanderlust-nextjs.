@@ -55,6 +55,10 @@ function revalidateActivityPaths(id) {
   revalidatePath('/discover');
   revalidatePath('/');
   if (id) revalidatePath(`/activity/${id}`);
+  // Also invalidate the admin list itself (all its filter/search variants),
+  // so a save/delete redirect back to it doesn't show stale pre-edit data
+  // from the client router cache.
+  revalidatePath('/admin/activities');
 }
 
 export async function createActivity(formData) {

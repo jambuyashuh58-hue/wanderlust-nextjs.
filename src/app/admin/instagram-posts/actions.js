@@ -1,6 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 import { getSupabaseServer } from '@/lib/supabaseServer';
 import { isAdminRequest } from '@/lib/adminAuth';
 
@@ -34,6 +35,7 @@ export async function createInstagramPost(formData) {
   const row = parse(formData);
   const { error } = await supabase.from('instagram_post').insert(row);
   if (error) throw new Error(error.message);
+  revalidatePath('/admin/instagram-posts');
   redirect(formData.get('_return_to') || '/admin/instagram-posts');
 }
 
@@ -43,6 +45,7 @@ export async function updateInstagramPost(id, formData) {
   const row = parse(formData);
   const { error } = await supabase.from('instagram_post').update(row).eq('id', id);
   if (error) throw new Error(error.message);
+  revalidatePath('/admin/instagram-posts');
   redirect(formData.get('_return_to') || '/admin/instagram-posts');
 }
 
@@ -51,5 +54,6 @@ export async function deleteInstagramPost(id, formData) {
   const supabase = getSupabaseServer();
   const { error } = await supabase.from('instagram_post').delete().eq('id', id);
   if (error) throw new Error(error.message);
+  revalidatePath('/admin/instagram-posts');
   redirect(formData?.get('_return_to') || '/admin/instagram-posts');
 }

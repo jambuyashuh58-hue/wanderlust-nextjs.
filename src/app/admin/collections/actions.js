@@ -57,6 +57,9 @@ function revalidateCollectionPaths(slug) {
   revalidatePath('/guides');
   revalidatePath('/');
   if (slug) revalidatePath(`/collections/${slug}`);
+  // Also invalidate the admin list itself, so a save/delete redirect back to
+  // it doesn't show stale pre-edit data from the client router cache.
+  revalidatePath('/admin/collections');
 }
 
 export async function createCollection(formData) {
