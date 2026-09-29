@@ -1,6 +1,7 @@
 import { getSupabaseServer } from '@/lib/supabaseServer';
 import ListTable from '@/components/admin/ListTable';
 import SearchBox from '@/components/admin/SearchBox';
+import { buildReturnTo } from '@/lib/adminNav';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,14 +15,17 @@ export default async function AdminCountryGuidesPage({ searchParams }) {
   if (q) query = query.ilike('title', `%${q}%`);
   const { data, error } = await query;
 
+  const listUrl = buildReturnTo('/admin/country-guides', searchParams);
+  const qsSuffix = listUrl.includes('?') ? listUrl.slice(listUrl.indexOf('?')) : '';
+
   return (
     <div>
       <SearchBox placeholder="Search country guides by title..." />
       {error && <p className="text-destructive text-sm mb-4">{error.message}</p>}
       <ListTable
         title="Country Guides"
-        newHref="/admin/country-guides/new"
-        rowHref={(row) => `/admin/country-guides/${row.id}`}
+        newHref={`/admin/country-guides/new${qsSuffix}`}
+        rowHref={(row) => `/admin/country-guides/${row.id}${qsSuffix}`}
         columns={[
           { key: 'country', label: 'Nationality' },
           { key: 'title', label: 'Title' },

@@ -4,12 +4,13 @@ import ActivityPicker from '@/components/admin/ActivityPicker';
 import DeleteButton from '@/components/admin/DeleteButton';
 import { DISPLAY_STYLES } from './constants';
 
-export default function CollectionForm({ collection, allActivities, action, deleteAction }) {
+export default function CollectionForm({ collection, allActivities, action, deleteAction, returnTo }) {
   const c = collection || {};
   const roadmap = c.roadmap || {};
   return (
     <div className="max-w-3xl">
       <form action={action} className="space-y-5 rounded-2xl border border-border bg-card p-6">
+        {returnTo && <input type="hidden" name="_return_to" value={returnTo} />}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="Title *"><TextInput name="title" defaultValue={c.title} required /></Field>
           <Field label="Slug *" help="URL-safe, e.g. first-weekend-istanbul"><TextInput name="slug" defaultValue={c.slug} required /></Field>
@@ -55,7 +56,7 @@ export default function CollectionForm({ collection, allActivities, action, dele
 
         <SaveButton />
       </form>
-      {deleteAction && <div className="mt-4"><DeleteButton action={deleteAction} confirmText={`Delete "${c.title}"? This cannot be undone.`} /></div>}
+      {deleteAction && <div className="mt-4"><DeleteButton action={deleteAction} confirmText={`Delete "${c.title}"? This cannot be undone.`} returnTo={returnTo} /></div>}
     </div>
   );
 }

@@ -3,11 +3,12 @@ import ImageUploadField from '@/components/admin/ImageUploadField';
 import DeleteButton from '@/components/admin/DeleteButton';
 import { ACTIVITY_CATEGORIES } from './constants';
 
-export default function ActivityForm({ activity, action, deleteAction }) {
+export default function ActivityForm({ activity, action, deleteAction, returnTo }) {
   const a = activity || {};
   return (
     <div className="max-w-3xl">
       <form action={action} className="space-y-5 rounded-2xl border border-border bg-card p-6">
+        {returnTo && <input type="hidden" name="_return_to" value={returnTo} />}
         <Field label="Title *"><TextInput name="title" defaultValue={a.title} required /></Field>
         <Field label="Description"><TextArea name="description" defaultValue={a.description} rows={4} /></Field>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -52,7 +53,7 @@ export default function ActivityForm({ activity, action, deleteAction }) {
 
         <SaveButton />
       </form>
-      {deleteAction && <div className="mt-4"><DeleteButton action={deleteAction} confirmText={`Delete "${a.title}"? This cannot be undone.`} /></div>}
+      {deleteAction && <div className="mt-4"><DeleteButton action={deleteAction} confirmText={`Delete "${a.title}"? This cannot be undone.`} returnTo={returnTo} /></div>}
     </div>
   );
 }

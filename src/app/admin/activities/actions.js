@@ -60,7 +60,7 @@ export async function createActivity(formData) {
   const { data, error } = await supabase.from('activity').insert(parseActivity(formData)).select('id').single();
   if (error) throw new Error(error.message);
   revalidateActivityPaths(data.id);
-  redirect('/admin/activities');
+  redirect(formData.get('_return_to') || '/admin/activities');
 }
 
 export async function updateActivity(id, formData) {
@@ -69,14 +69,14 @@ export async function updateActivity(id, formData) {
   const { error } = await supabase.from('activity').update(parseActivity(formData)).eq('id', id);
   if (error) throw new Error(error.message);
   revalidateActivityPaths(id);
-  redirect('/admin/activities');
+  redirect(formData.get('_return_to') || '/admin/activities');
 }
 
-export async function deleteActivity(id) {
+export async function deleteActivity(id, formData) {
   if (!isAdminRequest()) throw new Error('Unauthorized');
   const supabase = getSupabaseServer();
   const { error } = await supabase.from('activity').delete().eq('id', id);
   if (error) throw new Error(error.message);
   revalidateActivityPaths(id);
-  redirect('/admin/activities');
+  redirect(formData?.get('_return_to') || '/admin/activities');
 }

@@ -40,7 +40,7 @@ export async function createCountryGuide(formData) {
   const { error } = await supabase.from('country_guide').insert(row);
   if (error) throw new Error(error.message);
   revalidate(row.slug);
-  redirect('/admin/country-guides');
+  redirect(formData.get('_return_to') || '/admin/country-guides');
 }
 
 export async function updateCountryGuide(id, formData) {
@@ -50,14 +50,14 @@ export async function updateCountryGuide(id, formData) {
   const { error } = await supabase.from('country_guide').update(row).eq('id', id);
   if (error) throw new Error(error.message);
   revalidate(row.slug);
-  redirect('/admin/country-guides');
+  redirect(formData.get('_return_to') || '/admin/country-guides');
 }
 
-export async function deleteCountryGuide(id, slug) {
+export async function deleteCountryGuide(id, slug, formData) {
   if (!isAdminRequest()) throw new Error('Unauthorized');
   const supabase = getSupabaseServer();
   const { error } = await supabase.from('country_guide').delete().eq('id', id);
   if (error) throw new Error(error.message);
   revalidate(slug);
-  redirect('/admin/country-guides');
+  redirect(formData?.get('_return_to') || '/admin/country-guides');
 }

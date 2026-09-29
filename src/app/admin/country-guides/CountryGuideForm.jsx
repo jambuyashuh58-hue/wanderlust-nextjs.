@@ -2,11 +2,12 @@ import { Field, TextInput, NumberInput, TextArea, CheckboxInput, SaveButton } fr
 import ImageUploadField from '@/components/admin/ImageUploadField';
 import DeleteButton from '@/components/admin/DeleteButton';
 
-export default function CountryGuideForm({ guide, action, deleteAction }) {
+export default function CountryGuideForm({ guide, action, deleteAction, returnTo }) {
   const g = guide || {};
   return (
     <div className="max-w-3xl">
       <form action={action} className="space-y-5 rounded-2xl border border-border bg-card p-6">
+        {returnTo && <input type="hidden" name="_return_to" value={returnTo} />}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="Nationality / Country *" help="e.g. United States"><TextInput name="country" defaultValue={g.country} required /></Field>
           <Field label="Slug *" help="e.g. united-states"><TextInput name="slug" defaultValue={g.slug} required /></Field>
@@ -23,7 +24,7 @@ export default function CountryGuideForm({ guide, action, deleteAction }) {
         <CheckboxInput name="published" defaultChecked={g.published} label="Published" />
         <SaveButton />
       </form>
-      {deleteAction && <div className="mt-4"><DeleteButton action={deleteAction} confirmText={`Delete "${g.title}"? This cannot be undone.`} /></div>}
+      {deleteAction && <div className="mt-4"><DeleteButton action={deleteAction} confirmText={`Delete "${g.title}"? This cannot be undone.`} returnTo={returnTo} /></div>}
     </div>
   );
 }

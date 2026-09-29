@@ -65,7 +65,7 @@ export async function createCollection(formData) {
   const { error } = await supabase.from('collection').insert(row);
   if (error) throw new Error(error.message);
   revalidateCollectionPaths(row.slug);
-  redirect('/admin/collections');
+  redirect(formData.get('_return_to') || '/admin/collections');
 }
 
 export async function updateCollection(id, formData) {
@@ -75,14 +75,14 @@ export async function updateCollection(id, formData) {
   const { error } = await supabase.from('collection').update(row).eq('id', id);
   if (error) throw new Error(error.message);
   revalidateCollectionPaths(row.slug);
-  redirect('/admin/collections');
+  redirect(formData.get('_return_to') || '/admin/collections');
 }
 
-export async function deleteCollection(id, slug) {
+export async function deleteCollection(id, slug, formData) {
   if (!isAdminRequest()) throw new Error('Unauthorized');
   const supabase = getSupabaseServer();
   const { error } = await supabase.from('collection').delete().eq('id', id);
   if (error) throw new Error(error.message);
   revalidateCollectionPaths(slug);
-  redirect('/admin/collections');
+  redirect(formData?.get('_return_to') || '/admin/collections');
 }

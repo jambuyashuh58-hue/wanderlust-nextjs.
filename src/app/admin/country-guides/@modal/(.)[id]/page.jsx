@@ -3,17 +3,19 @@ import { getSupabaseServer } from '@/lib/supabaseServer';
 import Drawer from '@/components/admin/Drawer';
 import CountryGuideForm from '../../CountryGuideForm';
 import { updateCountryGuide, deleteCountryGuide } from '../../actions';
+import { buildReturnTo } from '@/lib/adminNav';
 
 export const dynamic = 'force-dynamic';
 
-export default async function EditCountryGuideModal({ params }) {
+export default async function EditCountryGuideModal({ params, searchParams }) {
   const supabase = getSupabaseServer();
   const { data: guide } = await supabase.from('country_guide').select('*').eq('id', params.id).maybeSingle();
   if (!guide) notFound();
+  const returnTo = buildReturnTo('/admin/country-guides', searchParams);
 
   return (
     <Drawer title={`Edit: ${guide.title}`} maxWidth="max-w-3xl">
-      <CountryGuideForm guide={guide} action={updateCountryGuide.bind(null, params.id)} deleteAction={deleteCountryGuide.bind(null, params.id, guide.slug)} />
+      <CountryGuideForm guide={guide} action={updateCountryGuide.bind(null, params.id)} deleteAction={deleteCountryGuide.bind(null, params.id, guide.slug)} returnTo={returnTo} />
     </Drawer>
   );
 }

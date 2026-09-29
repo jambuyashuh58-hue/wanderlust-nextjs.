@@ -6,7 +6,7 @@ import { Field, TextInput, TextArea, SelectInput, SaveButton } from '@/component
 import DeleteButton from '@/components/admin/DeleteButton';
 import { POST_TYPES, POST_STATUSES } from './constants';
 
-export default function InstagramPostForm({ post, action, deleteAction }) {
+export default function InstagramPostForm({ post, action, deleteAction, returnTo }) {
   const p = post || {};
   const topicRef = useRef(null);
   const pillarRef = useRef(null);
@@ -48,6 +48,7 @@ export default function InstagramPostForm({ post, action, deleteAction }) {
   return (
     <div className="max-w-2xl">
       <form action={action} className="space-y-5 rounded-2xl border border-border bg-card p-6">
+        {returnTo && <input type="hidden" name="_return_to" value={returnTo} />}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="Post type">
             <select ref={postTypeRef} name="post_type" defaultValue={p.post_type || POST_TYPES[0]} className="w-full min-h-[40px] px-3 py-2 rounded-lg border border-border bg-background text-sm outline-none focus:ring-2 focus:ring-primary">
@@ -105,7 +106,7 @@ export default function InstagramPostForm({ post, action, deleteAction }) {
 
         <SaveButton />
       </form>
-      {deleteAction && <div className="mt-4"><DeleteButton action={deleteAction} confirmText="Delete this Instagram post? This cannot be undone." /></div>}
+      {deleteAction && <div className="mt-4"><DeleteButton action={deleteAction} confirmText="Delete this Instagram post? This cannot be undone." returnTo={returnTo} /></div>}
     </div>
   );
 }

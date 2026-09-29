@@ -34,7 +34,7 @@ export async function createInstagramPost(formData) {
   const row = parse(formData);
   const { error } = await supabase.from('instagram_post').insert(row);
   if (error) throw new Error(error.message);
-  redirect('/admin/instagram-posts');
+  redirect(formData.get('_return_to') || '/admin/instagram-posts');
 }
 
 export async function updateInstagramPost(id, formData) {
@@ -43,13 +43,13 @@ export async function updateInstagramPost(id, formData) {
   const row = parse(formData);
   const { error } = await supabase.from('instagram_post').update(row).eq('id', id);
   if (error) throw new Error(error.message);
-  redirect('/admin/instagram-posts');
+  redirect(formData.get('_return_to') || '/admin/instagram-posts');
 }
 
-export async function deleteInstagramPost(id) {
+export async function deleteInstagramPost(id, formData) {
   if (!isAdminRequest()) throw new Error('Unauthorized');
   const supabase = getSupabaseServer();
   const { error } = await supabase.from('instagram_post').delete().eq('id', id);
   if (error) throw new Error(error.message);
-  redirect('/admin/instagram-posts');
+  redirect(formData?.get('_return_to') || '/admin/instagram-posts');
 }

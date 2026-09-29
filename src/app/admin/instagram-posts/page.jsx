@@ -1,6 +1,7 @@
 import { getSupabaseServer } from '@/lib/supabaseServer';
 import ListTable from '@/components/admin/ListTable';
 import SearchBox from '@/components/admin/SearchBox';
+import { buildReturnTo } from '@/lib/adminNav';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,14 +16,17 @@ export default async function AdminInstagramPostsPage({ searchParams }) {
   if (q) query = query.ilike('topic', `%${q}%`);
   const { data, error } = await query;
 
+  const listUrl = buildReturnTo('/admin/instagram-posts', searchParams);
+  const qsSuffix = listUrl.includes('?') ? listUrl.slice(listUrl.indexOf('?')) : '';
+
   return (
     <div>
       <div className="mb-4"><SearchBox placeholder="Search by topic..." /></div>
       {error && <p className="text-destructive text-sm mb-4">{error.message}</p>}
       <ListTable
         title="Instagram Posts"
-        newHref="/admin/instagram-posts/new"
-        rowHref={(row) => `/admin/instagram-posts/${row.id}`}
+        newHref={`/admin/instagram-posts/new${qsSuffix}`}
+        rowHref={(row) => `/admin/instagram-posts/${row.id}${qsSuffix}`}
         columns={[
           { key: 'topic', label: 'Topic' },
           { key: 'post_type', label: 'Type' },

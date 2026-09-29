@@ -2,6 +2,7 @@ import { getSupabaseServer } from '@/lib/supabaseServer';
 import ListTable from '@/components/admin/ListTable';
 import SearchBox from '@/components/admin/SearchBox';
 import ActivityFilters from '@/components/admin/ActivityFilters';
+import { buildReturnTo } from '@/lib/adminNav';
 
 export const dynamic = 'force-dynamic';
 
@@ -77,6 +78,12 @@ export default async function AdminActivitiesPage({ searchParams }) {
   const yn = (v) => (v ? '✓' : '');
   const activeFilterCount = [category, city, ...Object.values(gapFilters), ...Object.values(boolFilters)].filter(Boolean).length;
 
+  // Carry the current search/filters through to the edit and "new" links, so
+  // saving or deleting from there can redirect back to this same view
+  // instead of resetting to the bare list.
+  const listUrl = buildReturnTo('/admin/activities', searchParams);
+  const qsSuffix = listUrl.includes('?') ? listUrl.slice(listUrl.indexOf('?')) : '';
+
   return (
     <div>
       <SearchBox placeholder="Search activities by title..." />
@@ -84,8 +91,8 @@ export default async function AdminActivitiesPage({ searchParams }) {
       {error && <p className="text-destructive text-sm mb-4">{error.message}</p>}
       <ListTable
         title="Activities"
-        newHref="/admin/activities/new"
-        rowHref={(row) => `/admin/activities/${row.id}`}
+        newHref={`/admin/activities/new${qsSuffix}`}
+        rowHref={(row) => `/admin/activities/${row.id}${qsSuffix}`}
         columns={[
           { key: 'title', label: 'Title' },
           { key: 'description', label: 'Description', render: (r) => r.description ? `${r.description.slice(0, 60)}${r.description.length > 60 ? '…' : ''}` : '—' },

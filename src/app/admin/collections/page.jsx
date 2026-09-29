@@ -1,6 +1,7 @@
 import { getSupabaseServer } from '@/lib/supabaseServer';
 import ListTable from '@/components/admin/ListTable';
 import SearchBox from '@/components/admin/SearchBox';
+import { buildReturnTo } from '@/lib/adminNav';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,14 +16,17 @@ export default async function AdminCollectionsPage({ searchParams }) {
   if (q) query = query.ilike('title', `%${q}%`);
   const { data, error } = await query;
 
+  const listUrl = buildReturnTo('/admin/collections', searchParams);
+  const qsSuffix = listUrl.includes('?') ? listUrl.slice(listUrl.indexOf('?')) : '';
+
   return (
     <div>
       <SearchBox placeholder="Search collections & guides by title..." />
       {error && <p className="text-destructive text-sm mb-4">{error.message}</p>}
       <ListTable
         title="Collections & Guides"
-        newHref="/admin/collections/new"
-        rowHref={(row) => `/admin/collections/${row.id}`}
+        newHref={`/admin/collections/new${qsSuffix}`}
+        rowHref={(row) => `/admin/collections/${row.id}${qsSuffix}`}
         columns={[
           { key: 'title', label: 'Title' },
           { key: 'slug', label: 'Slug' },
