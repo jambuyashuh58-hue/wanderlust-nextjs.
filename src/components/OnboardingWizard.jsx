@@ -155,21 +155,29 @@ function buildFallbackItinerary({ cityLegs, interests, pace, activities, days: t
     const toCity = legs[i + 1].city;
     const candidates = (activities || []).filter((a) => a.category === 'Transfers'
       && (mentions(a.city_name, fromCity) || mentions(a.city_name, toCity)));
-    if (candidates.length === 0) continue;
-    const best = candidates.find((a) => mentions(a.title, fromCity) && mentions(a.title, toCity))
-      || candidates.find((a) => mentions(a.title, toCity) || mentions(a.title, fromCity))
-      || candidates[0];
-    legs[i].transferToNext = best;
+    if (candidates.length > 0) {
+      const best = candidates.find((a) => mentions(a.title, fromCity) && mentions(a.title, toCity))
+        || candidates.find((a) => mentions(a.title, toCity) || mentions(a.title, fromCity))
+        || candidates[0];
+      legs[i].transferToNext = best;
+    } else {
+      // No real Transfers-category activity connects these two cities --
+      // fall back to a Google Flights search link (no affiliate id
+      // configured yet; same as route.js's googleFlightsSearchUrl).
+      legs[i].flightSearchUrl = `https://www.google.com/travel/flights?${new URLSearchParams({ q: `Flights from ${fromCity} to ${toCity}` })}`;
+    }
   }
 
   // Same idea for a where-to-stay pick per city: best-rated Hotels-category
   // row for that city, if one happens to be in this fallback's 500-activity
-  // pool.
+  // pool -- otherwise a plain Booking.com search link (no affiliate id yet).
   for (const leg of legs) {
     const cityLower = (leg.city || '').toLowerCase();
     const hotels = (activities || []).filter((a) => a.category === 'Hotels' && (a.city_name || '').toLowerCase() === cityLower);
     if (hotels.length > 0) {
       leg.hotelPick = [...hotels].sort((a, b) => (b.rating || 0) - (a.rating || 0))[0];
+    } else {
+      leg.hotelSearchUrl = `https://www.booking.com/searchresults.html?${new URLSearchParams({ ss: `${leg.city}, Turkey` })}`;
     }
   }
 

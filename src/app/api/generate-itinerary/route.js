@@ -226,6 +226,25 @@ function sequenceLegByProximity(dayPlans) {
   });
 }
 
+// No affiliate id configured yet for either of these -- plain search links
+// for now. Once real accounts exist, add `&aid=<id>` (Booking.com) or the
+// Travelpayouts marker param (flights) here, in this one place, and every
+// itinerary picks it up on the next generation.
+const BOOKING_AFFILIATE_ID = null;
+const FLIGHTS_AFFILIATE_MARKER = null;
+
+function bookingSearchUrl(city) {
+  const params = new URLSearchParams({ ss: `${city}, Turkey` });
+  if (BOOKING_AFFILIATE_ID) params.set('aid', BOOKING_AFFILIATE_ID);
+  return `https://www.booking.com/searchresults.html?${params.toString()}`;
+}
+
+function googleFlightsSearchUrl(fromCity, toCity) {
+  const params = new URLSearchParams({ q: `Flights from ${fromCity} to ${toCity}` });
+  if (FLIGHTS_AFFILIATE_MARKER) params.set('marker', FLIGHTS_AFFILIATE_MARKER);
+  return `https://www.google.com/travel/flights?${params.toString()}`;
+}
+
 // Builds one city's leg of the trip: pulls its real candidate activities,
 // asks the AI for a day-by-day plan, and maps the result back to full
 // activity records. Returns either a populated leg or one carrying `error`
@@ -304,7 +323,15 @@ async function generateLeg(supabase, { city, days, interests, pace, budget, trav
     summary: aiResult.summary || '',
     dayPlans,
   };
-  if (hotelPick) leg.hotelPick = hotelPick;
+  if (hotelPick) {
+    leg.hotelPick = hotelPick;
+  } else {
+    // No real Hotels-category listing for this city yet -- fall back to a
+    // plain Booking.com search link (no affiliate id configured; swap in
+    // BOOKING_AFFILIATE_ID once one exists, one line, see bookingSearchUrl
+    // below) rather than leaving the traveler with no lead at all.
+    leg.hotelSearchUrl = bookingSearchUrl(city);
+  }
   if (actualDays < requestedDays) {
     leg.note = `Generated ${actualDays} of the ${requestedDays} days asked for -- ${city} may not have enough unique activities for a longer stay yet.`;
   }
@@ -430,7 +457,14 @@ async function generateItinerary(params) {
       })
     );
     transfers.forEach((transfer, i) => {
-      if (transfer) legs[i].transferToNext = transfer;
+      if (transfer) {
+        legs[i].transferToNext = transfer;
+      } else if (!legs[i].error && !legs[i + 1].error) {
+        // No real Transfers-category activity connects these two cities
+        // (ground or flight) -- fall back to a Google Flights search link
+        // rather than leaving the traveler with no way to get there.
+        legs[i].flightSearchUrl = googleFlightsSearchUrl(legs[i].city, legs[i + 1].city);
+      }
     });
   }
 

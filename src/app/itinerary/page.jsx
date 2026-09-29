@@ -10,7 +10,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Sparkles, MapPin, ArrowRight, Sun, Sunset, Moon, Star, Clock, Info, CalendarCheck, Car, Bed } from 'lucide-react';
+import { Sparkles, MapPin, ArrowRight, Sun, Sunset, Moon, Star, Clock, Info, CalendarCheck, Car, Bed, Plane, ExternalLink } from 'lucide-react';
 
 const PERIODS = ['morning', 'afternoon', 'evening'];
 const PERIOD_ICON = { morning: Sun, afternoon: Sunset, evening: Moon };
@@ -125,6 +125,31 @@ function HotelCard({ hotel, city }) {
         </span>
       )}
     </Link>
+  );
+}
+
+// Fallback for when there's no real activity to link to yet -- no matching
+// Transfers-category row between two cities, or no Hotels-category pick for
+// a city. Plain search links (no affiliate id configured on either yet, see
+// the comments in generate-itinerary/route.js) rather than leaving the
+// traveler with nothing.
+function SearchLinkCard({ href, icon: Icon, label, title }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-4 rounded-xl border border-dashed border-border bg-card/50 hover:border-primary transition-colors px-4 py-3.5 max-w-2xl mx-auto"
+    >
+      <span className="flex items-center justify-center w-9 h-9 rounded-full bg-muted text-muted-foreground shrink-0">
+        <Icon className="w-4 h-4" />
+      </span>
+      <div className="flex-1 min-w-0">
+        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-0.5">{label}</p>
+        <p className="text-sm font-semibold leading-snug truncate">{title}</p>
+      </div>
+      <ExternalLink className="w-4 h-4 text-muted-foreground shrink-0" />
+    </a>
   );
 }
 
@@ -331,9 +356,13 @@ export default function ItineraryPage() {
                   {dp.theme && <h2 className="text-lg font-bold leading-tight">{dp.theme}</h2>}
                 </div>
               </div>
-              {leg.hotelPick && (
+              {leg.hotelPick ? (
                 <div className="mb-5">
                   <HotelCard hotel={leg.hotelPick} city={leg.city} />
+                </div>
+              ) : leg.hotelSearchUrl && (
+                <div className="mb-5">
+                  <SearchLinkCard href={leg.hotelSearchUrl} icon={Bed} label={`Where to stay in ${leg.city}`} title="Search hotels on Booking.com" />
                 </div>
               )}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -346,11 +375,15 @@ export default function ItineraryPage() {
                   );
                 })}
               </div>
-              {leg.transferToNext && legs[i + 1] && (
+              {legs[i + 1] && (leg.transferToNext ? (
                 <div className="mt-6">
                   <TransferCard transfer={leg.transferToNext} fromCity={leg.city} toCity={legs[i + 1].city} />
                 </div>
-              )}
+              ) : leg.flightSearchUrl && (
+                <div className="mt-6">
+                  <SearchLinkCard href={leg.flightSearchUrl} icon={Plane} label={`${leg.city} → ${legs[i + 1].city}`} title="Search flights on Google Flights" />
+                </div>
+              ))}
             </div>
           );
         })}
