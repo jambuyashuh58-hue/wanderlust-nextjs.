@@ -1,8 +1,6 @@
 'use client';
 import { useState } from 'react';
 
-const BACKEND_URL = 'https://movetoistanbul-backend-yashus-projects-c3bafd05.vercel.app';
-
 export default function NewsletterSignup() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState('idle');
@@ -11,7 +9,7 @@ export default function NewsletterSignup() {
     e.preventDefault();
     setStatus('loading');
     try {
-      const res = await fetch(`${BACKEND_URL}/api/newsletter`, {
+      const res = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, source_page: '/', source_component: 'footer' }),

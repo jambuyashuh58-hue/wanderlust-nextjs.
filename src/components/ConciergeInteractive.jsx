@@ -22,7 +22,6 @@ const CONCIERGE_TIERS = [
 ];
 
 const CONCIERGE_URL = 'https://www.instagram.com/move_istanbul';
-const BACKEND_URL = 'https://movetoistanbul-backend-yashus-projects-c3bafd05.vercel.app';
 
 const EMPTY_FORM = { name: '', email: '', instagram_handle: '', nationality: '', budget_range: '', timeline: '', message: '' };
 
@@ -38,7 +37,7 @@ export default function ConciergeInteractive() {
     e.preventDefault();
     setStatus('loading');
     try {
-      const res = await fetch(`${BACKEND_URL}/api/concierge/inquiry`, {
+      const res = await fetch('/api/concierge/inquiry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, tier_interested: selectedTier || 'not_sure' }),
