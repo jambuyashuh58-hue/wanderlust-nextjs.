@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabaseServer';
 import { sendNotificationEmail } from '@/lib/notify';
 
-const VALID_TIERS = ['paperwork', 'apartment', 'full', 'not_sure'];
+const VALID_TIERS = ['paperwork', 'apartment', 'full', 'trip_package', 'not_sure'];
 
 export async function POST(request) {
   let body;

@@ -10,7 +10,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Sparkles, MapPin, ArrowRight, Sun, Sunset, Moon, Star, Clock, Info } from 'lucide-react';
+import { Sparkles, MapPin, ArrowRight, Sun, Sunset, Moon, Star, Clock, Info, CalendarCheck } from 'lucide-react';
 
 const PERIODS = ['morning', 'afternoon', 'evening'];
 const PERIOD_ICON = { morning: Sun, afternoon: Sunset, evening: Moon };
@@ -284,7 +284,28 @@ export default function ItineraryPage() {
         })}
       </div>
 
-      <div className="mt-10 flex flex-wrap gap-3 justify-center">
+      {/* The natural next step after seeing a full plan mapped out: hand it
+          to us to firm up and turn into real bookings, rather than doing
+          that legwork solo. Links straight into the concierge page with the
+          $20 tier pre-selected (?tier=trip_package) so there's no picking
+          through the other relocation-focused tiers to find it. */}
+      <div className="mt-10 rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/5 to-secondary/5 p-6 sm:p-8 text-center max-w-2xl mx-auto">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wider mb-3">
+          <CalendarCheck className="w-3.5 h-3.5" /> Next step
+        </span>
+        <h2 className="text-xl font-bold mb-2">Want us to firm this up and book it for you?</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed mb-5 max-w-lg mx-auto">
+          Send us this trip and we&apos;ll turn it into a day-by-day plan with real hotel picks and direct booking links for every activity — ready to book in a couple of clicks.
+        </p>
+        <Link
+          href="/concierge?tier=trip_package"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-primary text-white font-semibold hover:scale-[1.02] transition-transform"
+        >
+          Get my trip package plan — $20 <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
+
+      <div className="mt-6 flex flex-wrap gap-3 justify-center">
         <Link
           href="/onboarding"
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-border font-semibold hover:border-primary transition-colors"

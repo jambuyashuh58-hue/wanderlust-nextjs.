@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import ConciergeInteractive from '@/components/ConciergeInteractive';
 
 export const metadata = {
@@ -18,7 +19,9 @@ export default function ConciergeServicePage() {
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <ConciergeInteractive />
+        <Suspense fallback={null}>
+          <ConciergeInteractive />
+        </Suspense>
       </div>
     </div>
   );

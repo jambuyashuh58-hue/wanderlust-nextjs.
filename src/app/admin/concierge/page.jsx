@@ -3,7 +3,7 @@ import ListTable from '@/components/admin/ListTable';
 
 export const dynamic = 'force-dynamic';
 
-const TIER_LABELS = { paperwork: 'Visa & Paperwork', apartment: 'Apartment Shortlisting', full: 'Full Relocation', not_sure: 'Not sure' };
+const TIER_LABELS = { paperwork: 'Visa & Paperwork', apartment: 'Apartment Shortlisting', full: 'Full Relocation', trip_package: 'Trip Package Planning', not_sure: 'Not sure' };
 
 export default async function AdminConciergePage() {
   const supabase = getSupabaseServer();

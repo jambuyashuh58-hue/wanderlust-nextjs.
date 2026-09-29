@@ -1,9 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Check, ShieldAlert, MessageCircle } from 'lucide-react';
 
 const CONCIERGE_TIERS = [
+  {
+    id: 'trip_package', name: 'Trip Package Planning', price: 20,
+    tagline: 'Send us your cities, dates, and budget — we hand back a day-by-day plan with real activities, hotel picks, and booking links.',
+    includes: ['Custom day-by-day itinerary built from your cities, dates, and budget', 'Hand-picked activities and hotel range for every day', 'Direct booking links for everything — you book, we just plan it', 'One free revision if your dates or budget change', 'Delivered within 48 hours'],
+  },
   {
     id: 'paperwork', name: 'Visa & Paperwork Guidance', price: 99,
     tagline: 'A focused 45-minute strategy call to map your exact visa route — no more guessing.',
@@ -26,9 +32,20 @@ const CONCIERGE_URL = 'https://www.instagram.com/move_istanbul';
 const EMPTY_FORM = { name: '', email: '', instagram_handle: '', nationality: '', budget_range: '', timeline: '', message: '' };
 
 export default function ConciergeInteractive() {
+  const searchParams = useSearchParams();
   const [selectedTier, setSelectedTier] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
   const [status, setStatus] = useState('idle');
+
+  // Lets another page (e.g. the itinerary map, right after someone builds a
+  // trip) deep-link straight into a pre-selected tier via ?tier=trip_package
+  // instead of dropping the visitor on the page to pick again themselves.
+  useEffect(() => {
+    const requested = searchParams.get('tier');
+    if (requested && CONCIERGE_TIERS.some((t) => t.id === requested)) {
+      setSelectedTier(requested);
+    }
+  }, [searchParams]);
 
   const tierName = CONCIERGE_TIERS.find((t) => t.id === selectedTier)?.name;
   const buttonLabel = status === 'loading' ? 'Sending…' : tierName ? `Request ${tierName}` : 'Send Inquiry';
