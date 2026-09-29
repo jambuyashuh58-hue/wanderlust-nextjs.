@@ -196,8 +196,10 @@ function branchColor(i, alpha = 1) {
 
 export default function ItineraryPage() {
   const [itinerary, setItinerary] = useState(undefined); // undefined = loading, null = none found
-  const [selectedDay, setSelectedDay] = useState({}); // { [legIndex]: dayNumber }
-  const panelRefs = useRef({}); // { [legIndex]: HTMLElement } -- for city-click "jump to this city's itinerary"
+  const [selectedCity, setSelectedCity] = useState(0); // one city's full itinerary shown at a time
+  const panelRef = useRef(null); // the currently-shown city panel, for "jump to this city"
+  const dayRefs = useRef({}); // { [dayNumber]: HTMLElement } within the currently-shown city panel
+  const pendingDay = useRef(null); // a day to scroll to once a city switch finishes rendering
 
   useEffect(() => {
     let parsed = null;
@@ -208,15 +210,19 @@ export default function ItineraryPage() {
       parsed = null;
     }
     setItinerary(parsed);
-    if (parsed) {
-      const legs = getLegs(parsed);
-      const initial = {};
-      legs.forEach((leg, i) => {
-        if (leg.dayPlans?.length) initial[i] = leg.dayPlans[0].day;
-      });
-      setSelectedDay(initial);
-    }
   }, []);
+
+  // Runs after selectedCity changes (and the new panel has rendered), so a
+  // day-chip click that also had to switch cities can still land on that
+  // specific day rather than just the top of the city.
+  useEffect(() => {
+    if (pendingDay.current == null) return;
+    const day = pendingDay.current;
+    pendingDay.current = null;
+    requestAnimationFrame(() => {
+      dayRefs.current[day]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }, [selectedCity]);
 
   if (itinerary === undefined) return null;
 
@@ -251,14 +257,28 @@ export default function ItineraryPage() {
     ? `A ${itinerary.days}-day journey through ${legs.map((l) => l.city).join(', ')}.`
     : (legs[0]?.summary ? legs[0].summary.split(/(?<=[.!?])\s+/)[0] : '');
 
-  // Clicking a city node jumps straight to that city's itinerary panel
-  // below (making sure a day is actually selected first, in case a leg
-  // somehow has none pre-selected).
-  function handleCityClick(i, leg) {
-    setSelectedDay((s) => (s[i] ? s : { ...s, [i]: leg.dayPlans?.[0]?.day }));
-    requestAnimationFrame(() => {
-      panelRefs.current[i]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+  // Clicking a city node switches the single expanded panel below to show
+  // that city's full itinerary (every day, not just one) and scrolls to it.
+  function goToCity(i) {
+    pendingDay.current = null;
+    if (selectedCity === i) {
+      panelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      setSelectedCity(i);
+      requestAnimationFrame(() => panelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    }
+  }
+
+  // Clicking a day chip does the same, but also jumps straight to that day
+  // within the (now full) city panel -- via the pendingDay effect above if
+  // switching cities was needed first, or immediately if already showing.
+  function goToDay(i, day) {
+    if (selectedCity === i) {
+      dayRefs.current[day]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      pendingDay.current = day;
+      setSelectedCity(i);
+    }
   }
 
   return (
@@ -297,97 +317,134 @@ export default function ItineraryPage() {
         </div>
         {legs.length > 0 && <div className="mindmap-trunk" />}
 
-        {legs.map((leg, i) => (
-          <div key={`${leg.city}-${i}`} className="mindmap-branch">
-            <div className="mindmap-branch-stem" style={{ background: branchColor(i) }} />
-            <button
-              type="button"
-              onClick={() => handleCityClick(i, leg)}
-              className="mindmap-node mindmap-city-v"
-              style={{ borderColor: branchColor(i), background: branchColor(i, 0.1) }}
-            >
-              <MapPin className="w-4 h-4 shrink-0" style={{ color: branchColor(i) }} />
-              <span>
-                <span className="mindmap-city-name">{leg.city}</span>
-                <span className="mindmap-city-days">{leg.days} {leg.days === 1 ? 'day' : 'days'} · tap for itinerary</span>
-              </span>
-            </button>
-            {leg.dayPlans?.length > 0 && (
-              <div className="mindmap-day-row" style={{ borderColor: branchColor(i, 0.35) }}>
-                {leg.dayPlans.map((dp) => {
-                  const active = selectedDay[i] === dp.day;
-                  return (
+        {legs.map((leg, i) => {
+          const isSelectedCity = selectedCity === i;
+          return (
+            <div key={`${leg.city}-${i}`} className="mindmap-branch">
+              <div className="mindmap-branch-stem" style={{ background: branchColor(i) }} />
+              <button
+                type="button"
+                onClick={() => goToCity(i)}
+                className="mindmap-node mindmap-city-v"
+                style={{
+                  borderColor: branchColor(i),
+                  background: branchColor(i, isSelectedCity ? 0.18 : 0.1),
+                  boxShadow: isSelectedCity ? `0 0 0 2px ${branchColor(i, 0.4)}` : undefined,
+                }}
+              >
+                <MapPin className="w-4 h-4 shrink-0" style={{ color: branchColor(i) }} />
+                <span>
+                  <span className="mindmap-city-name">{leg.city}</span>
+                  <span className="mindmap-city-days">{leg.days} {leg.days === 1 ? 'day' : 'days'} · tap for itinerary</span>
+                </span>
+              </button>
+              {leg.dayPlans?.length > 0 && (
+                <div className="mindmap-day-row" style={{ borderColor: branchColor(i, 0.35) }}>
+                  {leg.dayPlans.map((dp) => (
                     <button
                       key={dp.day}
                       type="button"
-                      onClick={() => setSelectedDay((s) => ({ ...s, [i]: dp.day }))}
+                      onClick={() => goToDay(i, dp.day)}
                       className="mindmap-node mindmap-day"
                       style={{
-                        borderColor: branchColor(i, active ? 1 : 0.5),
-                        background: active ? branchColor(i, 0.16) : 'hsl(var(--card))',
-                        color: active ? branchColor(i) : undefined,
+                        borderColor: branchColor(i, isSelectedCity ? 1 : 0.5),
+                        background: isSelectedCity ? branchColor(i, 0.16) : 'hsl(var(--card))',
+                        color: isSelectedCity ? branchColor(i) : undefined,
                       }}
                     >
                       Day {dp.day}
                     </button>
-                  );
-                })}
-              </div>
-            )}
-            {i < legs.length - 1 && <div className="mindmap-trunk" />}
-          </div>
-        ))}
-      </div>
-
-      {/* Expanded panel for whichever day is selected in each city branch. */}
-      <div className="flex flex-col gap-10 mt-8">
-        {legs.map((leg, i) => {
-          const dp = (leg.dayPlans || []).find((d) => d.day === selectedDay[i]);
-          if (!dp) return null;
-          const slotByPeriod = Object.fromEntries((dp.slots || []).map((s) => [s.period, s]));
-          return (
-            <div key={`${leg.city}-${i}-panel`} ref={(el) => { panelRefs.current[i] = el; }} className="scroll-mt-28">
-              <div className="flex items-center gap-3 mb-4">
-                <span className="flex items-center justify-center w-9 h-9 rounded-full bg-primary text-white font-bold text-sm shrink-0">
-                  {dp.day}
-                </span>
-                <div>
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">{leg.city} · Day {dp.day}</p>
-                  {dp.theme && <h2 className="text-lg font-bold leading-tight">{dp.theme}</h2>}
-                </div>
-              </div>
-              {leg.hotelPick ? (
-                <div className="mb-5">
-                  <HotelCard hotel={leg.hotelPick} city={leg.city} />
-                </div>
-              ) : leg.hotelSearchUrl && (
-                <div className="mb-5">
-                  <SearchLinkCard href={leg.hotelSearchUrl} icon={Bed} label={`Where to stay in ${leg.city}`} title="Search hotels on Booking.com" />
+                  ))}
                 </div>
               )}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {PERIODS.map((period) => {
-                  const slot = slotByPeriod[period];
-                  return slot ? (
-                    <ActivityCard key={period} slot={slot} />
-                  ) : (
-                    <EmptySlot key={period} period={period} />
-                  );
-                })}
-              </div>
-              {legs[i + 1] && (leg.transferToNext ? (
-                <div className="mt-6">
-                  <TransferCard transfer={leg.transferToNext} fromCity={leg.city} toCity={legs[i + 1].city} />
-                </div>
-              ) : leg.flightSearchUrl && (
-                <div className="mt-6">
-                  <SearchLinkCard href={leg.flightSearchUrl} icon={Plane} label={`${leg.city} → ${legs[i + 1].city}`} title="Search flights on Google Flights" />
-                </div>
-              ))}
+              {i < legs.length - 1 && <div className="mindmap-trunk" />}
             </div>
           );
         })}
       </div>
+
+      {/* Expanded panel for the one selected city -- every one of its days,
+          not just one, so picking a city actually shows its whole
+          itinerary rather than a single day stacked under every city. */}
+      {legs[selectedCity] && (() => {
+        const leg = legs[selectedCity];
+        const i = selectedCity;
+        return (
+          <div ref={panelRef} className="mt-8 scroll-mt-28">
+            <div className="mb-6">
+              <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">{leg.city}</p>
+              <h2 className="text-2xl font-bold leading-tight">{leg.days} {leg.days === 1 ? 'day' : 'days'} in {leg.city}</h2>
+              {leg.summary && <p className="text-foreground/70 text-sm leading-relaxed mt-1.5 max-w-2xl">{leg.summary}</p>}
+            </div>
+            {leg.hotelPick ? (
+              <div className="mb-6">
+                <HotelCard hotel={leg.hotelPick} city={leg.city} />
+              </div>
+            ) : leg.hotelSearchUrl && (
+              <div className="mb-6">
+                <SearchLinkCard href={leg.hotelSearchUrl} icon={Bed} label={`Where to stay in ${leg.city}`} title="Search hotels on Booking.com" />
+              </div>
+            )}
+            <div className="flex flex-col gap-10">
+              {(leg.dayPlans || []).map((dp) => {
+                const slotByPeriod = Object.fromEntries((dp.slots || []).map((s) => [s.period, s]));
+                return (
+                  <div key={dp.day} ref={(el) => { dayRefs.current[dp.day] = el; }} className="scroll-mt-28">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="flex items-center justify-center w-9 h-9 rounded-full bg-primary text-white font-bold text-sm shrink-0">
+                        {dp.day}
+                      </span>
+                      <div>
+                        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">{leg.city} · Day {dp.day}</p>
+                        {dp.theme && <h3 className="text-lg font-bold leading-tight">{dp.theme}</h3>}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      {PERIODS.map((period) => {
+                        const slot = slotByPeriod[period];
+                        return slot ? (
+                          <ActivityCard key={period} slot={slot} />
+                        ) : (
+                          <EmptySlot key={period} period={period} />
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {legs[i + 1] && (leg.transferToNext ? (
+              <div className="mt-8">
+                <TransferCard transfer={leg.transferToNext} fromCity={leg.city} toCity={legs[i + 1].city} />
+              </div>
+            ) : leg.flightSearchUrl && (
+              <div className="mt-8">
+                <SearchLinkCard href={leg.flightSearchUrl} icon={Plane} label={`${leg.city} → ${legs[i + 1].city}`} title="Search flights on Google Flights" />
+              </div>
+            ))}
+            {legs.length > 1 && (
+              <div className="flex justify-between gap-3 mt-10 pt-6 border-t border-border">
+                <button
+                  type="button"
+                  onClick={() => goToCity(i - 1)}
+                  disabled={i === 0}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-border text-sm font-semibold hover:border-primary transition-colors disabled:opacity-40 disabled:pointer-events-none"
+                >
+                  ← {legs[i - 1]?.city}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => goToCity(i + 1)}
+                  disabled={i === legs.length - 1}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-border text-sm font-semibold hover:border-primary transition-colors disabled:opacity-40 disabled:pointer-events-none"
+                >
+                  {legs[i + 1]?.city} →
+                </button>
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       {/* The natural next step after seeing a full plan mapped out: hand it
           to us to firm up and turn into real bookings, rather than doing
