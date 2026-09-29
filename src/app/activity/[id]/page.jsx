@@ -1,9 +1,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, MapPin, Star, Clock, Wallet, Building2, Check } from 'lucide-react';
-import { getActivityById, getActivitiesByCity } from '@/lib/supabaseServer';
+import { ArrowLeft, MapPin, Star, Clock, Wallet, Building2, Check, Accessibility, BookOpen, ArrowRight } from 'lucide-react';
+import { getActivityById, getActivitiesByCity, getCollections } from '@/lib/supabaseServer';
 import ActivityCard from '@/components/ActivityCard';
+import GuideFAQ from '@/components/GuideFAQ';
+import NewsletterSignup from '@/components/NewsletterSignup';
 
 export const revalidate = 3600;
 
@@ -22,9 +24,12 @@ export default async function ActivityDetailPage({ params }) {
   const activity = await getActivityById(params.id);
   if (!activity) notFound();
 
-  const nearby = activity.city_name
-    ? (await getActivitiesByCity(activity.city_name, 11)).filter((a) => a.id !== activity.id).slice(0, 10)
-    : [];
+  const [nearbyRaw, relatedGuides] = await Promise.all([
+    activity.city_name ? getActivitiesByCity(activity.city_name, 11) : Promise.resolve([]),
+    activity.city_name ? getCollections({ city: activity.city_name }) : Promise.resolve([]),
+  ]);
+  const nearby = nearbyRaw.filter((a) => a.id !== activity.id).slice(0, 10);
+  const relatedGuide = relatedGuides?.[0] || null;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -44,6 +49,18 @@ export default async function ActivityDetailPage({ params }) {
   };
 
   const gallery = activity.gallery?.length > 0 ? activity.gallery : (activity.image_url ? [activity.image_url] : []);
+
+  const mapsQuery = activity.latitude != null && activity.longitude != null
+    ? `${activity.latitude},${activity.longitude}`
+    : activity.address || null;
+
+  const faqItems = [
+    activity.opening_hours && { q: 'What are the opening hours?', a: activity.opening_hours },
+    { q: 'How much does it cost?', a: activity.free ? 'This experience is free to enter.' : (activity.price != null ? `₺${activity.price} per person.` : 'Pricing varies — check the booking link for current rates.') },
+    (activity.how_long || activity.duration) && { q: 'How long should I plan to spend here?', a: activity.how_long || activity.duration },
+    { q: 'Is it family friendly?', a: activity.family_friendly ? 'Yes, this experience is suitable for families with children.' : 'This experience is better suited to adults.' },
+    activity.best_time_to_visit && { q: 'When is the best time to visit?', a: activity.best_time_to_visit },
+  ].filter(Boolean);
 
   return (
     <div className="pt-16 md:pt-20 min-h-screen">
@@ -79,10 +96,12 @@ export default async function ActivityDetailPage({ params }) {
             {gallery.length > 1 && (
               <section>
                 <h2 className="text-xl font-bold mb-3">Gallery</h2>
-                <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+                {/* A static wrapping grid, not a horizontal scroller -- every photo is
+                    visible at once with no hidden scroll to discover. */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {gallery.map((img, i) => (
-                    <div key={i} className="relative min-w-[200px] h-40 shrink-0 rounded-xl overflow-hidden">
-                      <Image src={img} alt={`${activity.title} ${i + 1}`} fill sizes="200px" className="object-cover" unoptimized />
+                    <div key={i} className="relative aspect-square rounded-xl overflow-hidden">
+                      <Image src={img} alt={`${activity.title} ${i + 1}`} fill sizes="(max-width: 640px) 50vw, 33vw" className="object-cover" unoptimized />
                     </div>
                   ))}
                 </div>
@@ -114,17 +133,90 @@ export default async function ActivityDetailPage({ params }) {
               </section>
             )}
 
-            {(activity.address || activity.website || activity.phone) && (
+            {activity.accessibility && (
               <section>
-                <h2 className="text-xl font-bold mb-4">The Area</h2>
-                {activity.address && (
-                  <div className="flex items-start gap-3 p-4 rounded-xl bg-muted/40 mb-4">
-                    <MapPin className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-                    <p className="text-sm font-medium">{activity.address}</p>
-                  </div>
-                )}
+                <h2 className="text-xl font-bold mb-4">Accessibility</h2>
+                <div className="flex items-start gap-3 p-4 rounded-xl bg-muted/40">
+                  <Accessibility className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                  <p className="text-sm leading-relaxed">{activity.accessibility}</p>
+                </div>
               </section>
             )}
+
+            {(activity.address || mapsQuery) && (
+              <section>
+                <h2 className="text-xl font-bold mb-4">Location</h2>
+                {mapsQuery && (
+                  <div className="rounded-2xl overflow-hidden border border-border mb-3 aspect-[16/9]">
+                    <iframe
+                      title={`Map showing ${activity.address || activity.title}`}
+                      src={`https://maps.google.com/maps?q=${encodeURIComponent(mapsQuery)}&z=14&output=embed`}
+                      className="w-full h-full border-0"
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                    />
+                  </div>
+                )}
+                <div className="flex items-start gap-3 p-4 rounded-xl bg-muted/40">
+                  <MapPin className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                  <div>
+                    {activity.address && <p className="text-sm font-medium">{activity.address}</p>}
+                    {mapsQuery && (
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapsQuery)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary font-medium hover:underline"
+                      >
+                        View on Google Maps →
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </section>
+            )}
+
+            <section>
+              <h2 className="text-xl font-bold mb-4">Reviews</h2>
+              {activity.review_count > 0 ? (
+                <div className="flex items-center gap-3 p-4 rounded-xl bg-muted/40">
+                  <Star className="w-5 h-5 fill-accent text-accent shrink-0" />
+                  <p className="text-sm font-medium">{Number(activity.rating || 0).toFixed(1)} average from {activity.review_count} reviews on the booking partner&apos;s site.</p>
+                </div>
+              ) : (
+                <div className="p-4 rounded-xl bg-muted/40 text-sm text-muted-foreground text-center">No reviews yet. Be the first to share your experience!</div>
+              )}
+            </section>
+
+            {faqItems.length > 0 && (
+              <section>
+                <h2 className="text-xl font-bold mb-4">FAQ</h2>
+                <GuideFAQ items={faqItems} />
+              </section>
+            )}
+
+            {relatedGuide && (
+              <section>
+                <h2 className="text-xl font-bold mb-4">{activity.city_name} Guides</h2>
+                <Link
+                  href={`/collections/${relatedGuide.slug}`}
+                  className="group flex items-center gap-4 p-4 rounded-2xl border border-border bg-card hover:border-primary/40 hover:shadow-lg transition-all"
+                >
+                  <div className="w-11 h-11 rounded-xl bg-muted flex items-center justify-center shrink-0"><BookOpen className="w-5 h-5 text-primary" /></div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold group-hover:text-primary transition-colors truncate">{relatedGuide.title}</h3>
+                    {relatedGuide.intro && <p className="text-sm text-muted-foreground line-clamp-1">{relatedGuide.intro}</p>}
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary shrink-0" />
+                </Link>
+              </section>
+            )}
+
+            <section className="rounded-2xl border border-border bg-background px-6 py-7">
+              <h4 className="font-semibold mb-1.5">One email a week. Live better in Türkiye.</h4>
+              <p className="text-sm text-muted-foreground mb-4">Long-stay tips + the best experiences worth booking — no spam.</p>
+              <NewsletterSignup />
+            </section>
           </div>
 
           <div className="lg:col-span-1">
@@ -152,7 +244,7 @@ export default async function ActivityDetailPage({ params }) {
 
         {nearby.length > 0 && (
           <section className="mt-12">
-            <h2 className="text-2xl font-bold mb-6">More in {activity.city_name}</h2>
+            <h2 className="text-2xl font-bold mb-6">Featured Experiences in {activity.city_name}</h2>
             <div className="flex gap-5 overflow-x-auto no-scrollbar pb-4 -mx-4 px-4">
               {nearby.map((a) => (
                 <div key={a.id} className="min-w-[260px] w-[260px] shrink-0"><ActivityCard activity={a} /></div>
