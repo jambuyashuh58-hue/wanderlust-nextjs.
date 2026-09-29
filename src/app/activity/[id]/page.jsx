@@ -67,7 +67,7 @@ export default async function ActivityDetailPage({ params }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <div className="relative h-[50vh] md:h-[60vh] overflow-hidden bg-muted">
-        {activity.image_url && <Image src={activity.image_url} alt={activity.title} fill priority sizes="100vw" className="object-cover" unoptimized />}
+        {activity.image_url && <Image src={activity.image_url} alt={activity.title} fill priority sizes="100vw" className="object-cover" />}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/30" />
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
           <div className="max-w-5xl mx-auto">
@@ -101,7 +101,7 @@ export default async function ActivityDetailPage({ params }) {
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {gallery.map((img, i) => (
                     <div key={i} className="relative aspect-square rounded-xl overflow-hidden">
-                      <Image src={img} alt={`${activity.title} ${i + 1}`} fill sizes="(max-width: 640px) 50vw, 33vw" className="object-cover" unoptimized />
+                      <Image src={img} alt={`${activity.title} ${i + 1}`} fill sizes="(max-width: 640px) 50vw, 33vw" className="object-cover" />
                     </div>
                   ))}
                 </div>
@@ -213,7 +213,7 @@ export default async function ActivityDetailPage({ params }) {
             )}
 
             <section className="rounded-2xl border border-border bg-background px-6 py-7">
-              <h4 className="font-semibold mb-1.5">One email a week. Live better in Türkiye.</h4>
+              <h2 className="text-xl font-bold mb-1.5">One email a week. Live better in Türkiye.</h2>
               <p className="text-sm text-muted-foreground mb-4">Long-stay tips + the best experiences worth booking — no spam.</p>
               <NewsletterSignup />
             </section>

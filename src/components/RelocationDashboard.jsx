@@ -116,7 +116,7 @@ function SectionCard({ icon: Icon, iconColor, title, doneCount, totalCount, chil
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Icon className={`w-5 h-5 ${iconColor}`} />
-          <h3 className="font-bold">{title}</h3>
+          <h2 className="font-bold">{title}</h2>
         </div>
         {totalCount != null && <span className="px-3 py-1 rounded-full bg-muted text-xs font-semibold text-muted-foreground shrink-0">{doneCount}/{totalCount} done</span>}
       </div>
@@ -288,15 +288,15 @@ export default function RelocationDashboard({ listings }) {
 
             {listings?.length > 0 && (
               <div>
-                <h4 className="text-sm font-semibold mb-3 flex items-center gap-1.5"><BedDouble className="w-4 h-4" /> Browse homes</h4>
+                <h3 className="text-sm font-semibold mb-3 flex items-center gap-1.5"><BedDouble className="w-4 h-4" /> Browse homes</h3>
                 <div className="flex flex-col gap-3 max-h-[420px] overflow-y-auto pr-1">
                   {listings.slice(0, 6).map((l) => (
                     <div key={l.id} className="flex gap-3 rounded-xl border border-border overflow-hidden bg-background p-2.5">
                       <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-muted shrink-0">
-                        {l.image_url && <Image src={l.image_url} alt={l.title} fill sizes="80px" className="object-cover" unoptimized />}
+                        {l.image_url && <Image src={l.image_url} alt={l.title} fill sizes="80px" className="object-cover" />}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h5 className="text-xs font-semibold line-clamp-1 mb-0.5">{l.title}</h5>
+                        <h4 className="text-xs font-semibold line-clamp-1 mb-0.5">{l.title}</h4>
                         <p className="flex items-center gap-1 text-xs text-muted-foreground mb-1.5"><MapPin className="w-3 h-3 shrink-0" /><span className="truncate">{l.neighborhood} · {l.bedrooms}BR{l.furnished ? ' · Furnished' : ''}</span></p>
                         <p className="text-sm font-bold mb-1.5">₺{Number(l.monthly_rent).toLocaleString()}<span className="text-xs font-normal text-muted-foreground">/mo</span></p>
                         <div className="flex items-center gap-2 text-xs font-semibold">
@@ -340,7 +340,7 @@ export default function RelocationDashboard({ listings }) {
               {savedActivities.map((a) => (
                 <li key={a.id} className="flex items-center gap-3">
                   <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted shrink-0">
-                    {a.image_url && <Image src={a.image_url} alt={a.title} fill sizes="48px" className="object-cover" unoptimized />}
+                    {a.image_url && <Image src={a.image_url} alt={a.title} fill sizes="48px" className="object-cover" />}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">{a.title}</p>

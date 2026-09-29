@@ -86,7 +86,7 @@ export default function CollectionsFilters({ collections, cities }) {
               <Link key={c.id} href={`/collections/${c.slug}`} className="block rounded-2xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-lg transition-all group h-full">
                 <div className="relative aspect-[4/3] bg-muted overflow-hidden">
                   {c.hero_image_url && (
-                    <Image src={c.hero_image_url} alt={c.title} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover group-hover:scale-105 transition-transform duration-300" unoptimized />
+                    <Image src={c.hero_image_url} alt={c.title} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover group-hover:scale-105 transition-transform duration-300" />
                   )}
                   <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
                     {isRanking ? <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#D4AF37]/90 text-white text-xs font-bold"><Trophy className="w-3 h-3" /> Best Of</span>

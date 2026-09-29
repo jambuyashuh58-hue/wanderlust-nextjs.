@@ -59,8 +59,15 @@ export default function Navbar({ locale = 'en' }) {
               <Link href={`${prefix}/onboarding`} className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
                 <Sparkles className="w-4 h-4" /> {t('plan_my_trip', locale)}
               </Link>
-              <a href={CONCIERGE_URL} target="_blank" rel="noopener noreferrer" className="w-11 h-11 flex items-center justify-center rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"><Instagram className="w-5 h-5" /></a>
-              <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden w-11 h-11 flex items-center justify-center rounded-full bg-muted/60">{mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}</button>
+              <a href={CONCIERGE_URL} target="_blank" rel="noopener noreferrer" aria-label="Follow Move to Istanbul on Instagram" className="w-11 h-11 flex items-center justify-center rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"><Instagram className="w-5 h-5" /></a>
+              <button
+                onClick={() => setMobileOpen(!mobileOpen)}
+                aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={mobileOpen}
+                className="md:hidden w-11 h-11 flex items-center justify-center rounded-full bg-muted/60"
+              >
+                {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
             </div>
           </div>
         </div>

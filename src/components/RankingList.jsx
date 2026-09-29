@@ -24,7 +24,7 @@ export default function RankingList({ activities }) {
               {rank}
             </span>
             <Link href={`/activity/${a.id}`} className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-muted shrink-0">
-              {a.image_url && <Image src={a.image_url} alt={a.title} fill sizes="112px" className="object-cover" unoptimized />}
+              {a.image_url && <Image src={a.image_url} alt={a.title} fill sizes="112px" className="object-cover" />}
               {a.trending && (
                 <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-black/70 text-white text-[9px] font-semibold uppercase tracking-wide">
                   Travelers&apos; Choice

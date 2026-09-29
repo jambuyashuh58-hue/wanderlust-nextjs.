@@ -19,10 +19,15 @@ export default function Footer() {
             <p className="text-sm text-muted-foreground leading-relaxed mb-3">AI-powered travel recommendations for Türkiye&apos;s museums, hidden gems, and cultural adventures.</p>
             <Link href="/guides" className="block text-sm font-medium text-primary hover:underline mb-1">Turkey Long Stay Guides →</Link>
             <a href={CONCIERGE_URL} target="_blank" rel="noopener noreferrer" className="block text-sm font-medium text-primary hover:underline mb-3">Follow @move_istanbul on Instagram →</a>
-            <a href={CONCIERGE_URL} target="_blank" rel="noopener noreferrer" className="w-11 h-11 rounded-full bg-muted flex items-center justify-center hover:bg-primary hover:text-white transition-colors"><Instagram className="w-5 h-5" /></a>
+            <a href={CONCIERGE_URL} target="_blank" rel="noopener noreferrer" aria-label="Follow Move to Istanbul on Instagram" className="w-11 h-11 rounded-full bg-muted flex items-center justify-center hover:bg-primary hover:text-white transition-colors"><Instagram className="w-5 h-5" /></a>
           </div>
           <div>
-            <h4 className="font-semibold text-sm mb-3">Explore</h4>
+            {/* h2, not a visually-driven h4 -- this footer renders at the end
+                of every page, and whatever heading level the page content
+                left off at, dropping straight to h4 here skips levels
+                (a Lighthouse/axe accessibility failure). h2 never skips,
+                since it can only follow h1 or an equal/deeper heading. */}
+            <h2 className="font-semibold text-sm mb-3">Explore</h2>
             <ul className="space-y-2 text-sm">
               <li><Link href="/discover" className="text-muted-foreground hover:text-primary">Discover</Link></li>
               <li><Link href="/collections" className="text-muted-foreground hover:text-primary">Collections</Link></li>
@@ -32,7 +37,7 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold text-sm mb-3">Long-Stay Guides</h4>
+            <h2 className="font-semibold text-sm mb-3">Long-Stay Guides</h2>
             <ul className="space-y-2 text-sm">
               <li><Link href="/guides/visa" className="text-muted-foreground hover:text-primary">Visa Guide</Link></li>
               <li><Link href="/guides/housing" className="text-muted-foreground hover:text-primary">Housing Guide</Link></li>
@@ -42,7 +47,7 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold text-sm mb-3">Collections</h4>
+            <h2 className="font-semibold text-sm mb-3">Collections</h2>
             <ul className="space-y-2 text-sm">
               <li><Link href="/collections/first-weekend-istanbul" className="text-muted-foreground hover:text-primary">First Weekend in Istanbul</Link></li>
               <li><Link href="/collections/istanbul-budget-slow-travel" className="text-muted-foreground hover:text-primary">Istanbul Under ₺2500</Link></li>
@@ -54,7 +59,7 @@ export default function Footer() {
         <div className="rounded-2xl border border-border bg-background px-6 py-8 sm:px-10 mb-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
             <div className="max-w-md">
-              <h4 className="font-semibold mb-1.5">One email a week. Live better in Türkiye.</h4>
+              <h2 className="font-semibold mb-1.5">One email a week. Live better in Türkiye.</h2>
               <p className="text-sm text-muted-foreground">Long-stay tips + the best experiences worth booking — no spam.</p>
             </div>
             <div className="w-full lg:w-auto lg:min-w-[380px]">

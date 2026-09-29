@@ -45,7 +45,7 @@ export default async function CityDetailPage({ params }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <section className="relative">
         <div className="relative h-[400px] md:h-[500px] overflow-hidden bg-muted">
-          {city.image_url && <Image src={city.image_url} alt={`${city.name}, Türkiye`} fill priority sizes="100vw" className="object-cover" unoptimized />}
+          {city.image_url && <Image src={city.image_url} alt={`${city.name}, Türkiye`} fill priority sizes="100vw" className="object-cover" />}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
           <div className="absolute inset-0 flex items-end">
             <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-10 w-full">

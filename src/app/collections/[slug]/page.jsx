@@ -60,7 +60,7 @@ export default async function CollectionDetailPage({ params }) {
           <h1 className="text-3xl md:text-4xl font-bold mb-3">{collection.title}</h1>
           {collection.hero_image_url && (
             <div className="relative aspect-[21/9] rounded-2xl overflow-hidden mt-6">
-              <Image src={collection.hero_image_url} alt={collection.title} fill priority sizes="100vw" className="object-cover" unoptimized />
+              <Image src={collection.hero_image_url} alt={collection.title} fill priority sizes="100vw" className="object-cover" />
             </div>
           )}
           {collection.intro && !isGuide && (

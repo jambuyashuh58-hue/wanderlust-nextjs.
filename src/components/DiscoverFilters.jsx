@@ -41,7 +41,7 @@ export default function DiscoverFilters({ initialSearch, initialCategory }) {
             className="w-full bg-transparent outline-none text-sm"
           />
           {search && (
-            <button type="button" onClick={() => { setSearch(''); updateUrl('', initialCategory); }} className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-muted/60 -mr-2 shrink-0">
+            <button type="button" onClick={() => { setSearch(''); updateUrl('', initialCategory); }} aria-label="Clear search" className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-muted/60 -mr-2 shrink-0">
               <X className="w-4 h-4" />
             </button>
           )}

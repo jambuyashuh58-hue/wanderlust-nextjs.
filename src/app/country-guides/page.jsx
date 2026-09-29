@@ -59,7 +59,7 @@ export default async function CountryGuidesPage() {
               return (
                 <Link key={g.id} href={`${prefix}/country-guides/${g.slug}`} className="group block h-full rounded-2xl overflow-hidden border border-border hover:border-primary/40 hover:shadow-lg transition-all">
                   <div className="relative aspect-[16/9] bg-gradient-to-br from-primary/30 to-secondary/30 overflow-hidden">
-                    {g.hero_image_url && <Image src={g.hero_image_url} alt={title} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" unoptimized />}
+                    {g.hero_image_url && <Image src={g.hero_image_url} alt={title} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />}
                     <span className="absolute bottom-3 left-4 text-white font-bold text-lg drop-shadow">{g.country}</span>
                   </div>
                   <div className="p-5">
