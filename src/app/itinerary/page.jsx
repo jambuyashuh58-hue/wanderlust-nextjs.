@@ -305,6 +305,37 @@ export default function ItineraryPage() {
         </p>
       )}
 
+      {/* A ready-made package that actually matches this trip's length and
+          cities -- an alternative to the day-by-day plan below, not a
+          replacement for it. Kept out of individual day slots (a 13-day
+          tour can't be a morning activity) but still worth surfacing when
+          someone would rather book the whole thing pre-planned than piece
+          together day trips themselves. */}
+      {itinerary.alternativePackages?.length > 0 && (
+        <div className="max-w-2xl mx-auto mb-8 rounded-2xl border border-border bg-card p-5">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
+            Prefer it already planned? These match your trip length and cities
+          </p>
+          <div className="flex flex-col gap-2">
+            {itinerary.alternativePackages.map((pkg) => (
+              <Link
+                key={pkg.id}
+                href={`/activity/${pkg.id}`}
+                className="flex items-center gap-3 rounded-xl border border-border hover:border-primary transition-colors px-3 py-2.5"
+              >
+                <span className="flex-1 min-w-0">
+                  <span className="block text-sm font-semibold leading-snug truncate">{pkg.title}</span>
+                  <span className="text-xs text-muted-foreground">{pkg.packageDays} days</span>
+                </span>
+                {pkg.price != null && (
+                  <span className="shrink-0 px-2.5 py-1 rounded-full bg-muted text-xs font-semibold">₺{Number(pkg.price).toLocaleString()}</span>
+                )}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Vertical mind map: Trip at the top, a colored trunk running down
           through one branch per city, and each city's days fanning out in a
           wrapped row right under it. Stacking top-to-bottom (rather than a

@@ -255,10 +255,48 @@ function googleFlightsSearchUrl(fromCity, toCity) {
 // these out of the day-slot pool by parsing "N day(s)"/"N night(s)" out of
 // the title/duration/how_long text is a blunt but reliable fix -- a real
 // single-stop activity never phrases its length that way.
-function isMultiDayPackage(a) {
+function parsePackageDays(a) {
   const text = `${a.duration || ''} ${a.how_long || ''} ${a.title || ''}`;
   const m = text.match(/(\d+)\s*[-\s]?\s*(days?|nights?)\b/i);
-  return !!m && Number(m[1]) >= 2;
+  return m ? Number(m[1]) : null;
+}
+function isMultiDayPackage(a) {
+  const days = parsePackageDays(a);
+  return days != null && days >= 2;
+}
+
+// Kept out of individual day slots (above), but that's not the same as
+// useless -- a package whose length and cities actually match what was
+// requested is a legitimate "skip the day-by-day planning, this is already
+// a full itinerary" alternative, e.g. someone asking for 13 days across
+// Istanbul/Cappadocia/Pamukkale/Ephesus getting offered "13 Days Patterns of
+// Turkey Tour from/to Istanbul by Plane" instead of (or alongside) the
+// AI-built plan. Matched by day-count proximity (within 3 days either way)
+// and by how many of the requested cities the title actually names -- a
+// package mentioning none of them isn't a real match even if the length
+// happens to line up.
+async function findAlternativePackages(supabase, cityNames, totalDays) {
+  const { data } = await supabase
+    .from('activity')
+    .select('id, title, city_name, price, image_url, booking_url, rating, duration, how_long')
+    .or('duration.ilike.%day%,how_long.ilike.%day%,title.ilike.%day%')
+    .order('popularity_score', { ascending: false, nullsFirst: false })
+    .limit(100);
+  if (!data) return [];
+
+  const mentions = (title, city) => (title || '').toLowerCase().includes((city || '').toLowerCase());
+
+  return data
+    .map((a) => ({ ...a, packageDays: parsePackageDays(a) }))
+    .filter((a) => a.packageDays != null && a.packageDays >= 2)
+    .map((a) => ({
+      ...a,
+      cityMatches: cityNames.filter((c) => mentions(a.title, c)).length,
+      dayDiff: Math.abs(a.packageDays - totalDays),
+    }))
+    .filter((a) => a.cityMatches > 0 && a.dayDiff <= 3)
+    .sort((a, b) => (b.cityMatches - a.cityMatches) || (a.dayDiff - b.dayDiff))
+    .slice(0, 3);
 }
 
 // Builds one city's leg of the trip: pulls its real candidate activities,
@@ -453,9 +491,12 @@ async function generateItinerary(params) {
 
   // Every leg's Supabase fetch + LLM call runs concurrently, so a 5-city
   // trip takes roughly as long as its slowest single leg, not 5x as long.
-  const legs = await Promise.all(
-    cityLegs.map((leg) => generateLeg(supabase, { ...leg, interests, pace, budget, travellingAs, accessibility }))
-  );
+  // The alternative-package search is independent of all of that (it's a
+  // trip-wide match, not per-leg), so it runs alongside rather than after.
+  const [legs, alternativePackages] = await Promise.all([
+    Promise.all(cityLegs.map((leg) => generateLeg(supabase, { ...leg, interests, pace, budget, travellingAs, accessibility }))),
+    findAlternativePackages(supabase, cityLegs.map((l) => l.city), totalRequested),
+  ]);
 
   const validLegs = legs.filter((l) => !l.error);
   if (validLegs.length === 0) {
@@ -502,6 +543,9 @@ async function generateItinerary(params) {
   const legNotes = legs.filter((l) => l.note || l.error).map((l) => l.note || l.error);
   if (legNotes.length > 0) {
     responsePayload.note = legNotes.join(' ');
+  }
+  if (alternativePackages.length > 0) {
+    responsePayload.alternativePackages = alternativePackages;
   }
 
   // Best-effort persistence -- mirrors the old Base44 TravelPreference /

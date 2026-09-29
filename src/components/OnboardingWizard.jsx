@@ -114,10 +114,33 @@ function sequenceLegByProximity(dayPlans) {
 // isMultiDayPackage() -- a handful of activity rows are actually whole
 // multi-day package tours, not a single stop, and have to be kept out of
 // the day-slot pool the same way.
-function isMultiDayPackage(a) {
+function parsePackageDays(a) {
   const text = `${a.duration || ''} ${a.how_long || ''} ${a.title || ''}`;
   const m = text.match(/(\d+)\s*[-\s]?\s*(days?|nights?)\b/i);
-  return !!m && Number(m[1]) >= 2;
+  return m ? Number(m[1]) : null;
+}
+function isMultiDayPackage(a) {
+  const days = parsePackageDays(a);
+  return days != null && days >= 2;
+}
+
+// Same idea as route.js's findAlternativePackages() -- a multi-day package
+// that's kept out of individual day slots can still be a legitimate
+// "skip the day-by-day planning" alternative when its length and cities
+// actually match what was requested.
+function findAlternativePackages(activities, cityNames, totalDays) {
+  const mentions = (title, city) => (title || '').toLowerCase().includes((city || '').toLowerCase());
+  return (activities || [])
+    .map((a) => ({ ...a, packageDays: parsePackageDays(a) }))
+    .filter((a) => a.packageDays != null && a.packageDays >= 2)
+    .map((a) => ({
+      ...a,
+      cityMatches: cityNames.filter((c) => mentions(a.title, c)).length,
+      dayDiff: Math.abs(a.packageDays - totalDays),
+    }))
+    .filter((a) => a.cityMatches > 0 && a.dayDiff <= 3)
+    .sort((a, b) => (b.cityMatches - a.cityMatches) || (a.dayDiff - b.dayDiff))
+    .slice(0, 3);
 }
 
 // Rule-based fallback, used only if the AI call errors out. Builds the same
@@ -191,12 +214,15 @@ function buildFallbackItinerary({ cityLegs, interests, pace, activities, days: t
     }
   }
 
+  const alternativePackages = findAlternativePackages(activities, cityLegs.map((l) => l.city), totalDays);
+
   return {
     cities: cityLegs.map((l) => l.city),
     days: totalDays,
     interests, pace, legs,
     summary: legs.map((l) => l.summary).join(' '),
     generatedAt: new Date().toISOString(),
+    ...(alternativePackages.length > 0 ? { alternativePackages } : {}),
   };
 }
 
