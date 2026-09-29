@@ -106,6 +106,17 @@ function buildFallbackItinerary({ cityLegs, interests, pace, activities, days: t
     legs[i].transferToNext = best;
   }
 
+  // Same idea for a where-to-stay pick per city: best-rated Hotels-category
+  // row for that city, if one happens to be in this fallback's 500-activity
+  // pool.
+  for (const leg of legs) {
+    const cityLower = (leg.city || '').toLowerCase();
+    const hotels = (activities || []).filter((a) => a.category === 'Hotels' && (a.city_name || '').toLowerCase() === cityLower);
+    if (hotels.length > 0) {
+      leg.hotelPick = [...hotels].sort((a, b) => (b.rating || 0) - (a.rating || 0))[0];
+    }
+  }
+
   return {
     cities: cityLegs.map((l) => l.city),
     days: totalDays,

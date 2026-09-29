@@ -173,18 +173,22 @@ async function callLLM(system, user, days) {
 async function generateLeg(supabase, { city, days, interests, pace, budget, travellingAs, accessibility }) {
   const requestedDays = Math.min(Math.max(1, Number(days) || 1), MAX_DAYS_PER_CITY);
 
-  // Transfers (and Hotels, once any exist) aren't a morning/afternoon/evening
-  // "activity" -- they're the connector between two city legs, matched in
-  // separately by matchTransfers() below. Keeping them out of the candidate
-  // pool stops the AI from slotting "Dalaman Airport Transfer" in as
-  // someone's afternoon plan.
-  const { data: activities, error: activitiesError } = await supabase
-    .from('activity')
-    .select('id, title, category, city_name, rating, price, duration, how_long, family_friendly, free, image_url, booking_url, address')
-    .ilike('city_name', city)
-    .not('category', 'in', '("Transfers","Hotels")')
-    .order('popularity_score', { ascending: false, nullsFirst: false })
-    .limit(MAX_CANDIDATES);
+  // Transfers and Hotels aren't a morning/afternoon/evening "activity" --
+  // Transfers are the connector between two city legs (matched separately by
+  // matchTransfer() below), and a Hotels row is a where-to-stay pick for
+  // this city (matched by matchHotel()). Keeping both out of the candidate
+  // pool stops the AI from slotting "Dalaman Airport Transfer" or a hotel in
+  // as someone's afternoon plan.
+  const [{ data: activities, error: activitiesError }, hotelPick] = await Promise.all([
+    supabase
+      .from('activity')
+      .select('id, title, category, city_name, rating, price, duration, how_long, family_friendly, free, image_url, booking_url, address')
+      .ilike('city_name', city)
+      .not('category', 'in', '("Transfers","Hotels")')
+      .order('popularity_score', { ascending: false, nullsFirst: false })
+      .limit(MAX_CANDIDATES),
+    matchHotel(supabase, city),
+  ]);
 
   if (activitiesError) {
     return { city, days: requestedDays, requestedDays, error: activitiesError.message, dayPlans: [] };
@@ -230,21 +234,34 @@ async function generateLeg(supabase, { city, days, interests, pace, budget, trav
     summary: aiResult.summary || '',
     dayPlans,
   };
+  if (hotelPick) leg.hotelPick = hotelPick;
   if (actualDays < requestedDays) {
     leg.note = `Generated ${actualDays} of the ${requestedDays} days asked for -- ${city} may not have enough unique activities for a longer stay yet.`;
   }
   return leg;
 }
 
+// A Hotels-category row is a where-to-stay pick for a single city (unlike
+// Transfers, which connects two). Just the best-rated one per city leg --
+// same affiliate booking_url pattern as everything else.
+async function matchHotel(supabase, city) {
+  const { data } = await supabase
+    .from('activity')
+    .select('id, title, category, city_name, rating, price, image_url, booking_url, address')
+    .eq('category', 'Hotels')
+    .ilike('city_name', city)
+    .order('popularity_score', { ascending: false, nullsFirst: false })
+    .limit(1);
+  return data?.[0] || null;
+}
+
 // There's no standalone "book a flight" or "book a hotel room" product in the
 // affiliate feed -- only regular activity rows that happen to be an
-// intercity/airport transfer (category='Transfers'), and a handful of
-// multi-day tour packages that bundle a flight or a hotel stay into the tour
-// itself (e.g. "2-Day Cappadocia Trip with Flights and Cave Hotel", still
-// category='Guided Tours' since it's a real day-by-day activity, not a pure
-// connector). So instead of a separate booking step, we look for a real
-// Transfers-category row that connects two consecutive cities on the trip
-// and slot it in between their day plans -- same affiliate booking_url
+// intercity/airport transfer (category='Transfers', covering both a ground
+// transfer and a flight-based connector), and Hotels-category rows for
+// where-to-stay picks. So instead of a separate booking step, we look for a
+// real Transfers-category row that connects two consecutive cities on the
+// trip and slot it in between their day plans -- same affiliate booking_url
 // pattern as everything else on the site, just placed differently.
 async function matchTransfer(supabase, fromCity, toCity) {
   const { data } = await supabase

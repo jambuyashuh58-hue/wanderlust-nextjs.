@@ -10,7 +10,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Sparkles, MapPin, ArrowRight, Sun, Sunset, Moon, Star, Clock, Info, CalendarCheck, Car } from 'lucide-react';
+import { Sparkles, MapPin, ArrowRight, Sun, Sunset, Moon, Star, Clock, Info, CalendarCheck, Car, Bed } from 'lucide-react';
 
 const PERIODS = ['morning', 'afternoon', 'evening'];
 const PERIOD_ICON = { morning: Sun, afternoon: Sunset, evening: Moon };
@@ -84,6 +84,31 @@ function TransferCard({ transfer, fromCity, toCity }) {
       <div className="flex-1 min-w-0">
         <p className="text-[11px] font-semibold text-primary uppercase tracking-wide mb-0.5">{fromCity} → {toCity}</p>
         <p className="text-sm font-semibold leading-snug truncate">{transfer.title}</p>
+      </div>
+      {price != null && (
+        <span className="shrink-0 px-2.5 py-1 rounded-full bg-background text-xs font-semibold">
+          {typeof price === 'number' ? `₺${price.toLocaleString()}` : price}
+        </span>
+      )}
+    </Link>
+  );
+}
+
+// Same idea as TransferCard, but a per-city where-to-stay pick (a Hotels-
+// category activity) rather than a between-cities connector.
+function HotelCard({ hotel, city }) {
+  const price = hotel.price ?? (hotel.free ? 'Free' : null);
+  return (
+    <Link
+      href={`/activity/${hotel.id}`}
+      className="flex items-center gap-4 rounded-xl border border-dashed border-primary/40 bg-primary/5 hover:border-primary transition-colors px-4 py-3.5 max-w-2xl mx-auto"
+    >
+      <span className="flex items-center justify-center w-9 h-9 rounded-full bg-primary/15 text-primary shrink-0">
+        <Bed className="w-4 h-4" />
+      </span>
+      <div className="flex-1 min-w-0">
+        <p className="text-[11px] font-semibold text-primary uppercase tracking-wide mb-0.5">Where to stay in {city}</p>
+        <p className="text-sm font-semibold leading-snug truncate">{hotel.title}</p>
       </div>
       {price != null && (
         <span className="shrink-0 px-2.5 py-1 rounded-full bg-background text-xs font-semibold">
@@ -297,6 +322,11 @@ export default function ItineraryPage() {
                   {dp.theme && <h2 className="text-lg font-bold leading-tight">{dp.theme}</h2>}
                 </div>
               </div>
+              {leg.hotelPick && (
+                <div className="mb-5">
+                  <HotelCard hotel={leg.hotelPick} city={leg.city} />
+                </div>
+              )}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {PERIODS.map((period) => {
                   const slot = slotByPeriod[period];
