@@ -54,6 +54,62 @@ function splitDaysAcrossCities(totalDays, cityNames) {
   return cityNames.map((city, i) => ({ city, days: base + (i < remainder ? 1 : 0) }));
 }
 
+function haversineKm(a, b) {
+  if (a.latitude == null || a.longitude == null || b.latitude == null || b.longitude == null) return null;
+  const R = 6371;
+  const toRad = (deg) => (deg * Math.PI) / 180;
+  const dLat = toRad(b.latitude - a.latitude);
+  const dLon = toRad(b.longitude - a.longitude);
+  const lat1 = toRad(a.latitude);
+  const lat2 = toRad(b.latitude);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+// Same proximity re-sequencing as the AI route (route.js) -- greedy
+// nearest-neighbor chain over whichever picks have coordinates, day count
+// and per-day slot count preserved, distance + suggested transport attached
+// to each hop.
+function sequenceLegByProximity(dayPlans) {
+  const daySizes = dayPlans.map((d) => d.slots.length);
+  const flat = dayPlans.flatMap((d) => d.slots);
+  const withCoords = flat.filter((s) => s.activity.latitude != null && s.activity.longitude != null);
+  const withoutCoords = flat.filter((s) => s.activity.latitude == null || s.activity.longitude == null);
+
+  let ordered = flat;
+  if (withCoords.length > 1) {
+    const remaining = [...withCoords];
+    const route = [remaining.shift()];
+    while (remaining.length > 0) {
+      const last = route[route.length - 1].activity;
+      let bestIdx = 0;
+      let bestDist = Infinity;
+      remaining.forEach((s, idx) => {
+        const d = haversineKm(last, s.activity);
+        if (d != null && d < bestDist) { bestDist = d; bestIdx = idx; }
+      });
+      route.push(remaining.splice(bestIdx, 1)[0]);
+    }
+    ordered = [...route, ...withoutCoords];
+  }
+
+  for (let i = 0; i < ordered.length - 1; i++) {
+    const d = haversineKm(ordered[i].activity, ordered[i + 1].activity);
+    if (d == null) continue;
+    ordered[i].distanceToNextKm = Math.round(d * 10) / 10;
+    ordered[i].suggestedTransport = d < 1.2 ? 'walk' : d < 6 ? 'taxi or tram' : 'taxi';
+  }
+
+  const periods = ['morning', 'afternoon', 'evening'];
+  let cursor = 0;
+  return dayPlans.map((d, i) => {
+    const size = daySizes[i];
+    const slots = ordered.slice(cursor, cursor + size).map((s, idx) => ({ ...s, period: periods[idx] || 'evening' }));
+    cursor += size;
+    return { ...d, slots };
+  });
+}
+
 // Rule-based fallback, used only if the AI call errors out. Builds the same
 // { legs: [...] } shape the API returns so the itinerary page can render
 // either one uniformly.
@@ -73,18 +129,18 @@ function buildFallbackItinerary({ cityLegs, interests, pace, activities, days: t
     });
     const sorted = [...pool].sort((a, b) => (b.rating || 0) - (a.rating || 0));
 
-    const dayPlans = [];
+    const rawDayPlans = [];
     let cursor = 0;
     for (let d = 1; d <= days; d++) {
       const picks = sorted.slice(cursor, cursor + perDay);
       cursor += perDay;
       const slots = picks.map((activity, i) => ({ period: periods[i] || 'evening', note: '', activity }));
-      dayPlans.push({ day: d, slots });
+      rawDayPlans.push({ day: d, slots });
     }
     return {
       city, days,
       summary: `A ${pace} ${days}-day stretch in ${city}, built from the best-rated activities available.`,
-      dayPlans,
+      dayPlans: sequenceLegByProximity(rawDayPlans),
     };
   });
 

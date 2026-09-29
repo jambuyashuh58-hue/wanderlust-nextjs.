@@ -2,6 +2,7 @@ import { getSupabaseServer } from '@/lib/supabaseServer';
 import ListTable from '@/components/admin/ListTable';
 import SearchBox from '@/components/admin/SearchBox';
 import ActivityFilters from '@/components/admin/ActivityFilters';
+import GeocodeButton from '@/components/admin/GeocodeButton';
 import { buildReturnTo } from '@/lib/adminNav';
 
 export const dynamic = 'force-dynamic';
@@ -33,9 +34,10 @@ export default async function AdminActivitiesPage({ searchParams }) {
   // Distinct category/city options for the filter dropdowns -- fetched from
   // the live table rather than hardcoded, so a new category/city shows up
   // automatically once an activity uses it.
-  const [{ data: categoryRows }, { data: cityRows }] = await Promise.all([
+  const [{ data: categoryRows }, { data: cityRows }, { count: missingCoordsCount }] = await Promise.all([
     supabase.from('activity').select('category').not('category', 'is', null),
     supabase.from('activity').select('city_name').not('city_name', 'is', null),
+    supabase.from('activity').select('id', { count: 'exact', head: true }).is('latitude', null).not('address', 'is', null).neq('address', ''),
   ]);
   const categories = [...new Set((categoryRows || []).map((r) => r.category))].sort();
   const cities = [...new Set((cityRows || []).map((r) => r.city_name))].sort();
@@ -96,6 +98,7 @@ export default async function AdminActivitiesPage({ searchParams }) {
   return (
     <div>
       <SearchBox placeholder="Search activities by title..." />
+      <GeocodeButton initialRemaining={missingCoordsCount || 0} />
       <ActivityFilters categories={categories} cities={cities} />
       {error && <p className="text-destructive text-sm mb-4">{error.message}</p>}
       <ListTable

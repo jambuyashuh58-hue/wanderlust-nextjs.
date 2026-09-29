@@ -61,6 +61,15 @@ function ActivityCard({ slot }) {
           )}
         </div>
         {slot.note && <p className="text-sm text-foreground/70 leading-snug">{slot.note}</p>}
+        {/* Approximate distance + suggested way to reach the next stop in
+            the route -- only present once activities have real coordinates
+            (see the admin "Geocode" button), so this quietly appears as
+            coverage grows rather than needing a separate flag. */}
+        {slot.distanceToNextKm != null && (
+          <p className="mt-2 pt-2 border-t border-border/60 text-xs text-muted-foreground flex items-center gap-1">
+            <Car className="w-3 h-3 shrink-0" /> ~{slot.distanceToNextKm} km to next stop — {slot.suggestedTransport}
+          </p>
+        )}
       </div>
     </Link>
   );

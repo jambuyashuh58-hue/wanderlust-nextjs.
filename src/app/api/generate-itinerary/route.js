@@ -165,6 +165,67 @@ async function callLLM(system, user, days) {
   throw new Error('No LLM API key configured (set GEMINI_API_KEY or ANTHROPIC_API_KEY)');
 }
 
+function haversineKm(a, b) {
+  if (a.latitude == null || a.longitude == null || b.latitude == null || b.longitude == null) return null;
+  const R = 6371;
+  const toRad = (deg) => (deg * Math.PI) / 180;
+  const dLat = toRad(b.latitude - a.latitude);
+  const dLon = toRad(b.longitude - a.longitude);
+  const lat1 = toRad(a.latitude);
+  const lat2 = toRad(b.latitude);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+// Re-orders one city's AI-picked activities into a proximity-sensible route:
+// a greedy nearest-neighbor chain over whichever picks have coordinates
+// (most don't yet -- coordinates are being backfilled activity-by-activity,
+// see the admin "Geocode" button -- so this only helps the picks that do,
+// and leaves the rest in the AI's original order at the end). The day COUNT
+// and each day's slot count are preserved exactly, so "how many days did
+// this trip get" never changes -- only which stops land in which day, and
+// in what order. Each stop also gets an approximate distance + suggested
+// way to reach the next one.
+function sequenceLegByProximity(dayPlans) {
+  const daySizes = dayPlans.map((d) => d.slots.length);
+  const flat = dayPlans.flatMap((d) => d.slots);
+  const withCoords = flat.filter((s) => s.activity.latitude != null && s.activity.longitude != null);
+  const withoutCoords = flat.filter((s) => s.activity.latitude == null || s.activity.longitude == null);
+
+  let ordered = flat;
+  if (withCoords.length > 1) {
+    const remaining = [...withCoords];
+    const route = [remaining.shift()];
+    while (remaining.length > 0) {
+      const last = route[route.length - 1].activity;
+      let bestIdx = 0;
+      let bestDist = Infinity;
+      remaining.forEach((s, idx) => {
+        const d = haversineKm(last, s.activity);
+        if (d != null && d < bestDist) { bestDist = d; bestIdx = idx; }
+      });
+      route.push(remaining.splice(bestIdx, 1)[0]);
+    }
+    ordered = [...route, ...withoutCoords];
+  }
+
+  for (let i = 0; i < ordered.length - 1; i++) {
+    const d = haversineKm(ordered[i].activity, ordered[i + 1].activity);
+    if (d == null) continue;
+    ordered[i].distanceToNextKm = Math.round(d * 10) / 10;
+    ordered[i].suggestedTransport = d < 1.2 ? 'walk' : d < 6 ? 'taxi or tram' : 'taxi';
+  }
+
+  const periods = ['morning', 'afternoon', 'evening'];
+  let cursor = 0;
+  return dayPlans.map((d, i) => {
+    const size = daySizes[i];
+    const slots = ordered.slice(cursor, cursor + size).map((s, idx) => ({ ...s, period: periods[idx] || 'evening' }));
+    cursor += size;
+    return { ...d, slots };
+  });
+}
+
 // Builds one city's leg of the trip: pulls its real candidate activities,
 // asks the AI for a day-by-day plan, and maps the result back to full
 // activity records. Returns either a populated leg or one carrying `error`
@@ -182,7 +243,7 @@ async function generateLeg(supabase, { city, days, interests, pace, budget, trav
   const [{ data: activities, error: activitiesError }, hotelPick] = await Promise.all([
     supabase
       .from('activity')
-      .select('id, title, category, city_name, rating, price, duration, how_long, family_friendly, free, image_url, booking_url, address')
+      .select('id, title, category, city_name, rating, price, duration, how_long, family_friendly, free, image_url, booking_url, address, latitude, longitude')
       .ilike('city_name', city)
       .not('category', 'in', '("Transfers","Hotels")')
       .order('popularity_score', { ascending: false, nullsFirst: false })
@@ -210,7 +271,7 @@ async function generateLeg(supabase, { city, days, interests, pace, budget, trav
   const activityById = new Map(activities.map((a) => [a.id, a]));
   const PERIODS = ['morning', 'afternoon', 'evening'];
 
-  const dayPlans = (aiResult.days || []).slice(0, requestedDays).map((d) => {
+  const rawDayPlans = (aiResult.days || []).slice(0, requestedDays).map((d) => {
     const slots = PERIODS.map((period) => {
       const slot = d[period];
       if (!slot?.activity_id) return null;
@@ -220,6 +281,15 @@ async function generateLeg(supabase, { city, days, interests, pace, budget, trav
     }).filter(Boolean);
     return { day: d.day, theme: d.theme || '', slots };
   });
+
+  // The AI is good at picking *which* activities fit the traveler's
+  // interests, but it's never shown a coordinate, so left alone it happily
+  // sends someone across town and back within the same day. This
+  // re-sequences its picks by physical proximity (same day *count* and day
+  // *themes* are kept, only which stops land on which day and in what order
+  // changes) and attaches an approximate distance + suggested way to get
+  // there for each hop.
+  const dayPlans = sequenceLegByProximity(rawDayPlans);
 
   // Trust what the AI actually returned, not the request -- if it came back
   // short (a small city without enough unique activities, or a truncated
