@@ -4,7 +4,7 @@
 // Import in page.jsx: import HomeHero from '@/components/HomeHero';
 
 import Link from 'next/link';
-import { Sparkles, MapPin } from 'lucide-react';
+import { Sparkles, MapPin, ArrowRight } from 'lucide-react';
 
 export default function HomeHero() {
   return (
@@ -44,6 +44,25 @@ export default function HomeHero() {
             <MapPin className="w-4 h-4" /> Discover Activities
           </Link>
         </div>
+
+        {/* The domain (movetoistanbul.online) and this whole hero read as a
+            trip-planning site, but a meaningful share of visitors are
+            actually here to relocate, not vacation -- and "Welcome to
+            Türkiye. Plan My Trip." gives them nothing to click. This banner
+            is deliberately styled to contrast against the tourist-blue CTAs
+            above (warm amber vs. the hero's blue/white palette) so a
+            relocation-intent visitor's eye catches it immediately instead of
+            reading it as more trip-planning copy. */}
+        <Link
+          href="/concierge"
+          className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 max-w-xl px-5 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 text-amber-950 shadow-lg hover:brightness-105 transition-[filter] group"
+        >
+          <span className="font-bold text-sm sm:text-base">Staying longer than 30 days?</span>
+          <span className="text-sm sm:text-base">Skip the bureaucracy — let our local concierge handle your visa, apartment hunt, and paperwork.</span>
+          <span className="inline-flex items-center gap-1 font-bold text-sm underline underline-offset-2 group-hover:gap-1.5 transition-all">
+            Learn more <ArrowRight className="w-4 h-4" />
+          </span>
+        </Link>
       </div>
     </section>
   );

@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import ChatBubble from './ChatBubble';
 
 // The admin portal (/admin/**) is a separate tool, not a page of the public
 // site -- it gets its own layout/nav (see admin/layout.jsx) instead of the
@@ -32,6 +33,7 @@ export default function SiteChrome({ children }) {
       <Navbar locale={locale} />
       <main className="min-h-screen">{children}</main>
       <Footer />
+      <ChatBubble />
     </>
   );
 }
