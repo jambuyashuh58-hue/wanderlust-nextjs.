@@ -1,8 +1,8 @@
 // Vercel Cron hits this once a day (see vercel.json) to send the two
-// follow-up emails in the ebook drip sequence: a Day-2 "common mistake"
-// story and a Day-4 pitch for the $99 Visa & Paperwork Guidance tier (the
-// low-friction entry point into the concierge funnel -- see
-// ConciergeInteractive.jsx for the full tier list).
+// follow-up emails in the checklist drip sequence: a Day-2 "common mistake"
+// story pitching Apartment Shortlisting ($449), and a Day-4 soft pitch for
+// a free discovery call into the Relocation Concierge -- see
+// ConciergeInteractive.jsx for the full tier list.
 //
 // Deliberately re-runs every day rather than scheduling exact send times:
 // each subscriber's ebook_sent_at is their own zero-hour, and the two
@@ -29,28 +29,27 @@ function daysAgo(n) {
 
 function day2Email(name) {
   return {
-    subject: "The apartment mistake that costs people their deposit",
+    subject: 'The #1 mistake foreigners make when renting in Istanbul',
     html: `
-      <p>Hi${name ? ` ${name}` : ''},</p>
-      <p>Quick story: one of the most common messages we get is from someone who found a great-looking apartment on sahibinden.com, wired a "holding deposit" to secure it before flying out -- and never heard from the "landlord" again.</p>
-      <p>The listing photos were real (lifted from another ad). The urgency ("someone else is ready to sign today") was the tell. There's a full scam checklist in your guide (chapter 12) -- worth a read before you message anyone about a rental.</p>
-      <p>The same pattern shows up with residence permits: people gather the wrong insurance policy (foreign travel insurance isn't accepted -- it has to be a Turkish insurer) and get rejected at the appointment after weeks of waiting.</p>
-      <p>Both are avoidable once you know the specific thing to check for -- which is exactly what the guide walks through step by step.</p>
-      <p>-- Move to Istanbul</p>
+      <p>Hey${name ? ` ${name}` : ''},</p>
+      <p>Most people think finding an apartment is just about the price. It's not. The real trap is the contract.</p>
+      <p>Many landlords ask for 6-12 months upfront or hide fees in Turkish-only clauses. We recently helped a client avoid a $3,000 mistake by spotting this exact clause.</p>
+      <p>If you want someone to review your options or handle the hunt entirely, we offer an <strong>Apartment Shortlisting</strong> service for $449.</p>
+      <p>Want to see how it works? <a href="https://movetoistanbul.online/concierge">Take a look here</a>.</p>
     `,
   };
 }
 
 function day4Email(name) {
+  const bookingUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || 'https://movetoistanbul.online/concierge';
   return {
-    subject: 'Want someone to just map your visa route for you?',
+    subject: 'Can I take this off your plate?',
     html: `
-      <p>Hi${name ? ` ${name}` : ''},</p>
-      <p>If reading through the visa/ikamet chapters left you with more questions than answers, that's normal -- the rules changed a lot in 2025-2026, and getting it wrong costs weeks, not minutes.</p>
-      <p>Our <strong>Visa & Paperwork Guidance</strong> is a 45-minute strategy call where we map your exact route for your nationality and situation: a personalized checklist, document review, and help booking your e-ikamet appointment -- for $99.</p>
-      <p><a href="https://movetoistanbul.online/concierge">See the details and book →</a></p>
-      <p>It's the same guidance we'd give if you hired us for the full relocation package -- just scoped to the one thing most people get stuck on first.</p>
-      <p>-- Move to Istanbul</p>
+      <p>Hey${name ? ` ${name}` : ''},</p>
+      <p>I know planning a move is stressful. Between visas, banks, and housing, it's a part-time job.</p>
+      <p>If you're staying longer than a month, our <strong>Relocation Concierge</strong> handles it all for you.</p>
+      <p>We offer a 15-minute free discovery call to map out your exact situation -- no pressure. If we're not a good fit, I'll still point you to the right free resources.</p>
+      <p><a href="${bookingUrl}">Book your slot here</a>.</p>
     `,
   };
 }
@@ -80,7 +79,7 @@ export async function GET(request) {
 
   for (const sub of day2Due || []) {
     const { subject, html } = day2Email(sub.first_name);
-    const res = await sendSubscriberEmail({ to: sub.email, subject, html });
+    const res = await sendSubscriberEmail({ to: sub.email, subject, html, replyTo: process.env.NOTIFY_EMAIL || undefined });
     if (res.ok) {
       results.day2.sent += 1;
       await supabase.from('newsletter_subscriber').update({ drip_day2_sent_at: new Date().toISOString() }).eq('id', sub.id);
@@ -99,7 +98,7 @@ export async function GET(request) {
 
   for (const sub of day4Due || []) {
     const { subject, html } = day4Email(sub.first_name);
-    const res = await sendSubscriberEmail({ to: sub.email, subject, html });
+    const res = await sendSubscriberEmail({ to: sub.email, subject, html, replyTo: process.env.NOTIFY_EMAIL || undefined });
     if (res.ok) {
       results.day4.sent += 1;
       await supabase.from('newsletter_subscriber').update({ drip_day4_sent_at: new Date().toISOString() }).eq('id', sub.id);

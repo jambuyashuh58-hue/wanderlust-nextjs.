@@ -15,7 +15,7 @@
 // sendSubscriberEmail) needs a verified sending domain in the Resend
 // dashboard and RESEND_FROM pointed at it (e.g. "Move to Istanbul
 // <hello@movetoistanbul.online>").
-export async function sendEmail({ to, subject, html }) {
+export async function sendEmail({ to, subject, html, replyTo }) {
   const apiKey = process.env.RESEND_API_KEY;
 
   if (!apiKey || !to) {
@@ -35,6 +35,7 @@ export async function sendEmail({ to, subject, html }) {
         to: Array.isArray(to) ? to : [to],
         subject,
         html,
+        ...(replyTo ? { reply_to: replyTo } : {}),
       }),
     });
 

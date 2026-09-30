@@ -53,15 +53,18 @@ export async function POST(request) {
 
     const downloadUrl = `${request.nextUrl.origin}${PDF_PATH}`;
 
-    // Fire-and-forget -- never block the download on either email.
+    // Fire-and-forget -- never block the download on either email. Reply-to
+    // points at the site owner's own inbox so "I read every reply" below is
+    // literally true, not just a nice line.
     sendSubscriberEmail({
       to: email,
-      subject: 'Your Istanbul for Digital Nomads guide',
+      replyTo: process.env.NOTIFY_EMAIL || undefined,
+      subject: 'Your Istanbul Survival Checklist is inside \u{1F1F9}\u{1F1F7}',
       html: `
-        <p>Hi${name ? ` ${name}` : ''},</p>
-        <p>Here's your free copy of <strong>Istanbul for Digital Nomads</strong> -- 18 step-by-step guides covering visas, residence permits, banking, housing, and cost of living.</p>
-        <p><a href="${downloadUrl}">Download the PDF</a></p>
-        <p>-- Move to Istanbul</p>
+        <p>Hey${name ? ` ${name}` : ''}, welcome!</p>
+        <p>Here's your <a href="${downloadUrl}">free checklist</a>. I put this together because I saw too many foreigners getting overcharged or stuck in visa limbo.</p>
+        <p>If you have a quick question about your specific situation, just reply to this email. I read every reply.</p>
+        <p>Cheers,<br>Elif, MoveToIstanbul.online</p>
       `,
     }).catch(() => {});
 

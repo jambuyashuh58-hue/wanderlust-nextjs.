@@ -38,8 +38,8 @@ export default function GuideDownloadForm() {
   if (status === 'ready' && downloadUrl) {
     return (
       <div className="text-center py-4">
-        <h3 className="font-bold text-lg mb-2">Your guide is ready</h3>
-        <p className="text-sm text-muted-foreground mb-5">We&apos;ve also emailed you a copy at {email}.</p>
+        <h3 className="font-bold text-lg mb-2">Your checklist is ready</h3>
+        <p className="text-sm text-muted-foreground mb-5">We&apos;ve also emailed a copy to {email}.</p>
         <a
           href={downloadUrl}
           download="istanbul-digital-nomad-guide.pdf"
@@ -53,11 +53,12 @@ export default function GuideDownloadForm() {
 
   return (
     <form onSubmit={submit} className="space-y-4">
-      <h3 className="font-bold text-lg">Get the free PDF</h3>
+      <h3 className="font-bold text-lg">Get the free checklist</h3>
       <div>
-        <label className="block text-sm font-medium mb-1.5">First name</label>
+        <label className="block text-sm font-medium mb-1.5">Name *</label>
         <input
           type="text"
+          required
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
           placeholder="Jamie"
@@ -80,7 +81,7 @@ export default function GuideDownloadForm() {
         disabled={status === 'loading'}
         className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-primary text-white font-semibold disabled:opacity-60"
       >
-        <Download className="w-4 h-4" /> {status === 'loading' ? 'Getting your guide…' : 'Send me the guide'}
+        <Download className="w-4 h-4" /> {status === 'loading' ? 'Sending…' : 'Send Me the Free Checklist'}
       </button>
       {status === 'error' && <p className="text-xs text-destructive text-center">Something went wrong — try again.</p>}
       <p className="text-xs text-muted-foreground text-center">No spam. Just this guide and the occasional relocation tip.</p>
