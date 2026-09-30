@@ -1,5 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    // The gated-guide landing page moved from /guide to /free-guide when the
+    // lead magnet was upgraded from a checklist to the full 90-60-30 Day
+    // Relocation Guide -- keep the old URL alive for anyone with it bookmarked
+    // or shared (social bios, old emails, etc).
+    return [
+      { source: '/guide', destination: '/free-guide', permanent: true },
+    ];
+  },
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: '**' },

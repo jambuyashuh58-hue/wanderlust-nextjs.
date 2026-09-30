@@ -58,11 +58,11 @@ export default function Footer() {
         </div>
         <div className="rounded-2xl border border-amber-400/40 bg-amber-50 dark:bg-amber-950/20 px-6 py-6 sm:px-10 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h2 className="font-semibold mb-1">Free guide: Istanbul for Digital Nomads</h2>
-            <p className="text-sm text-muted-foreground">18 step-by-step chapters on visas, ikamet, banking, and housing.</p>
+            <h2 className="font-semibold mb-1">Free guide: The 90-60-30 Day Relocation Guide</h2>
+            <p className="text-sm text-muted-foreground">The complete digital book on visas, housing, budgeting, and arrival setup.</p>
           </div>
-          <Link href="/guide" className="shrink-0 inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-amber-500 text-white font-semibold hover:bg-amber-600 transition-colors">
-            Get the free PDF
+          <Link href="/free-guide" className="shrink-0 inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-amber-500 text-white font-semibold hover:bg-amber-600 transition-colors">
+            Get the free guide
           </Link>
         </div>
         <div className="rounded-2xl border border-border bg-background px-6 py-8 sm:px-10 mb-8">

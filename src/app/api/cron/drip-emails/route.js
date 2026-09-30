@@ -1,7 +1,8 @@
 // Vercel Cron hits this once a day (see vercel.json) to send the two
-// follow-up emails in the checklist drip sequence: a Day-2 "common mistake"
-// story pitching Apartment Shortlisting ($449), and a Day-4 soft pitch for
-// a free discovery call into the Relocation Concierge -- see
+// follow-up emails in the 90-60-30 Day Relocation Guide drip sequence: a
+// Day-2 "common mistake" story referencing Module 3 (Housing) of the guide
+// and pitching Apartment Shortlisting ($449), and a Day-4 pitch for the
+// $999 Full Relocation Concierge via a free discovery call -- see
 // ConciergeInteractive.jsx for the full tier list.
 //
 // Deliberately re-runs every day rather than scheduling exact send times:
@@ -29,12 +30,11 @@ function daysAgo(n) {
 
 function day2Email(name) {
   return {
-    subject: 'The #1 mistake foreigners make when renting in Istanbul',
+    subject: "The #1 mistake foreigners make (It's in Module 3)",
     html: `
       <p>Hey${name ? ` ${name}` : ''},</p>
-      <p>Most people think finding an apartment is just about the price. It's not. The real trap is the contract.</p>
-      <p>Many landlords ask for 6-12 months upfront or hide fees in Turkish-only clauses. We recently helped a client avoid a $3,000 mistake by spotting this exact clause.</p>
-      <p>If you want someone to review your options or handle the hunt entirely, we offer an <strong>Apartment Shortlisting</strong> service for $449.</p>
+      <p>As mentioned in <strong>Module 3</strong> of the guide, paying 6-12 months rent upfront is one of the most common traps foreigners fall into here -- and landlords often hide extra fees in Turkish-only clauses on top of it.</p>
+      <p>We recently helped a client avoid a $3,000 mistake by spotting this exact clause. If you want someone to review your options or handle the hunt entirely, we offer an <strong>Apartment Shortlisting</strong> service for $449.</p>
       <p>Want to see how it works? <a href="https://movetoistanbul.online/concierge">Take a look here</a>.</p>
     `,
   };
@@ -43,12 +43,12 @@ function day2Email(name) {
 function day4Email(name) {
   const bookingUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || 'https://movetoistanbul.online/concierge';
   return {
-    subject: 'Can I take this off your plate?',
+    subject: 'You have the map. Do you want a guide?',
     html: `
       <p>Hey${name ? ` ${name}` : ''},</p>
-      <p>I know planning a move is stressful. Between visas, banks, and housing, it's a part-time job.</p>
-      <p>If you're staying longer than a month, our <strong>Relocation Concierge</strong> handles it all for you.</p>
-      <p>We offer a 15-minute free discovery call to map out your exact situation -- no pressure. If we're not a good fit, I'll still point you to the right free resources.</p>
+      <p>Reading the guide is step one. Having a local expert execute it for you is step two.</p>
+      <p>Our <strong>$999 Full Relocation Concierge</strong> handles the whole move -- visa, housing, banking, all of it -- so nothing in the guide becomes your part-time job.</p>
+      <p>Let's hop on a free 15-minute discovery call to map out your exact situation -- no pressure. If we're not a good fit, I'll still point you to the right free resources.</p>
       <p><a href="${bookingUrl}">Book your slot here</a>.</p>
     `,
   };
