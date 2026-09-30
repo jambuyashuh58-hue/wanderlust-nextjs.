@@ -27,6 +27,27 @@ const MAX_CANDIDATES = 60;
 // parallel, so a 2-city trip still finishes within roughly one timeout, not
 // two.
 const LLM_TIMEOUT_MS = 20000;
+// A larger trip (8 cities is the max we accept) fires that many concurrent
+// LLM calls from one function instance. The free-tier Gemini key this site
+// runs on has a fairly low per-minute request cap, so 8 requests landing in
+// the same instant routinely got a handful of them rate-limited or queued
+// long enough to blow past LLM_TIMEOUT_MS -- surfacing as "AI generation
+// failed: The operation was aborted due to timeout" for those cities even
+// though nothing was actually wrong with them. Two mitigations below:
+// staggering each leg's LLM call by a few hundred ms per city index so they
+// don't all hit the API in the same instant, and retrying once (with a
+// short backoff) when a call fails for a transient reason -- a second
+// attempt after the initial burst has cleared usually succeeds.
+const LEG_STAGGER_MS = 350;
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+function isTransientLLMError(err) {
+  if (!err) return false;
+  if (err.status === 429 || err.status === 503) return true;
+  if (err.name === 'TimeoutError') return true;
+  return /abort|timeout/i.test(err.message || '');
+}
 // A single city is capped at MAX_DAYS_PER_CITY (keeps that leg's LLM call
 // fast -- a bigger day count needs more output tokens, the main source of
 // slow generations -- and keeps its section of the itinerary from becoming
@@ -98,7 +119,9 @@ async function callClaude(system, user, apiKey, maxTokens) {
 
   if (!res.ok) {
     const errText = await res.text().catch(() => '');
-    throw new Error(`Anthropic API error (${res.status}): ${errText.slice(0, 500)}`);
+    const err = new Error(`Anthropic API error (${res.status}): ${errText.slice(0, 500)}`);
+    err.status = res.status;
+    throw err;
   }
 
   const data = await res.json();
@@ -160,9 +183,24 @@ async function callLLM(system, user, days) {
   const maxTokens = Math.min(8000, Math.max(2000, 350 + days * 260));
   const geminiKey = process.env.GEMINI_API_KEY;
   const anthropicKey = process.env.ANTHROPIC_API_KEY;
-  if (geminiKey) return callGemini(system, user, geminiKey, maxTokens);
-  if (anthropicKey) return callClaude(system, user, anthropicKey, maxTokens);
-  throw new Error('No LLM API key configured (set GEMINI_API_KEY or ANTHROPIC_API_KEY)');
+  const attempt = () => {
+    if (geminiKey) return callGemini(system, user, geminiKey, maxTokens);
+    if (anthropicKey) return callClaude(system, user, anthropicKey, maxTokens);
+    throw new Error('No LLM API key configured (set GEMINI_API_KEY or ANTHROPIC_API_KEY)');
+  };
+
+  try {
+    return await attempt();
+  } catch (err) {
+    // A rate-limit (429), an overloaded provider (503), or a timeout are all
+    // transient -- worth one retry after a short backoff rather than
+    // immediately surfacing "AI generation failed" for that city. Anything
+    // else (a genuine 4xx like a bad request, a JSON parse failure) won't be
+    // fixed by trying again, so it's thrown straight through.
+    if (!isTransientLLMError(err)) throw err;
+    await sleep(1200 + Math.random() * 800);
+    return attempt();
+  }
 }
 
 function haversineKm(a, b) {
@@ -304,7 +342,7 @@ async function findAlternativePackages(supabase, cityNames, totalDays) {
 // activity records. Returns either a populated leg or one carrying `error`
 // (never throws) so one bad city doesn't take down the whole multi-city
 // request -- the other legs still come back.
-async function generateLeg(supabase, { city, days, interests, pace, budget, travellingAs, accessibility }) {
+async function generateLeg(supabase, { city, days, interests, pace, budget, travellingAs, accessibility }, legIndex = 0) {
   const requestedDays = Math.min(Math.max(1, Number(days) || 1), MAX_DAYS_PER_CITY);
 
   // Transfers and Hotels aren't a morning/afternoon/evening "activity" --
@@ -334,6 +372,10 @@ async function generateLeg(supabase, { city, days, interests, pace, budget, trav
 
   const system = buildSystemPrompt(requestedDays);
   const user = buildUserPrompt({ city, days: requestedDays, interests, pace, budget, travellingAs, accessibility }, singleStopActivities);
+
+  // Spread the legs' LLM calls out instead of firing all of them in the same
+  // instant -- see the LEG_STAGGER_MS comment above.
+  if (legIndex > 0) await sleep(legIndex * LEG_STAGGER_MS);
 
   let aiResult;
   try {
@@ -494,7 +536,7 @@ async function generateItinerary(params) {
   // The alternative-package search is independent of all of that (it's a
   // trip-wide match, not per-leg), so it runs alongside rather than after.
   const [legs, alternativePackages] = await Promise.all([
-    Promise.all(cityLegs.map((leg) => generateLeg(supabase, { ...leg, interests, pace, budget, travellingAs, accessibility }))),
+    Promise.all(cityLegs.map((leg, i) => generateLeg(supabase, { ...leg, interests, pace, budget, travellingAs, accessibility }, i))),
     findAlternativePackages(supabase, cityLegs.map((l) => l.city), totalRequested),
   ]);
 
@@ -540,7 +582,14 @@ async function generateItinerary(params) {
     legs,
     generatedAt: new Date().toISOString(),
   };
-  const legNotes = legs.filter((l) => l.note || l.error).map((l) => l.note || l.error);
+  // Prefix each note/error with its city so two different cities hitting the
+  // *same* underlying error (e.g. both timing out) don't render as the exact
+  // same sentence repeated back-to-back with no indication anything else
+  // went wrong elsewhere -- and dedupe defensively in case a message really
+  // is identical after that.
+  const legNotes = [...new Set(
+    legs.filter((l) => l.note || l.error).map((l) => `${l.city}: ${l.note || l.error}`)
+  )];
   if (legNotes.length > 0) {
     responsePayload.note = legNotes.join(' ');
   }
