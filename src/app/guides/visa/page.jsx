@@ -2,12 +2,10 @@ import Link from 'next/link';
 import { CheckCircle2, AlertTriangle, ExternalLink, ArrowRight } from 'lucide-react';
 import GuideLayout from '@/components/GuideLayout';
 import GuideFAQ from '@/components/GuideFAQ';
-import GuideSchema from '@/components/GuideSchema';
 
 export const metadata = {
   title: 'Türkiye Visa & Residence Permit Guide 2026 | Move to Istanbul',
   description: "e-Visa, tourist entry, and short-term residence permits, with official sources.",
-  alternates: { canonical: '/moving-to-istanbul/visa-residence-permit' },
 };
 
 const PATHWAYS = [
@@ -221,21 +219,12 @@ const OFFICIAL_SOURCES = [
 
 export default function GuideVisaPage() {
   return (
-    <>
-    <GuideSchema
-      path="/moving-to-istanbul/visa-residence-permit"
-      title="Türkiye Visa & Residence Permit Guide 2026"
-      description="e-Visa, tourist entry, and short-term residence permits, with official sources."
-      faq={FAQ}
-    />
     <GuideLayout
       eyebrow="Visa Guide"
       title="Türkiye Visa & Residence Permit Guide 2026"
       description="e-Visa, tourist entry, and short-term residence permits, with official sources."
       readTime="14 min read"
       updated={new Date().toISOString().slice(0, 10)}
-      backHref="/moving-to-istanbul"
-      backLabel="Moving to Istanbul"
       sections={[
         { id: 'landscape', label: '2026 Legal Landscape' },
         { id: 'pathways', label: 'Permit Pathways' },
@@ -483,6 +472,5 @@ export default function GuideVisaPage() {
         </p>
       </section>
     </GuideLayout>
-    </>
   );
 }

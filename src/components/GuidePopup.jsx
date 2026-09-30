@@ -24,7 +24,7 @@ export default function GuidePopup() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (pathname?.startsWith('/admin') || pathname === '/free-istanbul-relocation-guide') return undefined;
+    if (pathname?.startsWith('/admin') || pathname === '/free-guide') return undefined;
     let dismissed = false;
     try {
       dismissed = sessionStorage.getItem(DISMISS_KEY) === '1';
@@ -46,7 +46,7 @@ export default function GuidePopup() {
     }
   };
 
-  if (pathname?.startsWith('/admin') || pathname === '/free-istanbul-relocation-guide' || !visible) return null;
+  if (pathname?.startsWith('/admin') || pathname === '/free-guide' || !visible) return null;
 
   return (
     <div className="fixed bottom-5 left-5 z-40 w-[320px] max-w-[calc(100vw-2.5rem)] animate-in fade-in slide-in-from-bottom-4 duration-300">
@@ -62,7 +62,7 @@ export default function GuidePopup() {
             </p>
             <div className="flex items-center gap-3 mt-2.5">
               <Link
-                href="/free-istanbul-relocation-guide"
+                href="/free-guide"
                 onClick={dismiss}
                 className="inline-flex items-center justify-center px-3.5 py-1.5 rounded-full bg-amber-500 text-white text-xs font-semibold hover:bg-amber-600 transition-colors"
               >

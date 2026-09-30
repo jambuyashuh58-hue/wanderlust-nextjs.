@@ -6,16 +6,7 @@ const nextConfig = {
     // Relocation Guide -- keep the old URL alive for anyone with it bookmarked
     // or shared (social bios, old emails, etc).
     return [
-      // Sep 2026 restructure: old /guides/* pillar content moved under the
-      // new /moving-to-istanbul/* relocation-authority URL tree. Old links
-      // (social bios, backlinks, bookmarks) still point at the old paths.
-      { source: '/guides/visa', destination: '/moving-to-istanbul/visa-residence-permit', permanent: true },
-      { source: '/guides/housing', destination: '/moving-to-istanbul/housing', permanent: true },
-      { source: '/guides/cost-of-living', destination: '/moving-to-istanbul/cost-of-living', permanent: true },
-      // Lead-magnet URL history: /guide -> /free-guide -> the final,
-      // keyword-matched slug used in the new nav and sitemap.
-      { source: '/guide', destination: '/free-istanbul-relocation-guide', permanent: true },
-      { source: '/free-guide', destination: '/free-istanbul-relocation-guide', permanent: true },
+      { source: '/guide', destination: '/free-guide', permanent: true },
     ];
   },
   images: {

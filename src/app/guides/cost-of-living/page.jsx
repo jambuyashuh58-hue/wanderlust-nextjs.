@@ -2,12 +2,10 @@ import Link from 'next/link';
 import { CheckCircle2, AlertTriangle, ExternalLink, ArrowRight } from 'lucide-react';
 import GuideLayout from '@/components/GuideLayout';
 import GuideFAQ from '@/components/GuideFAQ';
-import GuideSchema from '@/components/GuideSchema';
 
 export const metadata = {
   title: 'Monthly Cost of Living in Istanbul for Expats & Digital Nomads (2026) | Move to Istanbul',
   description: 'Real numbers on housing, food, transportation, and monthly expenses.',
-  alternates: { canonical: '/moving-to-istanbul/cost-of-living' },
 };
 
 const TIERS = [
@@ -177,21 +175,12 @@ const SOURCES = [
 
 export default function GuideCostOfLivingPage() {
   return (
-    <>
-    <GuideSchema
-      path="/moving-to-istanbul/cost-of-living"
-      title="Monthly Cost of Living in Istanbul for Expats & Digital Nomads (2026)"
-      description="Real numbers on housing, food, transportation, and monthly expenses."
-      faq={FAQ}
-    />
     <GuideLayout
       eyebrow="Cost of Living"
       title="Monthly Cost of Living in Istanbul for Expats & Digital Nomads (2026)"
       description="Real numbers on housing, food, transportation, and monthly expenses."
       readTime="12 min read"
       updated={new Date().toISOString().slice(0, 10)}
-      backHref="/moving-to-istanbul"
-      backLabel="Moving to Istanbul"
       sections={[
         { id: 'reality', label: '2026 Economic Reality' },
         { id: 'breakdown', label: 'Cost Breakdown' },
@@ -223,7 +212,7 @@ export default function GuideCostOfLivingPage() {
         </div>
         <p className="text-xs text-muted-foreground leading-relaxed bg-muted/50 rounded-lg p-3">
           Note: The estimates below exclude one-time upfront move-in deposits and visa filing fees. See our{' '}
-          <Link href="/moving-to-istanbul/housing" className="text-primary font-medium hover:underline">Housing Guide</Link> for full deposit and commission breakdowns.
+          <Link href="/guides/housing" className="text-primary font-medium hover:underline">Housing Guide</Link> for full deposit and commission breakdowns.
         </p>
       </section>
 
@@ -448,6 +437,5 @@ export default function GuideCostOfLivingPage() {
         </p>
       </section>
     </GuideLayout>
-    </>
   );
 }
