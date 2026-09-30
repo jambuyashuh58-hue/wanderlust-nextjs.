@@ -8,24 +8,44 @@
 // Base URL: hardcoded to the production domain (movetoistanbul.online) since
 // that's what search engines should always see regardless of which Vercel
 // preview/alias served the request. Update SITE_URL if the domain changes.
-import { getCollections, getAllActivities, getCities, getCountryGuides } from '@/lib/supabaseServer';
+import { getCollections, getCountryGuides } from '@/lib/supabaseServer';
 
 export const revalidate = 3600;
 
 const SITE_URL = 'https://movetoistanbul.online';
 
+// Sep 2026 restructure: the site moved from a Turkey travel directory to a
+// relocation authority (see MOVE_TO_ISTANBUL restructure plan). The old
+// sitemap listed every activity/city page unconditionally -- 744 largely
+// auto-generated listing pages plus city hubs -- which is what produced the
+// "Discovered/Crawled -- currently not indexed" collapse in Search Console
+// (683 of 964 URLs). Those pages are now noindexed at the source
+// (activity/[id] and city/[cityName] generateMetadata) and deliberately
+// excluded here. The sitemap now carries only the ~50-80 pages the site
+// actually wants ranked: the relocation pillar cluster, the service pages,
+// and existing good content (collections, country guides, guides).
 const STATIC_ROUTES = [
   { path: '/', priority: 1.0, changeFrequency: 'daily' },
-  { path: '/discover', priority: 0.9, changeFrequency: 'daily' },
-  { path: '/collections', priority: 0.9, changeFrequency: 'daily' },
-  { path: '/guides', priority: 0.8, changeFrequency: 'weekly' },
-  { path: '/guides/visa', priority: 0.7, changeFrequency: 'monthly' },
-  { path: '/guides/housing', priority: 0.7, changeFrequency: 'monthly' },
-  { path: '/guides/cost-of-living', priority: 0.7, changeFrequency: 'monthly' },
-  { path: '/country-guides', priority: 0.7, changeFrequency: 'weekly' },
-  { path: '/onboarding', priority: 0.6, changeFrequency: 'monthly' },
-  { path: '/relocation-quiz', priority: 0.5, changeFrequency: 'monthly' },
-  { path: '/concierge', priority: 0.6, changeFrequency: 'monthly' },
+  { path: '/moving-to-istanbul', priority: 1.0, changeFrequency: 'weekly' },
+  { path: '/moving-to-istanbul/checklist', priority: 0.9, changeFrequency: 'weekly' },
+  { path: '/moving-to-istanbul/visa-residence-permit', priority: 0.9, changeFrequency: 'monthly' },
+  { path: '/moving-to-istanbul/housing', priority: 0.9, changeFrequency: 'monthly' },
+  { path: '/moving-to-istanbul/cost-of-living', priority: 0.9, changeFrequency: 'monthly' },
+  { path: '/moving-to-istanbul/budget', priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/moving-to-istanbul/arrival-setup', priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/services', priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/services/visa-paperwork-guidance', priority: 0.9, changeFrequency: 'monthly' },
+  { path: '/services/apartment-shortlisting', priority: 0.9, changeFrequency: 'monthly' },
+  { path: '/services/full-relocation-concierge', priority: 0.9, changeFrequency: 'monthly' },
+  { path: '/services/book-a-discovery-call', priority: 0.7, changeFrequency: 'monthly' },
+  { path: '/free-istanbul-relocation-guide', priority: 0.9, changeFrequency: 'weekly' },
+  { path: '/discover', priority: 0.5, changeFrequency: 'daily' },
+  { path: '/collections', priority: 0.6, changeFrequency: 'daily' },
+  { path: '/guides', priority: 0.6, changeFrequency: 'weekly' },
+  { path: '/country-guides', priority: 0.6, changeFrequency: 'weekly' },
+  { path: '/onboarding', priority: 0.4, changeFrequency: 'monthly' },
+  { path: '/relocation-quiz', priority: 0.4, changeFrequency: 'monthly' },
+  { path: '/concierge', priority: 0.5, changeFrequency: 'monthly' },
   { path: '/about', priority: 0.4, changeFrequency: 'yearly' },
   { path: '/contact', priority: 0.4, changeFrequency: 'yearly' },
   { path: '/privacy', priority: 0.2, changeFrequency: 'yearly' },
@@ -33,10 +53,8 @@ const STATIC_ROUTES = [
 ];
 
 export default async function sitemap() {
-  const [collections, activities, cities, countryGuides] = await Promise.all([
+  const [collections, countryGuides] = await Promise.all([
     getCollections().catch(() => []),
-    getAllActivities(2000).catch(() => []),
-    getCities().catch(() => []),
     getCountryGuides().catch(() => []),
   ]);
 
@@ -52,20 +70,6 @@ export default async function sitemap() {
   const collectionEntries = (collections || []).map((c) => ({
     url: `${SITE_URL}/collections/${c.slug}`,
     lastModified: c.updated_date ? new Date(c.updated_date) : now,
-    changeFrequency: 'weekly',
-    priority: 0.7,
-  }));
-
-  const activityEntries = (activities || []).map((a) => ({
-    url: `${SITE_URL}/activity/${a.id}`,
-    lastModified: a.updated_date ? new Date(a.updated_date) : now,
-    changeFrequency: 'monthly',
-    priority: 0.6,
-  }));
-
-  const cityEntries = (cities || []).map((c) => ({
-    url: `${SITE_URL}/city/${encodeURIComponent(c.name.toLowerCase())}`,
-    lastModified: now,
     changeFrequency: 'weekly',
     priority: 0.7,
   }));
@@ -105,8 +109,6 @@ export default async function sitemap() {
   return [
     ...staticEntries,
     ...collectionEntries,
-    ...activityEntries,
-    ...cityEntries,
     ...countryGuideEntries,
     ...trStaticEntries,
     ...trCountryGuideEntries,

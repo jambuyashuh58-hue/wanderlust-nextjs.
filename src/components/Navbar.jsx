@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Compass, Menu, X, Sparkles, Instagram, Languages } from 'lucide-react';
+import { Compass, Menu, X, BookOpen, Instagram, Languages } from 'lucide-react';
 import { t } from '@/lib/i18n';
 
 const CONCIERGE_URL = 'https://www.instagram.com/move_istanbul';
@@ -16,14 +16,18 @@ export default function Navbar({ locale = 'en' }) {
   // built once here rather than baked into a static NAV_LINKS array, since
   // the prefix depends on the current locale.
   const prefix = locale === 'tr' ? '/tr' : '';
+  // Sep 2026 restructure: relocation-first nav (see MOVE_TO_ISTANBUL plan).
+  // Plain English labels for the new items rather than t() lookups -- these
+  // pages aren't translated yet, so a /tr label would be misleading; the
+  // t()-driven items below are unchanged, translated pages.
   const NAV_LINKS = [
-    { label: t('nav_discover', locale), path: `${prefix}/discover` },
-    { label: t('nav_collections', locale), path: `${prefix}/collections` },
+    { label: 'Moving to Istanbul', path: `${prefix}/moving-to-istanbul` },
+    { label: 'Housing', path: `${prefix}/moving-to-istanbul/housing` },
+    { label: 'Cost of Living', path: `${prefix}/moving-to-istanbul/cost-of-living` },
+    { label: 'Concierge Services', path: `${prefix}/services` },
     { label: t('nav_guides', locale), path: `${prefix}/guides` },
-    { label: t('nav_country_guides', locale), path: `${prefix}/country-guides` },
-    { label: t('nav_itinerary', locale), path: `${prefix}/itinerary` },
-    { label: t('nav_dashboard', locale), path: `${prefix}/dashboard` },
-    { label: t('nav_concierge', locale), path: `${prefix}/concierge` },
+    { label: 'About', path: `${prefix}/about` },
+    { label: 'Contact', path: `${prefix}/contact` },
   ];
   // Strip the current locale's prefix to get the "bare" path, then rebuild
   // it under the other locale -- this is what the EN/TR toggle links to.
@@ -56,8 +60,8 @@ export default function Navbar({ locale = 'en' }) {
               <Link href={otherLocaleHref} className="hidden md:inline-flex items-center gap-1 px-3 py-2 rounded-full text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors" title={locale === 'tr' ? 'Switch to English' : "Türkçe'ye geç"}>
                 <Languages className="w-3.5 h-3.5" /> {locale === 'tr' ? 'EN' : 'TR'}
               </Link>
-              <Link href={`${prefix}/onboarding`} className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
-                <Sparkles className="w-4 h-4" /> {t('plan_my_trip', locale)}
+              <Link href="/free-istanbul-relocation-guide" className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
+                <BookOpen className="w-4 h-4" /> Get Free Guide
               </Link>
               <a href={CONCIERGE_URL} target="_blank" rel="noopener noreferrer" aria-label="Follow Move to Istanbul on Instagram" className="w-11 h-11 flex items-center justify-center rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"><Instagram className="w-5 h-5" /></a>
               <button
@@ -84,8 +88,8 @@ export default function Navbar({ locale = 'en' }) {
             <Link href={otherLocaleHref} className="mt-1 inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl border border-border font-semibold">
               <Languages className="w-4 h-4" /> {locale === 'tr' ? 'View in English' : "Türkçe'yi görüntüle"}
             </Link>
-            <Link href={`${prefix}/onboarding`} className="mt-1 inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl bg-gradient-primary text-white font-semibold">
-              <Sparkles className="w-4 h-4" /> {t('plan_my_trip', locale)}
+            <Link href="/free-istanbul-relocation-guide" className="mt-1 inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl bg-gradient-primary text-white font-semibold">
+              <BookOpen className="w-4 h-4" /> Get Free Guide
             </Link>
           </nav>
         </div>

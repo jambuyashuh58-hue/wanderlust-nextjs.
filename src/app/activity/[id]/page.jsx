@@ -17,6 +17,14 @@ export async function generateMetadata({ params }) {
   return {
     title: `${activity.title} — Prices, Duration & Booking | Move to Istanbul`,
     description: activity.description?.slice(0, 160),
+    // Individual activity listings are supporting/booking-reference content,
+    // not the SEO surface -- the site's indexable authority now lives on the
+    // /moving-to-istanbul/, /settling-in-istanbul/, /services/ and curated
+    // /istanbul-guides/ pages. Indexing hundreds of thin, largely
+    // auto-generated listing pages is what caused the Sep 2026 Search
+    // Console "Discovered/Crawled -- currently not indexed" collapse
+    // (683 of 964 URLs). Pages stay live and linkable, just out of the index.
+    robots: { index: false, follow: true },
   };
 }
 

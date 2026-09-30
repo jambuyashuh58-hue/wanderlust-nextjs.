@@ -2,10 +2,12 @@ import Link from 'next/link';
 import { CheckCircle2, AlertTriangle, ExternalLink, ArrowRight } from 'lucide-react';
 import GuideLayout from '@/components/GuideLayout';
 import GuideFAQ from '@/components/GuideFAQ';
+import GuideSchema from '@/components/GuideSchema';
 
 export const metadata = {
   title: 'Finding Housing in Türkiye: Renting in Istanbul as a Foreigner (2026) | Move to Istanbul',
   description: 'Neighborhood breakdown, rent ranges, and the full apartment-search process.',
+  alternates: { canonical: '/moving-to-istanbul/housing' },
 };
 
 const DISTRICTS = [
@@ -196,12 +198,21 @@ const SOURCES = [
 
 export default function GuideHousingPage() {
   return (
+    <>
+    <GuideSchema
+      path="/moving-to-istanbul/housing"
+      title="Finding Housing in Türkiye: Renting in Istanbul as a Foreigner (2026)"
+      description="Neighborhood breakdown, rent ranges, and the full apartment-search process."
+      faq={FAQ}
+    />
     <GuideLayout
       eyebrow="Housing Guide"
       title="Finding Housing in Türkiye: Renting in Istanbul as a Foreigner (2026)"
       description="Neighborhood breakdown, rent ranges, and the full apartment-search process."
       readTime="13 min read"
       updated={new Date().toISOString().slice(0, 10)}
+      backHref="/moving-to-istanbul"
+      backLabel="Moving to Istanbul"
       sections={[
         { id: 'landscape', label: '2026 Rental Landscape' },
         { id: 'districts', label: 'District Costs' },
@@ -453,5 +464,6 @@ export default function GuideHousingPage() {
         </p>
       </section>
     </GuideLayout>
+    </>
   );
 }

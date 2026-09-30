@@ -13,6 +13,10 @@ export async function generateMetadata({ params }) {
   return {
     title: `${city.name} — Things to Do | Move to Istanbul`,
     description: city.description,
+    // See the matching note on activity/[id]/page.jsx -- these auto-generated
+    // city hubs are part of the same thin-content cluster the Sep 2026
+    // Search Console restructure pulled out of the index.
+    robots: { index: false, follow: true },
   };
 }
 
