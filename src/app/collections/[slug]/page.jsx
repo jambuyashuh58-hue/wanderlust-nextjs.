@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
@@ -60,7 +59,8 @@ export default async function CollectionDetailPage({ params }) {
           <h1 className="text-3xl md:text-4xl font-bold mb-3">{collection.title}</h1>
           {collection.hero_image_url && (
             <div className="relative aspect-[21/9] rounded-2xl overflow-hidden mt-6">
-              <Image src={collection.hero_image_url} alt={collection.title} fill priority sizes="100vw" className="object-cover" />
+              {/* Plain <img>, not next/image -- see CollectionsFilters.jsx for why. */}
+              <img src={collection.hero_image_url} alt={collection.title} className="absolute inset-0 w-full h-full object-cover" />
             </div>
           )}
           {collection.intro && !isGuide && (

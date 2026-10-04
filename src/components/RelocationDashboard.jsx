@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import {
   Wallet, Home, Sparkles, Plane, FileCheck, ShoppingCart, Heart,
   MapPin, BedDouble, ExternalLink, ChevronDown, MessageCircle,
@@ -293,7 +292,8 @@ export default function RelocationDashboard({ listings }) {
                   {listings.slice(0, 6).map((l) => (
                     <div key={l.id} className="flex gap-3 rounded-xl border border-border overflow-hidden bg-background p-2.5">
                       <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-muted shrink-0">
-                        {l.image_url && <Image src={l.image_url} alt={l.title} fill sizes="80px" className="object-cover" />}
+                        {/* Plain <img>, not next/image -- see CollectionsFilters.jsx for why. */}
+                        {l.image_url && <img src={l.image_url} alt={l.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />}
                       </div>
                       <div className="flex-1 min-w-0">
                         <h4 className="text-xs font-semibold line-clamp-1 mb-0.5">{l.title}</h4>
@@ -340,7 +340,8 @@ export default function RelocationDashboard({ listings }) {
               {savedActivities.map((a) => (
                 <li key={a.id} className="flex items-center gap-3">
                   <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted shrink-0">
-                    {a.image_url && <Image src={a.image_url} alt={a.title} fill sizes="48px" className="object-cover" />}
+                    {/* Plain <img>, not next/image -- see CollectionsFilters.jsx for why. */}
+                    {a.image_url && <img src={a.image_url} alt={a.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">{a.title}</p>

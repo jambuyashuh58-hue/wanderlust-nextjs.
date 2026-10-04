@@ -9,7 +9,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Sparkles, MapPin, ArrowRight, Sun, Sunset, Moon, Star, Clock, Info, CalendarCheck, Car, Bed, Plane, ExternalLink } from 'lucide-react';
 
 const PERIODS = ['morning', 'afternoon', 'evening'];
@@ -32,7 +31,8 @@ function ActivityCard({ slot }) {
     >
       <div className="relative w-full aspect-[4/3] bg-muted">
         {a.image_url ? (
-          <Image src={a.image_url} alt={a.title || a.name || ''} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
+          // Plain <img>, not next/image -- see CollectionsFilters.jsx for why.
+          <img src={a.image_url} alt={a.title || a.name || ''} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-muted-foreground">
             <MapPin className="w-8 h-8" />
