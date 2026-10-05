@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { getCollectionBySlug } from '@/lib/supabaseServer';
 import ActivityCard from '@/components/ActivityCard';
 import GuideBody from '@/components/GuideBody';
@@ -69,11 +70,15 @@ export default async function CollectionDetailPage({ params }) {
               prose-p:text-foreground/80 prose-p:leading-relaxed
               prose-strong:text-foreground prose-strong:font-semibold
               prose-li:text-foreground/80 prose-ul:my-3
-              prose-a:text-primary prose-a:font-medium prose-a:no-underline hover:prose-a:underline">
+              prose-a:text-primary prose-a:font-medium prose-a:no-underline hover:prose-a:underline
+              prose-table:text-sm prose-th:text-foreground prose-th:font-semibold prose-th:border-b prose-th:border-border prose-th:px-3 prose-th:py-2 prose-th:text-left
+              prose-td:text-foreground/80 prose-td:border-b prose-td:border-border/60 prose-td:px-3 prose-td:py-2 prose-td:align-top">
               <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
                 components={{
                   a: ({ href, children }) =>
                     href?.startsWith('/') ? <Link href={href}>{children}</Link> : <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>,
+                  table: ({ children }) => <div className="overflow-x-auto my-4"><table className="w-full border-collapse">{children}</table></div>,
                 }}
               >
                 {collection.intro}
