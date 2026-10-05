@@ -75,6 +75,7 @@ const FAQ = [
 ];
 
 const RELATED_RESOURCES = [
+  { label: 'Best Way to Send USD to a Turkish Bank Account: 2026 Guide', href: '/guides/send-usd-to-turkish-bank-account' },
   { label: 'How to Open a Turkish Bank Account Without an İkamet Card', href: '/guides/bank-account-without-ikamet' },
   { label: 'Is the Türkiye Digital Nomad Visa Tax-Free? Remote Tax Guide', href: '/guides/digital-nomad-visa-tax-guide' },
   { label: 'Türkiye Visa & Residence Permit Guide 2026', href: '/guides/visa' },

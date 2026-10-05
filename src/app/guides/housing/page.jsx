@@ -183,7 +183,15 @@ const RELATED_RESOURCES = [
       { label: 'How to Avoid Excessive ATM Conversion Fees in Istanbul', href: '/guides/avoiding-atm-fees-istanbul' },
       { label: 'Kadıköy vs. Beşiktaş: Best Neighborhoods for Expats', href: '/guides/kadikoy-vs-besiktas' },
       { label: 'PayPal and Stripe Alternatives for Freelancers in Türkiye', href: '/guides/paypal-stripe-alternatives-turkey' },
+      { label: 'Best Way to Send USD to a Turkish Bank Account: 2026 Guide', href: '/guides/send-usd-to-turkish-bank-account' },
       { label: 'eSIM vs. Local SIM Card in Türkiye: 2026 Comparison', href: '/guides/esim-vs-local-sim-turkey' },
+      { label: 'Phone Registration Tax in Türkiye: IMEI Lock Rules', href: '/guides/phone-registration-tax-turkey' },
+    ],
+  },
+  {
+    category: 'Property Owners',
+    links: [
+      { label: 'Best Property Management Companies in Istanbul for Overseas Owners', href: '/guides/property-management-istanbul' },
     ],
   },
   {

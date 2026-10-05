@@ -84,6 +84,9 @@ export default function EsimVsLocalSimGuidePage() {
           <p className="text-sm text-foreground/80 leading-relaxed"><strong>Network blocking:</strong> after 120 days, the phone&apos;s IMEI is blocked from registering on Turkish mobile towers (Turkcell, Vodafone, Türk Telekom) until the tax is paid or you leave the country.</p>
           <p className="text-sm text-foreground/80 leading-relaxed"><strong>Dual-SIM workaround:</strong> dual-SIM or eSIM-capable phones have two distinct IMEI numbers. Using the physical SIM slot gives you 120 days; switching to the eSIM slot afterward gives you another 120 days — up to 240 days per calendar year.</p>
         </div>
+        <p className="text-xs text-foreground/70 leading-relaxed bg-muted/50 rounded-lg p-3 mt-4">
+          Deciding whether to just pay the registration tax instead? See our <Link href="/guides/phone-registration-tax-turkey" className="text-primary font-medium hover:underline">Phone Registration Tax guide</Link> for the actual 2026 cost breakdown and the official payment process for residents.
+        </p>
       </section>
 
       {/* Comparison table */}

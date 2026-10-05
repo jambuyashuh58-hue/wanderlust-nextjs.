@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Stamp, Home, Wallet, TrendingUp, HeartPulse, GraduationCap, Brain, Smartphone, CreditCard, ArrowRight, BookOpen, LayoutGrid } from 'lucide-react';
+import { Stamp, Home, Wallet, TrendingUp, HeartPulse, GraduationCap, Brain, Smartphone, CreditCard, ArrowRight, BookOpen, LayoutGrid, Building2, Landmark, ShieldCheck } from 'lucide-react';
 
 export const metadata = {
   title: 'Türkiye Long-Stay Guides | Move to Istanbul',
@@ -18,7 +18,10 @@ const SPECIALIZED_GUIDES = [
   { slug: 'international-schools-istanbul', icon: GraduationCap, title: 'International Schools for Expat Families', description: 'Curricula, top schools by district, tuition benchmarks, and visa rules for kids.', color: 'text-secondary' },
   { slug: 'culture-shock-istanbul', icon: Brain, title: 'Expat Culture Shock in Istanbul', description: 'The 4 phases of adjustment and a practical plan to integrate faster.', color: 'text-accent' },
   { slug: 'esim-vs-local-sim-turkey', icon: Smartphone, title: 'eSIM vs. Local SIM in Türkiye', description: 'The 120-day IMEI rule, the airport SIM trap, and the hybrid setup that works.', color: 'text-primary' },
-  { slug: 'paypal-stripe-alternatives-turkey', icon: CreditCard, title: 'PayPal & Stripe Alternatives for Freelancers', description: 'Wise, Payoneer, and SWIFT — plus the tax setup that gets you to 0% income tax.', color: 'text-secondary' },
+  { slug: 'paypal-stripe-alternatives-turkey', icon: CreditCard, title: 'PayPal & Stripe Alternatives for Freelancers', description: 'Wise, Payoneer, and SWIFT — plus the tax setup that gets you to 0% income tax.', color: 'text-primary' },
+  { slug: 'property-management-istanbul', icon: Building2, title: 'Property Management for Overseas Owners', description: 'The agent-vs-dedicated-manager tradeoff, and the legal protections Turkish landlords actually need.', color: 'text-accent' },
+  { slug: 'phone-registration-tax-turkey', icon: ShieldCheck, title: 'Phone Registration Tax in Türkiye', description: 'The 120-day IMEI rule, the real cost of registering, and the cheaper workarounds compared.', color: 'text-destructive' },
+  { slug: 'send-usd-to-turkish-bank-account', icon: Landmark, title: 'Send USD to a Turkish Bank Account', description: 'Wise vs. SWIFT vs. Payoneer vs. Revolut — the fastest, cheapest way to move your own money.', color: 'text-secondary' },
 ];
 
 export default function GuidesPage() {
