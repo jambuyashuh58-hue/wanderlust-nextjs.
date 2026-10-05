@@ -9,21 +9,25 @@ const CONCIERGE_TIERS = [
     id: 'trip_package', name: 'Trip Package Planning', price: 20,
     tagline: 'Send us your cities, dates, and budget — we hand back a day-by-day plan with real activities, hotel picks, and booking links.',
     includes: ['Custom day-by-day itinerary built from your cities, dates, and budget', 'Hand-picked activities and hotel range for every day', 'Direct booking links for everything — you book, we just plan it', 'One free revision if your dates or budget change', 'Delivered within 48 hours'],
+    notThis: 'Not a travel agency booking — we plan, you book.',
   },
   {
     id: 'paperwork', name: 'Visa & Paperwork Guidance', price: 99,
     tagline: 'A focused 45-minute strategy call to map your exact visa route — no more guessing.',
     includes: ['Personalized visa-route checklist for your nationality', 'A 45-minute live call', 'Document review plus up to 3 follow-up emails', 'Help booking your e-ikamet appointment', 'Access to long-stay guides'],
+    notThis: 'Not a filed application or legal filing — a planning review.',
   },
   {
-    id: 'apartment', name: 'Apartment Shortlisting', price: 449,
+    id: 'apartment', name: 'Apartment Shortlisting', price: 449, featured: true,
     tagline: '5-8 real listings matched to your budget, with curated video walkthroughs.',
     includes: ['Everything in Visa & Paperwork Guidance', '5-8 real rental listings matched to your budget and preferred neighborhood, pre-screened for foreigner-friendly landlords', 'Curated walk-through videos provided directly by local property agents or our on-the-ground team', 'A localized contract checklist highlighting common rental terms to look out for', 'DASK earthquake insurance guidance', 'Guidance on negotiating rent and deposit'],
+    notThis: 'Not a licensed rental agency — we don’t sign or negotiate the lease for you.',
   },
   {
     id: 'full', name: 'Full Relocation Concierge', price: 999,
     tagline: 'Hand us the whole first month — visa, housing, banking, and settling in.',
     includes: ['Everything in Apartment Shortlisting', 'Bilingual local specialist accompaniment', 'Airport arrival logistics', 'Neighborhood orientation write-up', 'First-month cost breakdown', 'Priority response time', 'Weekly async check-ins'],
+    notThis: 'Not visa sponsorship or a law firm — independent planning support.',
   },
 ];
 
@@ -75,14 +79,16 @@ export default function ConciergeInteractive() {
           return (
             <div
               key={tier.id}
-              className={`rounded-2xl border p-6 bg-card flex flex-col transition-colors ${isSelected ? 'border-primary ring-2 ring-primary/20' : 'border-border'}`}
+              className={`rounded-2xl border p-6 bg-card flex flex-col transition-colors ${isSelected ? 'border-primary ring-2 ring-primary/20' : tier.featured ? 'border-primary border-2 shadow-sm' : 'border-border'}`}
             >
+              {tier.featured && <span className="self-start inline-block px-2.5 py-0.5 rounded-full bg-primary text-white text-[10px] font-semibold uppercase tracking-wide mb-2">Most popular</span>}
               <h3 className="font-bold text-lg mb-1">{tier.name}</h3>
               <div className="text-3xl font-bold mb-1">${tier.price}<span className="text-sm font-normal text-muted-foreground ml-1">USD</span></div>
               <p className="text-sm text-muted-foreground mb-4">{tier.tagline}</p>
-              <ul className="space-y-2 flex-1 mb-6">
+              <ul className="space-y-2 flex-1 mb-4">
                 {tier.includes.map((item, i) => <li key={i} className="flex items-start gap-2 text-sm"><Check className="w-4 h-4 text-success shrink-0 mt-0.5" /><span>{item}</span></li>)}
               </ul>
+              <p className="text-[11px] text-muted-foreground leading-snug mb-4">{tier.notThis}</p>
               <button
                 type="button"
                 onClick={() => setSelectedTier(tier.id)}
