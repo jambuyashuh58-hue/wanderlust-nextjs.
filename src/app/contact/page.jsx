@@ -6,7 +6,6 @@ const CONCIERGE_URL = 'https://www.instagram.com/move_istanbul';
 export const metadata = {
   title: 'Contact Us | Move to Istanbul',
   description: 'Get in touch with the Move to Istanbul team.',
-  alternates: { canonical: '/contact/' },
 };
 
 export default function ContactPage() {

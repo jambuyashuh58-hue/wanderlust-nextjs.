@@ -41,17 +41,6 @@ export async function middleware(request) {
     return NextResponse.next();
   }
 
-  // -------------------- Default Vercel domain: keep it out of the index --------------------
-  // The project's auto-assigned *.vercel.app domain (wanderlust-nextjs.vercel.app)
-  // serves the exact same content as the real domain and has no redirect
-  // configured at the Vercel project level, so it's a live, crawlable
-  // duplicate of the whole site sitting next to the canonical one. A
-  // redirect can't be set from next.config.mjs/vercel.json (that's
-  // host-independent), so this blocks indexing at the response-header
-  // level for any request that didn't come in on the real domain.
-  const host = request.headers.get('host') || '';
-  const isCanonicalHost = host === 'movetoistanbul.online' || host === 'www.movetoistanbul.online';
-
   // -------------------- Locale (EN default, TR under /tr) --------------------
   // English keeps today's exact URLs untouched (nothing rewritten, no prefix)
   // so every already-indexed/backlinked English URL keeps working exactly as
@@ -65,22 +54,13 @@ export async function middleware(request) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-locale', isTurkish ? 'tr' : 'en');
 
-  const response = isTurkish
-    ? NextResponse.rewrite(
-        (() => {
-          const rewritten = request.nextUrl.clone();
-          rewritten.pathname = pathname.replace(/^\/tr/, '') || '/';
-          return rewritten;
-        })(),
-        { request: { headers: requestHeaders } },
-      )
-    : NextResponse.next({ request: { headers: requestHeaders } });
-
-  if (!isCanonicalHost) {
-    response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+  if (isTurkish) {
+    const rewritten = request.nextUrl.clone();
+    rewritten.pathname = pathname.replace(/^\/tr/, '') || '/';
+    return NextResponse.rewrite(rewritten, { request: { headers: requestHeaders } });
   }
 
-  return response;
+  return NextResponse.next({ request: { headers: requestHeaders } });
 }
 
 export const config = {

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Globe, ArrowRight } from 'lucide-react';
 import { getCountryGuides } from '@/lib/supabaseServer';
 import { pick } from '@/lib/i18n';
@@ -16,18 +17,12 @@ export async function generateMetadata() {
     ? {
         title: 'Türkiye\'ye Taşınma Rehberleri | Move to Istanbul',
         description: 'Türkiye\'ye taşınmak için ülkeye özel rehberler.',
-        alternates: {
-          canonical: '/tr/country-guides/',
-          languages: { en: '/country-guides', tr: '/tr/country-guides' },
-        },
+        alternates: { languages: { en: '/country-guides', tr: '/tr/country-guides' } },
       }
     : {
         title: 'Country Relocation Guides | Move to Istanbul',
         description: 'Nationality-specific guides for moving to Türkiye.',
-        alternates: {
-          canonical: '/country-guides/',
-          languages: { en: '/country-guides', tr: '/tr/country-guides' },
-        },
+        alternates: { languages: { en: '/country-guides', tr: '/tr/country-guides' } },
       };
 }
 
@@ -64,8 +59,7 @@ export default async function CountryGuidesPage() {
               return (
                 <Link key={g.id} href={`${prefix}/country-guides/${g.slug}`} className="group block h-full rounded-2xl overflow-hidden border border-border hover:border-primary/40 hover:shadow-lg transition-all">
                   <div className="relative aspect-[16/9] bg-gradient-to-br from-primary/30 to-secondary/30 overflow-hidden">
-                    {/* Plain <img>, not next/image -- see CollectionsFilters.jsx for why. */}
-                    {g.hero_image_url && <img src={g.hero_image_url} alt={title} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />}
+                    {g.hero_image_url && <Image src={g.hero_image_url} alt={title} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />}
                     <span className="absolute bottom-3 left-4 text-white font-bold text-lg drop-shadow">{g.country}</span>
                   </div>
                   <div className="p-5">

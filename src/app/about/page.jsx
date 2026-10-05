@@ -5,7 +5,6 @@ import AboutFAQ from '@/components/AboutFAQ';
 export const metadata = {
   title: 'About Us | Move to Istanbul',
   description: 'We help travelers discover the depth of Türkiye — beyond the postcards, into the real neighborhoods, hidden museums, and everyday moments that make a place feel like home.',
-  alternates: { canonical: '/about/' },
 };
 
 const FEATURES = [

@@ -28,7 +28,7 @@ const DICTIONARY = {
     nav_country_guides: 'Country Guides',
     nav_itinerary: 'Itinerary',
     nav_dashboard: 'Dashboard',
-    nav_concierge: 'Services',
+    nav_concierge: 'Concierge',
     plan_my_trip: 'Plan My Trip',
   },
   tr: {
@@ -38,7 +38,7 @@ const DICTIONARY = {
     nav_country_guides: 'Ülke Rehberleri',
     nav_itinerary: 'Gezi Planı',
     nav_dashboard: 'Panel',
-    nav_concierge: 'Hizmetler',
+    nav_concierge: 'Danışmanlık',
     plan_my_trip: 'Gezimi Planla',
   },
 };

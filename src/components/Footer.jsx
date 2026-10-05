@@ -1,12 +1,10 @@
 import Link from 'next/link';
-import { Compass, Instagram, Mail } from 'lucide-react';
+import { Compass, Instagram } from 'lucide-react';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import Destinations from '@/components/Destinations';
 
 const AFFILIATE_DISCLOSURE = 'We may earn a commission when you book through links on this page, at no extra cost to you.';
-const ADVICE_DISCLAIMER = 'We do not provide legal or tax advice. Verify visa, residence, and tax requirements via official Republic of Türkiye channels.';
 const CONCIERGE_URL = 'https://www.instagram.com/move_istanbul';
-const CONTACT_EMAIL = 'hello@movetoistanbul.online';
 
 export default function Footer() {
   return (
@@ -18,13 +16,10 @@ export default function Footer() {
               <div className="w-9 h-9 rounded-xl bg-gradient-primary flex items-center justify-center"><Compass className="w-5 h-5 text-white" /></div>
               <span className="text-lg font-bold">Move to Istanbul</span>
             </Link>
-            <p className="text-sm text-muted-foreground leading-relaxed mb-3">Independent relocation planning service, plus AI-powered travel recommendations for Türkiye&apos;s museums, hidden gems, and cultural adventures.</p>
+            <p className="text-sm text-muted-foreground leading-relaxed mb-3">AI-powered travel recommendations for Türkiye&apos;s museums, hidden gems, and cultural adventures.</p>
             <Link href="/guides" className="block text-sm font-medium text-primary hover:underline mb-1">Turkey Long Stay Guides →</Link>
             <a href={CONCIERGE_URL} target="_blank" rel="noopener noreferrer" className="block text-sm font-medium text-primary hover:underline mb-3">Follow @move_istanbul on Instagram →</a>
-            <div className="flex items-center gap-2">
-              <a href={`mailto:${CONTACT_EMAIL}`} aria-label="Email Move to Istanbul" className="w-11 h-11 rounded-full bg-muted flex items-center justify-center hover:bg-primary hover:text-white transition-colors"><Mail className="w-5 h-5" /></a>
-              <a href={CONCIERGE_URL} target="_blank" rel="noopener noreferrer" aria-label="Follow Move to Istanbul on Instagram" className="w-11 h-11 rounded-full bg-muted flex items-center justify-center hover:bg-primary hover:text-white transition-colors"><Instagram className="w-5 h-5" /></a>
-            </div>
+            <a href={CONCIERGE_URL} target="_blank" rel="noopener noreferrer" aria-label="Follow Move to Istanbul on Instagram" className="w-11 h-11 rounded-full bg-muted flex items-center justify-center hover:bg-primary hover:text-white transition-colors"><Instagram className="w-5 h-5" /></a>
           </div>
           <div>
             {/* h2, not a visually-driven h4 -- this footer renders at the end
@@ -36,21 +31,9 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li><Link href="/discover" className="text-muted-foreground hover:text-primary">Discover</Link></li>
               <li><Link href="/collections" className="text-muted-foreground hover:text-primary">Collections</Link></li>
-              <li><Link href="/services" className="text-muted-foreground hover:text-primary">Services</Link></li>
-              <li><Link href="/how-we-work" className="text-muted-foreground hover:text-primary">How We Work</Link></li>
+              <li><Link href="/concierge" className="text-muted-foreground hover:text-primary">Concierge Service</Link></li>
               <li><Link href="/about" className="text-muted-foreground hover:text-primary">About</Link></li>
               <li><Link href="/contact" className="text-muted-foreground hover:text-primary">Contact</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h2 className="font-semibold text-sm mb-3">Moving to Türkiye</h2>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="/moving-to-turkiye" className="text-muted-foreground hover:text-primary">Moving to Türkiye</Link></li>
-              <li><Link href="/visa-residence" className="text-muted-foreground hover:text-primary">Visa &amp; Residence</Link></li>
-              <li><Link href="/housing" className="text-muted-foreground hover:text-primary">Housing</Link></li>
-              <li><Link href="/cost-of-living" className="text-muted-foreground hover:text-primary">Cost of Living</Link></li>
-              <li><Link href="/after-you-land" className="text-muted-foreground hover:text-primary">After You Land</Link></li>
-              <li><Link href="/istanbul-for-digital-nomads" className="text-muted-foreground hover:text-primary">For Digital Nomads</Link></li>
             </ul>
           </div>
           <div>
@@ -61,7 +44,6 @@ export default function Footer() {
               <li><Link href="/guides/cost-of-living" className="text-muted-foreground hover:text-primary">Cost of Living</Link></li>
               <li><Link href="/guides" className="text-muted-foreground hover:text-primary">All Guides</Link></li>
               <li><Link href="/country-guides" className="text-muted-foreground hover:text-primary">Country Guides</Link></li>
-              <li><Link href="/living-in-istanbul" className="text-muted-foreground hover:text-primary">Living in Istanbul</Link></li>
             </ul>
           </div>
           <div>
@@ -101,14 +83,10 @@ export default function Footer() {
             <div className="flex items-center gap-3">
               <Link href="/privacy" className="text-xs text-muted-foreground hover:text-primary">Privacy Policy</Link>
               <Link href="/terms" className="text-xs text-muted-foreground hover:text-primary">Terms of Service</Link>
-              <Link href="/refund-policy" className="text-xs text-muted-foreground hover:text-primary">Refund Policy</Link>
-              <Link href="/editorial-policy" className="text-xs text-muted-foreground hover:text-primary">Editorial Policy</Link>
-              <Link href="/partner-network" className="text-xs text-muted-foreground hover:text-primary">Partner Network</Link>
             </div>
           </div>
           <p className="text-xs text-muted-foreground text-center sm:text-right max-w-md">{AFFILIATE_DISCLOSURE}</p>
         </div>
-        <p className="pt-4 text-[11px] leading-relaxed text-muted-foreground/80 text-center sm:text-left">{ADVICE_DISCLAIMER}</p>
       </div>
     </footer>
   );

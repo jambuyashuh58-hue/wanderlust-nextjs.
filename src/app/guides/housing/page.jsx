@@ -6,7 +6,6 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Finding Housing in Türkiye: Renting in Istanbul as a Foreigner (2026) | Move to Istanbul',
   description: 'Neighborhood breakdown, rent ranges, and the full apartment-search process.',
-  alternates: { canonical: '/guides/housing/' },
 };
 
 const DISTRICTS = [
@@ -367,7 +366,7 @@ export default function GuideHousingPage() {
         <p className="text-sm text-foreground/80 leading-relaxed mb-4">
           Finding a pre-vetted, furnished flat in an open district with a cooperative landlord can take weeks of frustrating searches. Use our apartment shortlisting service to receive hand-picked, verified rental listings in open zones, or let our relocation concierge handle your lease notarization and utility setups.
         </p>
-        <Link href="/services" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
+        <Link href="/concierge" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
           Explore Apartment Shortlisting &amp; Relocation Services <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
@@ -401,7 +400,7 @@ export default function GuideHousingPage() {
         <p className="text-sm text-foreground/80 leading-relaxed mb-4">
           Unsure if your prospective lease, UAVT code, or neighborhood meets Göç İdaresi residency standards? Book a 45-minute visa &amp; paperwork consultation call with our team to review your lease terms and neighborhood eligibility.
         </p>
-        <Link href="/services" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
+        <Link href="/concierge" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
           Book Your 45-Minute Address &amp; Lease Audit Call <ArrowRight className="w-4 h-4" />
         </Link>
       </div>

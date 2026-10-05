@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Star, MapPin, Heart } from 'lucide-react';
 import { isActivitySaved, toggleSavedActivity } from '@/lib/savedActivities';
 
@@ -27,12 +28,8 @@ export default function ActivityCard({ activity }) {
     <div className="group relative bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl hover:shadow-black/5 transition-all duration-300">
       <Link href={`/activity/${activity.id}`} className="block">
         <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-          {/* Plain <img>, not next/image -- see CollectionsFilters.jsx for why:
-              these image_url values are arbitrary third-party hosts, and
-              several reject Vercel's server-side optimization fetch even
-              though they serve the browser fine. */}
           {activity.image_url && (
-            <img src={activity.image_url} alt={activity.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+            <Image src={activity.image_url} alt={activity.title} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover group-hover:scale-110 transition-transform duration-500" />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
           <div className="absolute top-4 left-4"><span className="px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm text-xs font-semibold text-foreground">{activity.category}</span></div>

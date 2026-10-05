@@ -6,7 +6,6 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Monthly Cost of Living in Istanbul for Expats & Digital Nomads (2026) | Move to Istanbul',
   description: 'Real numbers on housing, food, transportation, and monthly expenses.',
-  alternates: { canonical: '/guides/cost-of-living/' },
 };
 
 const TIERS = [
@@ -365,7 +364,7 @@ export default function GuideCostOfLivingPage() {
         <p className="text-sm text-foreground/80 leading-relaxed mb-4">
           Skip overpriced rental listings, un-notarized contracts, and closed neighborhood traps. Use our apartment shortlisting service to get hand-picked, verified rentals in 100% open neighborhoods matching your exact target budget.
         </p>
-        <Link href="/services" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
+        <Link href="/concierge" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
           Explore Apartment Shortlisting &amp; Concierge Services <ArrowRight className="w-4 h-4" />
         </Link>
       </div>

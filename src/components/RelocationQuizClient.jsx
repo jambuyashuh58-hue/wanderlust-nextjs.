@@ -127,10 +127,7 @@ export default function RelocationQuizClient({ collections = [] }) {
         <div className="flex flex-col gap-3 mb-8">
           {rec.collection && (
             <Link
-              // Guide-type collections are canonicalized to /guides/<slug>;
-              // everything else to /living-in-istanbul/<slug> -- see
-              // collections/[slug]/page.jsx.
-              href={rec.collection.display_style === 'guide' ? `/guides/${rec.collection.slug}` : `/living-in-istanbul/${rec.collection.slug}`}
+              href={`/collections/${rec.collection.slug}`}
               className="flex items-center justify-between px-5 py-4 rounded-xl border border-border bg-card hover:border-primary transition-colors"
             >
               <span className="font-semibold">{rec.collection.title}</span>
@@ -153,7 +150,7 @@ export default function RelocationQuizClient({ collections = [] }) {
               Our concierge team can handle this for you directly.
             </p>
             <Link
-              href="/services"
+              href="/concierge"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-primary text-sm font-semibold"
             >
               See concierge tiers <ArrowRight className="w-4 h-4" />

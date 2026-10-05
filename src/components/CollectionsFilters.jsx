@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { LayoutGrid, BookOpen, Sparkles, Trophy, MapPin } from 'lucide-react';
 
 const TYPE_TABS = [
@@ -81,25 +82,11 @@ export default function CollectionsFilters({ collections, cities }) {
           {filtered.map((c) => {
             const isRanking = c.display_style === 'ranking';
             const isGuide = c.display_style === 'guide';
-            // Guide-type collections are canonicalized to /guides/<slug>;
-            // everything else is canonicalized to /living-in-istanbul/<slug>
-            // (see collections/[slug]/page.jsx) -- link directly to the
-            // canonical URL so link equity flows there, not to a duplicate.
-            const href = isGuide ? `/guides/${c.slug}` : `/living-in-istanbul/${c.slug}`;
             return (
-              <Link key={c.id} href={href} className="block rounded-2xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-lg transition-all group h-full">
+              <Link key={c.id} href={`/collections/${c.slug}`} className="block rounded-2xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-lg transition-all group h-full">
                 <div className="relative aspect-[4/3] bg-muted overflow-hidden">
-                  {/* Plain <img>, not next/image -- these hero_image_url values
-                      come from arbitrary third-party hosts (stock photo sites,
-                      TripAdvisor's CDN, etc). Routing them through Vercel's
-                      Image Optimization (next/image) means Vercel fetches the
-                      image server-side, and several of those hosts reject
-                      that fetch (hotlink protection) even though they serve
-                      the same image to a browser just fine -- that silently
-                      broke images on this page while the homepage's identical
-                      cards (which already use a plain <img>) kept working. */}
                   {c.hero_image_url && (
-                    <img src={c.hero_image_url} alt={c.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    <Image src={c.hero_image_url} alt={c.title} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover group-hover:scale-105 transition-transform duration-300" />
                   )}
                   <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
                     {isRanking ? <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#D4AF37]/90 text-white text-xs font-bold"><Trophy className="w-3 h-3" /> Best Of</span>

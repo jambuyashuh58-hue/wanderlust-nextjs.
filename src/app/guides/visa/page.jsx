@@ -6,7 +6,6 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Türkiye Visa & Residence Permit Guide 2026 | Move to Istanbul',
   description: "e-Visa, tourist entry, and short-term residence permits, with official sources.",
-  alternates: { canonical: '/guides/visa/' },
 };
 
 const PATHWAYS = [
@@ -389,7 +388,7 @@ export default function GuideVisaPage() {
         <p className="text-sm text-foreground/80 leading-relaxed mb-4">
           Over 30% of initial residency applications in Istanbul are turned away due to closed neighborhood lease errors, un-notarized contracts, or mismatched name spellings on health insurance policies. Book a 45-minute visa &amp; paperwork consultation call — we&apos;ll audit your entire document folder, verify your UAVT code, and walk you step-by-step through your filing before your appointment.
         </p>
-        <Link href="/services" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
+        <Link href="/concierge" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
           Book Your 45-Minute Visa Consultation <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
@@ -423,7 +422,7 @@ export default function GuideVisaPage() {
         <p className="text-sm text-foreground/80 leading-relaxed mb-4">
           Bypassing rental scams, verifying UAVT address codes, and coordinating with Turkish landlords can take weeks of stressful searches. Use our apartment shortlisting service for hand-picked open-zone flats, or let our full relocation concierge handle your move end to end.
         </p>
-        <Link href="/services" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
+        <Link href="/concierge" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
           Explore Apartment Shortlisting &amp; Concierge Plans <ArrowRight className="w-4 h-4" />
         </Link>
       </div>

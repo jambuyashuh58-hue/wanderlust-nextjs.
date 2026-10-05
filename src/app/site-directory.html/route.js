@@ -29,18 +29,11 @@ export async function GET() {
   ]);
 
   const citySection = (cities || [])
-    .map((c) => `<li><a href="/city/${encodeURIComponent(c.name.toLowerCase())}/">${escapeHtml(c.name)}</a></li>`)
+    .map((c) => `<li><a href="/city/${encodeURIComponent(c.name.toLowerCase())}">${escapeHtml(c.name)}</a></li>`)
     .join('\n');
 
-  // Guide-type collections canonicalize to /guides/<slug>; everything else
-  // to /living-in-istanbul/<slug> (see collections/[slug]/page.jsx) -- link
-  // directly so this directory isn't itself a source of non-canonical
-  // internal links.
   const collectionSection = (collections || [])
-    .map((c) => {
-      const href = c.display_style === 'guide' ? `/guides/${encodeURIComponent(c.slug)}/` : `/living-in-istanbul/${encodeURIComponent(c.slug)}/`;
-      return `<li><a href="${href}">${escapeHtml(c.title || c.slug)}</a></li>`;
-    })
+    .map((c) => `<li><a href="/collections/${encodeURIComponent(c.slug)}">${escapeHtml(c.title || c.slug)}</a></li>`)
     .join('\n');
 
   const activitySection = (activities || [])
@@ -48,51 +41,11 @@ export async function GET() {
     .join('\n');
 
   const staticPages = [
-    ['/', 'Home'], ['/discover/', 'Discover'], ['/collections/', 'Collections'],
-    ['/guides/', 'Guides'], ['/guides/visa/', 'Visa Guide'], ['/guides/housing/', 'Housing Guide'],
-    ['/guides/cost-of-living/', 'Cost of Living'], ['/country-guides/', 'Country Guides'],
-    ['/living-in-istanbul/', 'Living in Istanbul'], ['/living-in-istanbul/remote-work-cafes/', 'Remote Work Cafés'],
-    ['/living-in-istanbul/annual-passes-guide/', 'Museum Annual Passes'], ['/living-in-istanbul/weekend-logistics/', 'Weekend Logistics'],
-    ['/living-in-istanbul/local-routines/', 'Local Routines'], ['/living-in-istanbul/hands-on-workshops/', 'Hands-On Workshops'],
-    ['/onboarding/', 'Plan My Trip'], ['/itinerary/', 'Itinerary'], ['/relocation-quiz/', 'Relocation Quiz'],
-    ['/services/', 'Services'], ['/services/istanbul-route-check/', 'Istanbul Route Check'],
-    ['/services/housing-shortlist-file/', 'Housing Shortlist File'], ['/services/full-move-file/', 'Full Move File'],
-    ['/services/book-a-call/', 'Book a Call'],
-    ['/moving-to-turkiye/', 'Moving to Türkiye'], ['/moving-to-turkiye/full-sequence/', 'The Full Sequence'],
-    ['/moving-to-turkiye/checklist/', 'Pre-Move Checklist'], ['/moving-to-turkiye/map-the-move/', 'Map the Move'],
-    ['/moving-to-turkiye/visa-and-documents/', 'Visa & Documents'], ['/moving-to-turkiye/housing-timeline/', 'Housing Timeline'],
-    ['/moving-to-turkiye/budget/', 'Moving Budget'], ['/moving-to-turkiye/arrival-setup/', 'Arrival Setup'],
-    ['/moving-to-turkiye/common-mistakes/', 'Moving Mistakes'],
-    ['/visa-residence/', 'Visa & Residence'], ['/visa-residence/short-term-residence-permit/', 'Short-Term Residence Permit'],
-    ['/visa-residence/documents/', 'Residence Permit Documents'], ['/visa-residence/translation-legalization/', 'Translation & Legalization'],
-    ['/visa-residence/immigration-follow-up/', 'Immigration Follow-Up'], ['/visa-residence/common-mistakes/', 'Residence Permit Mistakes'],
-    ['/visa-residence/by-nationality/', 'Visa by Nationality'], ['/visa-residence/by-nationality/united-states/', 'Visa: United States'],
-    ['/visa-residence/by-nationality/united-kingdom/', 'Visa: United Kingdom'], ['/visa-residence/by-nationality/germany/', 'Visa: Germany'],
-    ['/visa-residence/by-nationality/france/', 'Visa: France'], ['/visa-residence/by-nationality/netherlands/', 'Visa: Netherlands'],
-    ['/visa-residence/by-nationality/canada/', 'Visa: Canada'], ['/visa-residence/by-nationality/india/', 'Visa: India'],
-    ['/visa-residence/by-nationality/uae/', 'Visa: UAE'], ['/visa-residence/by-nationality/saudi-arabia/', 'Visa: Saudi Arabia'],
-    ['/visa-residence/by-nationality/russia/', 'Visa: Russia'],
-    ['/housing/', 'Housing: Renting Process'], ['/housing/rental-red-flags/', 'Rental Red Flags'],
-    ['/housing/viewing-checklist/', 'Viewing Checklist'], ['/housing/contract-review/', 'Contract Review'],
-    ['/housing/handover-inspection/', 'Handover Inspection'], ['/housing/negotiation-tips/', 'Negotiation Tips'],
-    ['/housing/neighborhoods/', 'Neighborhood Guides'], ['/housing/neighborhoods/kadikoy/', 'Kadıköy'],
-    ['/housing/neighborhoods/besiktas/', 'Beşiktaş'], ['/housing/neighborhoods/sisli/', 'Şişli'],
-    ['/housing/neighborhoods/fatih/', 'Fatih'], ['/housing/neighborhoods/beyoglu/', 'Beyoğlu'],
-    ['/housing/neighborhoods/atasehir/', 'Ataşehir'], ['/housing/neighborhoods/bakirkoy/', 'Bakırköy'],
-    ['/cost-of-living/', 'Cost of Living: By Topic'], ['/cost-of-living/3-month-budget/', '3-Month Starter Budget'],
-    ['/cost-of-living/monthly-expenses/', 'Monthly Expenses'], ['/cost-of-living/banking-payments/', 'Banking & Payments'],
-    ['/cost-of-living/health-insurance/', 'Health Insurance'], ['/cost-of-living/transport/', 'Transport'],
-    ['/cost-of-living/coworking-internet/', 'Coworking & Internet'],
-    ['/after-you-land/', 'After You Land'], ['/after-you-land/first-24-hours/', 'First 24 Hours'],
-    ['/after-you-land/first-7-days/', 'First 7 Days'], ['/after-you-land/first-30-days/', 'First 30 Days'],
-    ['/after-you-land/administrative-identity/', 'Administrative Identity'], ['/after-you-land/utilities-connectivity/', 'Utilities & Connectivity'],
-    ['/after-you-land/turkish-phrases/', 'Turkish Phrases'], ['/after-you-land/food-household-routine/', 'Food & Household Routine'],
-    ['/after-you-land/work-study-setup/', 'Work & Study Setup'], ['/after-you-land/local-support-network/', 'Local Support Network'],
-    ['/after-you-land/30-60-90-reviews/', '30-60-90 Day Reviews'], ['/after-you-land/relocation-recovery-method/', 'Relocation Recovery Method'],
-    ['/istanbul-for-digital-nomads/', 'Istanbul for Digital Nomads'],
-    ['/how-we-work/', 'How We Work'], ['/partner-network/', 'Partner Network'],
-    ['/editorial-policy/', 'Editorial Policy'], ['/refund-policy/', 'Refund Policy'],
-    ['/dashboard/', 'Dashboard'], ['/about/', 'About'], ['/contact/', 'Contact'],
+    ['/', 'Home'], ['/discover', 'Discover'], ['/collections', 'Collections'],
+    ['/guides', 'Guides'], ['/guides/visa', 'Visa Guide'], ['/guides/housing', 'Housing Guide'],
+    ['/guides/cost-of-living', 'Cost of Living'], ['/country-guides', 'Country Guides'],
+    ['/onboarding', 'Plan My Trip'], ['/itinerary', 'Itinerary'], ['/relocation-quiz', 'Relocation Quiz'],
+    ['/concierge', 'Concierge'], ['/dashboard', 'Dashboard'], ['/about', 'About'], ['/contact', 'Contact'],
   ]
     .map(([href, label]) => `<li><a href="${href}">${escapeHtml(label)}</a></li>`)
     .join('\n');

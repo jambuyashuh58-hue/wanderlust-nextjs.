@@ -11,7 +11,6 @@ import OnboardingWizard from '@/components/OnboardingWizard';
 export const metadata = {
   title: 'Plan My Trip — Move to Istanbul',
   description: 'Answer a few questions and get a personalized Türkiye itinerary.',
-  alternates: { canonical: '/onboarding/' },
 };
 
 export const revalidate = 3600;

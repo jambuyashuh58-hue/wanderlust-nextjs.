@@ -6,7 +6,7 @@ import { updateConciergeStatus } from '../actions';
 
 export const dynamic = 'force-dynamic';
 
-const TIER_LABELS = { paperwork: 'Istanbul Route Check', apartment: 'Housing Shortlist File', full: 'Full Move File', trip_package: 'Trip Package Planning', not_sure: 'Not sure yet' };
+const TIER_LABELS = { paperwork: 'Visa & Paperwork Guidance', apartment: 'Apartment Shortlisting', full: 'Full Relocation Concierge', trip_package: 'Trip Package Planning', not_sure: 'Not sure yet' };
 const STATUSES = ['new', 'contacted', 'converted', 'declined'];
 
 export default async function ConciergeInquiryPage({ params }) {

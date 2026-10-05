@@ -2,12 +2,12 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Wallet, Home, Sparkles, Plane, FileCheck, ShoppingCart, Heart,
   MapPin, BedDouble, ExternalLink, ChevronDown, MessageCircle,
 } from 'lucide-react';
 import { getSavedActivities, subscribeSavedActivities } from '@/lib/savedActivities';
-import QuickEstimateCalculator from '@/components/QuickEstimateCalculator';
 
 const STORAGE_KEY = 'wanderlust_relocation_plan';
 
@@ -249,8 +249,6 @@ export default function RelocationDashboard({ listings }) {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
-        <QuickEstimateCalculator />
-
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <SummaryCard icon={Wallet} iconBg="bg-primary/10" iconColor="text-primary" label="One-time relocation costs" value={fmt(oneTimeCosts, plan.currency)} sub="Visa + flight + deposit + experiences" />
           <SummaryCard icon={Home} iconBg="bg-success/10" iconColor="text-success" label="Monthly living estimate" value={fmt(monthlyEstimate, plan.currency)} sub="Rent + daily living costs" />
@@ -295,8 +293,7 @@ export default function RelocationDashboard({ listings }) {
                   {listings.slice(0, 6).map((l) => (
                     <div key={l.id} className="flex gap-3 rounded-xl border border-border overflow-hidden bg-background p-2.5">
                       <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-muted shrink-0">
-                        {/* Plain <img>, not next/image -- see CollectionsFilters.jsx for why. */}
-                        {l.image_url && <img src={l.image_url} alt={l.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />}
+                        {l.image_url && <Image src={l.image_url} alt={l.title} fill sizes="80px" className="object-cover" />}
                       </div>
                       <div className="flex-1 min-w-0">
                         <h4 className="text-xs font-semibold line-clamp-1 mb-0.5">{l.title}</h4>
@@ -343,8 +340,7 @@ export default function RelocationDashboard({ listings }) {
               {savedActivities.map((a) => (
                 <li key={a.id} className="flex items-center gap-3">
                   <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted shrink-0">
-                    {/* Plain <img>, not next/image -- see CollectionsFilters.jsx for why. */}
-                    {a.image_url && <img src={a.image_url} alt={a.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />}
+                    {a.image_url && <Image src={a.image_url} alt={a.title} fill sizes="48px" className="object-cover" />}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">{a.title}</p>
@@ -360,7 +356,7 @@ export default function RelocationDashboard({ listings }) {
         <div className="rounded-2xl border border-border bg-muted/50 p-6 text-center">
           <h3 className="font-bold mb-1.5">Planning a full relocation?</h3>
           <p className="text-sm text-muted-foreground max-w-md mx-auto mb-4">We help remote workers move to Türkiye — visa paperwork, apartment hunting, and your first-month setup, handled.</p>
-          <Link href="/services" className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors">
+          <Link href="/concierge" className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors">
             <MessageCircle className="w-4 h-4" /> See Concierge Plans
           </Link>
         </div>

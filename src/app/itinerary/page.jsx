@@ -9,6 +9,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Sparkles, MapPin, ArrowRight, Sun, Sunset, Moon, Star, Clock, Info, CalendarCheck, Car, Bed, Plane, ExternalLink } from 'lucide-react';
 
 const PERIODS = ['morning', 'afternoon', 'evening'];
@@ -31,8 +32,7 @@ function ActivityCard({ slot }) {
     >
       <div className="relative w-full aspect-[4/3] bg-muted">
         {a.image_url ? (
-          // Plain <img>, not next/image -- see CollectionsFilters.jsx for why.
-          <img src={a.image_url} alt={a.title || a.name || ''} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+          <Image src={a.image_url} alt={a.title || a.name || ''} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-muted-foreground">
             <MapPin className="w-8 h-8" />
@@ -491,7 +491,7 @@ export default function ItineraryPage() {
           Send us this trip and we&apos;ll turn it into a day-by-day plan with real hotel picks and direct booking links for every activity — ready to book in a couple of clicks.
         </p>
         <Link
-          href="/services?tier=trip_package"
+          href="/concierge?tier=trip_package"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-primary text-white font-semibold hover:scale-[1.02] transition-transform"
         >
           Get my trip package plan — $20 <ArrowRight className="w-4 h-4" />

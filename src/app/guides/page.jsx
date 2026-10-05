@@ -4,7 +4,6 @@ import { Stamp, Home, Wallet, ArrowRight, BookOpen, LayoutGrid } from 'lucide-re
 export const metadata = {
   title: 'Türkiye Long-Stay Guides | Move to Istanbul',
   description: 'Free relocation guides for moving to Türkiye — visas, housing, and cost of living.',
-  alternates: { canonical: '/guides/' },
 };
 
 const LONG_STAY_GUIDES = [
@@ -42,10 +41,6 @@ export default function GuidesPage() {
             </Link>
           ))}
         </div>
-        <Link href="/living-in-istanbul" className="group flex items-center justify-between gap-4 p-6 rounded-2xl border border-border bg-gradient-to-br from-primary/5 to-secondary/5 hover:border-primary/40 transition-all">
-          <div><h3 className="font-bold mb-1">Already moved? Living in Istanbul</h3><p className="text-sm text-muted-foreground">Routines, remote-work spots, and day-to-day logistics once you've settled in.</p></div>
-          <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary shrink-0" />
-        </Link>
         <Link href="/collections" className="group flex items-center justify-between gap-4 p-6 rounded-2xl border border-border bg-gradient-to-br from-primary/5 to-secondary/5 hover:border-primary/40 transition-all">
           <div><h3 className="font-bold mb-1 flex items-center gap-2"><LayoutGrid className="w-5 h-5 text-primary" /> Destination guides & things to do</h3><p className="text-sm text-muted-foreground">Browse every city guide and curated experience set.</p></div>
           <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary shrink-0" />

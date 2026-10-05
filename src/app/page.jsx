@@ -18,10 +18,6 @@ import ConciergeCTA from '@/components/ConciergeCTA';
 
 export const revalidate = 3600;
 
-export const metadata = {
-  alternates: { canonical: '/' },
-};
-
 function SectionHeader({ eyebrow, title, href }) {
   return (
     <div className="flex items-end justify-between mb-5">
@@ -50,37 +46,6 @@ export default async function HomePage() {
 
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-14">
 
-        {/* Relocation-first block (Oct 2026 sales sprint): the quiz CTA,
-            concierge CTA, and guide tiles lead the page now, right after the
-            hero. Travel/activity browsing (cities, categories, experiences,
-            collections) is unchanged in content and links -- just moved
-            below this block instead of leading the page, so it keeps its
-            indexing and internal-link equity without competing with the
-            relocation offer for the first scroll. (for=code) */}
-        <WhyWanderlust />
-
-        <RelocationQuizCTA />
-
-        <ConciergeCTA />
-
-        {/* Practical Türkiye -- quick-link tiles, magazine-style utility row */}
-        <section>
-          <SectionHeader eyebrow="Plan Your Trip" title="Practical Türkiye" />
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { href: '/guides/visa', icon: Compass, label: 'Visa Guide' },
-              { href: '/guides/housing', icon: HomeIcon, label: 'Housing Guide' },
-              { href: '/guides/cost-of-living', icon: Landmark, label: 'Cost of Living' },
-              { href: '/country-guides', icon: MapPin, label: 'Country Guides' },
-            ].map((tile) => (
-              <Link key={tile.href} href={tile.href} className="flex items-center gap-3 p-4 rounded-xl border border-border hover:border-primary/40 hover:shadow-sm transition-all bg-card">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0"><tile.icon className="w-5 h-5 text-primary" /></div>
-                <span className="text-sm font-semibold">{tile.label}</span>
-              </Link>
-            ))}
-          </div>
-        </section>
-
         {/* Popular destinations -- wide grid, more cities visible at once */}
         <section>
           <SectionHeader eyebrow="Destinations" title="Choose Your City" href="/discover" />
@@ -94,6 +59,8 @@ export default async function HomePage() {
             ))}
           </div>
         </section>
+
+        <WhyWanderlust />
 
         <CategoryTiles />
 
@@ -120,7 +87,7 @@ export default async function HomePage() {
         {/* Guided tours row */}
         {tours.length > 0 && (
           <section>
-            <SectionHeader eyebrow="Things To Do" title="Guided Tours & Day Trips" href="/discover?category=Guided+Tours" />
+            <SectionHeader eyebrow="Practical Türkiye" title="Guided Tours & Day Trips" href="/discover?category=Guided+Tours" />
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
               {tours.map((a) => <ActivityCard key={a.id} activity={a} />)}
             </div>
@@ -143,12 +110,8 @@ export default async function HomePage() {
             <SectionHeader eyebrow="Guides" title="Curated Collections" href="/collections" />
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
               {collections.slice(0, 12).map((c, i) => {
-                // Guide-type collections canonicalize to /guides/<slug>;
-                // everything else to /living-in-istanbul/<slug> -- see
-                // collections/[slug]/page.jsx -- link there directly.
-                const href = c.display_style === 'guide' ? `/guides/${c.slug}` : `/living-in-istanbul/${c.slug}`;
                 const card = (
-                  <Link href={href} className="group block rounded-xl overflow-hidden border border-border hover:border-primary/40 hover:shadow-md transition-all bg-card">
+                  <Link href={`/collections/${c.slug}`} className="group block rounded-xl overflow-hidden border border-border hover:border-primary/40 hover:shadow-md transition-all bg-card">
                     <div className="relative aspect-[4/3] bg-muted overflow-hidden">
                       {c.hero_image_url && <img src={c.hero_image_url} alt={c.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />}
                     </div>
@@ -165,6 +128,28 @@ export default async function HomePage() {
         )}
 
         <VideoBlogs />
+
+        <RelocationQuizCTA />
+
+        <ConciergeCTA />
+
+        {/* Practical Türkiye -- quick-link tiles, magazine-style utility row */}
+        <section>
+          <SectionHeader eyebrow="Plan Your Trip" title="Practical Türkiye" />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { href: '/guides/visa', icon: Compass, label: 'Visa Guide' },
+              { href: '/guides/housing', icon: HomeIcon, label: 'Housing Guide' },
+              { href: '/guides/cost-of-living', icon: Landmark, label: 'Cost of Living' },
+              { href: '/country-guides', icon: MapPin, label: 'Country Guides' },
+            ].map((tile) => (
+              <Link key={tile.href} href={tile.href} className="flex items-center gap-3 p-4 rounded-xl border border-border hover:border-primary/40 hover:shadow-sm transition-all bg-card">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0"><tile.icon className="w-5 h-5 text-primary" /></div>
+                <span className="text-sm font-semibold">{tile.label}</span>
+              </Link>
+            ))}
+          </div>
+        </section>
 
         <TrustBadges />
       </div>

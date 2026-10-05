@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { MapPin, ArrowLeft } from 'lucide-react';
 import { getCityByName, getActivitiesByCity, getCollections } from '@/lib/supabaseServer';
@@ -12,10 +13,6 @@ export async function generateMetadata({ params }) {
   return {
     title: `${city.name} — Things to Do | Move to Istanbul`,
     description: city.description,
-    // Thin aggregator pages (a short blurb + a grid of activity cards),
-    // kept out of the index for the same reason as activity/[id] -- see
-    // the comment there. (for=code)
-    robots: { index: false, follow: true },
   };
 }
 
@@ -48,8 +45,7 @@ export default async function CityDetailPage({ params }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <section className="relative">
         <div className="relative h-[400px] md:h-[500px] overflow-hidden bg-muted">
-          {/* Plain <img>, not next/image -- see CollectionsFilters.jsx for why. */}
-          {city.image_url && <img src={city.image_url} alt={`${city.name}, Türkiye`} className="absolute inset-0 w-full h-full object-cover" />}
+          {city.image_url && <Image src={city.image_url} alt={`${city.name}, Türkiye`} fill priority sizes="100vw" className="object-cover" />}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
           <div className="absolute inset-0 flex items-end">
             <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-10 w-full">
@@ -79,10 +75,7 @@ export default async function CityDetailPage({ params }) {
           <h2 className="text-2xl font-bold mb-6">Guides for {city.name}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {collections.map((c) => (
-              // Guide-type collections canonicalize to /guides/<slug>;
-              // everything else to /living-in-istanbul/<slug> -- see
-              // collections/[slug]/page.jsx -- link there directly.
-              <Link key={c.id} href={c.display_style === 'guide' ? `/guides/${c.slug}` : `/living-in-istanbul/${c.slug}`} className="block p-4 rounded-xl border border-border hover:border-primary/40 hover:shadow-sm transition-all">
+              <Link key={c.id} href={`/collections/${c.slug}`} className="block p-4 rounded-xl border border-border hover:border-primary/40 hover:shadow-sm transition-all">
                 <div className="font-semibold text-sm mb-1">{c.title}</div>
                 {c.meta_description && <div className="text-xs text-muted-foreground line-clamp-2">{c.meta_description}</div>}
               </Link>

@@ -19,10 +19,6 @@ export async function generateMetadata({ params }) {
   return {
     title: `${guide.title} | Move to Istanbul`,
     description: guide.meta_description || undefined,
-    // This is the preferred URL for guide-type collections -- see the
-    // matching canonical override in collections/[slug]/page.jsx, which
-    // points the duplicate /collections/<slug> URL back to this one.
-    alternates: { canonical: `/guides/${params.slug}/` },
   };
 }
 
