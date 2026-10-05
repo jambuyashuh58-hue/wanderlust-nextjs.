@@ -334,7 +334,7 @@ function GuideSection({ section }) {
         <div className="rounded-2xl border border-primary/20 bg-primary/5 p-6">
           {section.title && <h3 className="font-bold mb-1.5">{section.title}</h3>}
           {section.body && <p className="text-sm text-foreground/80 leading-relaxed mb-4">{section.body}</p>}
-          <Link href={section.linkHref || '/concierge'} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
+          <Link href={section.linkHref || '/services'} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
             {section.linkLabel || 'Explore Concierge Plans'} <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

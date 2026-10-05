@@ -28,7 +28,7 @@ export default function GuideLayout({ eyebrow, title, description, readTime, upd
                 <div className="mt-8 rounded-2xl border border-border bg-card p-4">
                   <p className="text-xs font-semibold mb-1.5">Planning your move?</p>
                   <p className="text-xs text-muted-foreground mb-3 leading-relaxed">Our concierge service can help with visa paperwork and apartment hunting.</p>
-                  <Link href="/concierge" className="text-xs font-semibold text-primary hover:underline">See Concierge Plans →</Link>
+                  <Link href="/services" className="text-xs font-semibold text-primary hover:underline">See Concierge Plans →</Link>
                 </div>
               </div>
             </aside>

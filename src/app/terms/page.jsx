@@ -38,7 +38,7 @@ export default function TermsPage() {
 
           <h2>Concierge service</h2>
           <ul>
-            <li>Concierge tiers, pricing, and what&apos;s included are as described on the <a href="/concierge">Concierge page</a> at the time you purchase.</li>
+            <li>Concierge tiers, pricing, and what&apos;s included are as described on the <a href="/services">Concierge page</a> at the time you purchase.</li>
             <li>Payment is processed through PayPal. Once we&apos;ve begun work on your intake (research, document review, listings sourced, etc.), that work has value delivered and isn&apos;t automatically refundable — if something isn&apos;t working for you, contact us and we&apos;ll look at it case by case.</li>
             <li>We coordinate and advise; you remain responsible for your own visa applications, contracts, and final decisions. We can&apos;t guarantee any specific visa, permit, or rental outcome, since those are ultimately decided by third parties (government authorities, landlords, etc.) outside our control.</li>
           </ul>

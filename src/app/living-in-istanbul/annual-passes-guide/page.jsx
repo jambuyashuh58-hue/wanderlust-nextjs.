@@ -105,7 +105,7 @@ export default async function AnnualPassesGuidePage() {
         <p className="text-sm text-foreground/80 leading-relaxed mb-4">
           Museum passes are a nice-to-have. Getting your residence permit, housing, and budget locked down is what actually makes the first month work. Our Full Move File handles the paperwork so you have time for the museum weekend.
         </p>
-        <Link href="/concierge" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
+        <Link href="/services" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
           See Concierge Plans <ArrowRight className="w-4 h-4" />
         </Link>
       </div>

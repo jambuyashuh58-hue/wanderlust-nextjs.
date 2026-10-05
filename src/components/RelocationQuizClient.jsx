@@ -153,7 +153,7 @@ export default function RelocationQuizClient({ collections = [] }) {
               Our concierge team can handle this for you directly.
             </p>
             <Link
-              href="/concierge"
+              href="/services"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-primary text-sm font-semibold"
             >
               See concierge tiers <ArrowRight className="w-4 h-4" />

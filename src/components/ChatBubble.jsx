@@ -159,7 +159,7 @@ export default function ChatBubble() {
                 >
                   Or continue on WhatsApp
                 </a>
-                <a href="/concierge" className="text-xs text-center text-muted-foreground hover:text-foreground underline underline-offset-2">
+                <a href="/services" className="text-xs text-center text-muted-foreground hover:text-foreground underline underline-offset-2">
                   See concierge pricing
                 </a>
               </>

@@ -106,7 +106,7 @@ export default async function LivingInIstanbulPage() {
           </div>
         )}
 
-        <Link href="/concierge" className="group flex items-center justify-between gap-4 p-6 rounded-2xl border border-border bg-gradient-to-br from-primary/5 to-secondary/5 hover:border-primary/40 transition-all">
+        <Link href="/services" className="group flex items-center justify-between gap-4 p-6 rounded-2xl border border-border bg-gradient-to-br from-primary/5 to-secondary/5 hover:border-primary/40 transition-all">
           <div><h3 className="font-bold mb-1">Want the whole move handled for you?</h3><p className="text-sm text-muted-foreground">Visa paperwork, apartment hunting, and your first-month setup — done end to end.</p></div>
           <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary shrink-0" />
         </Link>

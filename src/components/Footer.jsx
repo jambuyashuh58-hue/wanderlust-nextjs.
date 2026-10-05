@@ -31,9 +31,21 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li><Link href="/discover" className="text-muted-foreground hover:text-primary">Discover</Link></li>
               <li><Link href="/collections" className="text-muted-foreground hover:text-primary">Collections</Link></li>
-              <li><Link href="/concierge" className="text-muted-foreground hover:text-primary">Concierge Service</Link></li>
+              <li><Link href="/services" className="text-muted-foreground hover:text-primary">Services</Link></li>
+              <li><Link href="/how-we-work" className="text-muted-foreground hover:text-primary">How We Work</Link></li>
               <li><Link href="/about" className="text-muted-foreground hover:text-primary">About</Link></li>
               <li><Link href="/contact" className="text-muted-foreground hover:text-primary">Contact</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h2 className="font-semibold text-sm mb-3">Moving to Türkiye</h2>
+            <ul className="space-y-2 text-sm">
+              <li><Link href="/moving-to-turkiye" className="text-muted-foreground hover:text-primary">Moving to Türkiye</Link></li>
+              <li><Link href="/visa-residence" className="text-muted-foreground hover:text-primary">Visa &amp; Residence</Link></li>
+              <li><Link href="/housing" className="text-muted-foreground hover:text-primary">Housing</Link></li>
+              <li><Link href="/cost-of-living" className="text-muted-foreground hover:text-primary">Cost of Living</Link></li>
+              <li><Link href="/after-you-land" className="text-muted-foreground hover:text-primary">After You Land</Link></li>
+              <li><Link href="/istanbul-for-digital-nomads" className="text-muted-foreground hover:text-primary">For Digital Nomads</Link></li>
             </ul>
           </div>
           <div>
@@ -84,6 +96,9 @@ export default function Footer() {
             <div className="flex items-center gap-3">
               <Link href="/privacy" className="text-xs text-muted-foreground hover:text-primary">Privacy Policy</Link>
               <Link href="/terms" className="text-xs text-muted-foreground hover:text-primary">Terms of Service</Link>
+              <Link href="/refund-policy" className="text-xs text-muted-foreground hover:text-primary">Refund Policy</Link>
+              <Link href="/editorial-policy" className="text-xs text-muted-foreground hover:text-primary">Editorial Policy</Link>
+              <Link href="/partner-network" className="text-xs text-muted-foreground hover:text-primary">Partner Network</Link>
             </div>
           </div>
           <p className="text-xs text-muted-foreground text-center sm:text-right max-w-md">{AFFILIATE_DISCLOSURE}</p>

@@ -96,7 +96,7 @@ export default function LandlordSilenceTacticPage() {
         <p className="text-sm text-foreground/80 leading-relaxed mb-4">
           Our concierge service includes red-flag lease screening and contract review so these problems get caught before you sign.
         </p>
-        <Link href="/concierge" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
+        <Link href="/services" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
           View Housing Support <ArrowRight className="w-4 h-4" />
         </Link>
       </div>

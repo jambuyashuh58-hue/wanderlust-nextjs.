@@ -35,7 +35,7 @@ export default function ConciergeCTA() {
             ))}
           </div>
           <Link
-            href="/concierge"
+            href="/services"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-primary font-semibold hover:bg-white/90 transition-colors"
           >
             See concierge details <ArrowRight className="w-4 h-4" />

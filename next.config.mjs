@@ -7,6 +7,16 @@ const nextConfig = {
     // or shared (social bios, old emails, etc).
     return [
       { source: '/guide', destination: '/free-guide', permanent: true },
+      // Concierge rebranded + moved to /services (productized as
+      // istanbul-route-check/housing-shortlist-file/full-move-file) as part
+      // of the site-structure rebuild -- same inquiry form and backend,
+      // just a new home and new product names. Keep the old URL alive.
+      { source: '/concierge', destination: '/services', permanent: true },
+      // Aliases for names used in the new site-structure doc that already
+      // have a live equivalent under a different name -- redirect rather
+      // than duplicate the page.
+      { source: '/move-dashboard', destination: '/dashboard', permanent: true },
+      { source: '/free-90-60-30-guide', destination: '/free-guide', permanent: true },
     ];
   },
   images: {

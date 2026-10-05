@@ -23,7 +23,7 @@ export default function Navbar({ locale = 'en' }) {
     { label: t('nav_country_guides', locale), path: `${prefix}/country-guides` },
     { label: t('nav_itinerary', locale), path: `${prefix}/itinerary` },
     { label: t('nav_dashboard', locale), path: `${prefix}/dashboard` },
-    { label: t('nav_concierge', locale), path: `${prefix}/concierge` },
+    { label: t('nav_concierge', locale), path: `${prefix}/services` },
   ];
   // Strip the current locale's prefix to get the "bare" path, then rebuild
   // it under the other locale -- this is what the EN/TR toggle links to.

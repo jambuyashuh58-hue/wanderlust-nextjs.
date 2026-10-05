@@ -491,7 +491,7 @@ export default function ItineraryPage() {
           Send us this trip and we&apos;ll turn it into a day-by-day plan with real hotel picks and direct booking links for every activity — ready to book in a couple of clicks.
         </p>
         <Link
-          href="/concierge?tier=trip_package"
+          href="/services?tier=trip_package"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-primary text-white font-semibold hover:scale-[1.02] transition-transform"
         >
           Get my trip package plan — $20 <ArrowRight className="w-4 h-4" />

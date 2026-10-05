@@ -11,19 +11,19 @@ const CONCIERGE_TIERS = [
     includes: ['Custom day-by-day itinerary built from your cities, dates, and budget', 'Hand-picked activities and hotel range for every day', 'Direct booking links for everything — you book, we just plan it', 'One free revision if your dates or budget change', 'Delivered within 48 hours'],
   },
   {
-    id: 'paperwork', name: 'Visa & Paperwork Guidance', price: 99,
+    id: 'paperwork', name: 'Istanbul Route Check', price: 99,
     tagline: 'A focused 45-minute strategy call to map your exact visa route — no more guessing.',
     includes: ['Personalized visa-route checklist for your nationality', 'A 45-minute live call', 'Document review plus up to 3 follow-up emails', 'Help booking your e-ikamet appointment', 'Access to long-stay guides'],
   },
   {
-    id: 'apartment', name: 'Apartment Shortlisting', price: 449,
+    id: 'apartment', name: 'Housing Shortlist File', price: 449,
     tagline: '5-8 real listings matched to your budget, with curated video walkthroughs.',
-    includes: ['Everything in Visa & Paperwork Guidance', '5-8 real rental listings matched to your budget and preferred neighborhood, pre-screened for foreigner-friendly landlords', 'Curated walk-through videos provided directly by local property agents or our on-the-ground team', 'A localized contract checklist highlighting common rental terms to look out for', 'DASK earthquake insurance guidance', 'Guidance on negotiating rent and deposit'],
+    includes: ['Everything in the Istanbul Route Check', '5-8 real rental listings matched to your budget and preferred neighborhood, pre-screened for foreigner-friendly landlords', 'Curated walk-through videos provided directly by local property agents or our on-the-ground team', 'A localized contract checklist highlighting common rental terms to look out for', 'DASK earthquake insurance guidance', 'Guidance on negotiating rent and deposit'],
   },
   {
-    id: 'full', name: 'Full Relocation Concierge', price: 999,
+    id: 'full', name: 'Full Move File', price: 999,
     tagline: 'Hand us the whole first month — visa, housing, banking, and settling in.',
-    includes: ['Everything in Apartment Shortlisting', 'Bilingual local specialist accompaniment', 'Airport arrival logistics', 'Neighborhood orientation write-up', 'First-month cost breakdown', 'Priority response time', 'Weekly async check-ins'],
+    includes: ['Everything in the Housing Shortlist File', 'Bilingual local specialist accompaniment', 'Airport arrival logistics', 'Neighborhood orientation write-up', 'First-month cost breakdown', 'Priority response time', 'Weekly async check-ins'],
   },
 ];
 

@@ -357,7 +357,7 @@ export default function RelocationDashboard({ listings }) {
         <div className="rounded-2xl border border-border bg-muted/50 p-6 text-center">
           <h3 className="font-bold mb-1.5">Planning a full relocation?</h3>
           <p className="text-sm text-muted-foreground max-w-md mx-auto mb-4">We help remote workers move to Türkiye — visa paperwork, apartment hunting, and your first-month setup, handled.</p>
-          <Link href="/concierge" className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors">
+          <Link href="/services" className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors">
             <MessageCircle className="w-4 h-4" /> See Concierge Plans
           </Link>
         </div>

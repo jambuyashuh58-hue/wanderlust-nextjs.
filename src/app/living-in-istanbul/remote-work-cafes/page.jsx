@@ -189,7 +189,7 @@ export default function RemoteWorkCafesPage() {
         <p className="text-sm text-foreground/80 leading-relaxed mb-4">
           Struggling to find a neighborhood that matches how you actually want to work — close to a laptop-friendly café scene, not just close to the sights? Our Housing Shortlist File filters apartment options by the things that actually affect your daily routine, not just price and bedroom count.
         </p>
-        <Link href="/concierge" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
+        <Link href="/services" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
           See the Housing Shortlist File <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
