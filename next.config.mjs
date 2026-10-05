@@ -13,6 +13,23 @@ const nextConfig = {
     remotePatterns: [
       { protocol: 'https', hostname: '**' },
     ],
+    // All of this site's external images (pexels, getyourguide, Supabase
+    // storage, tripadvisor, etc.) are already pre-sized/compressed by their
+    // own CDN query params. Vercel's Image Optimization bills by unique
+    // SOURCE image per month, and once that quota is used up, any
+    // never-before-requested source image starts failing with a 402 on
+    // /_next/image -- confirmed in prod (2026-10-05): brand-new hero images
+    // from a batch of new guides, plus some pre-existing activity photos
+    // that had simply never been displayed before, both 402'd, while
+    // already-cached images kept loading fine. `unoptimized: true` routes
+    // <Image> straight to the original URL, skipping that quota entirely,
+    // so new content stops silently breaking every time the monthly cap is
+    // hit. Tradeoff: no more automatic resize/webp conversion on Vercel's
+    // side -- acceptable since every source already serves a reasonably
+    // sized image. Revert this if the Vercel plan's Image Optimization
+    // quota gets raised and the automatic resizing/format conversion is
+    // wanted back.
+    unoptimized: true,
   },
   experimental: {
     // Next's client-side Router Cache otherwise reuses a page's last-fetched
