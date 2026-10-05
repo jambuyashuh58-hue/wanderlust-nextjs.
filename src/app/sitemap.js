@@ -25,6 +25,7 @@ const STATIC_ROUTES = [
   { path: '/guides/visa', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/guides/housing', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/guides/cost-of-living', priority: 0.7, changeFrequency: 'monthly' },
+  { path: '/guides/kira-artis-orani', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/country-guides', priority: 0.7, changeFrequency: 'weekly' },
   { path: '/onboarding', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/relocation-quiz', priority: 0.5, changeFrequency: 'monthly' },
