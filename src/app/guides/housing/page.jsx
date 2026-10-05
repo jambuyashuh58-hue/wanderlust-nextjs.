@@ -180,7 +180,7 @@ const RELATED_RESOURCES = [
     links: [
       { label: 'Monthly Cost of Living in Istanbul for Expats & Nomads', href: '/guides/cost-of-living' },
       { label: 'How to Open a Turkish Bank Account Without an İkamet Card', href: '/guides/bank-account-without-ikamet' },
-      { label: 'How to Avoid Excessive ATM Conversion Fees in Istanbul', href: '/guides/avoid-atm-conversion-fees' },
+      { label: 'How to Avoid Excessive ATM Conversion Fees in Istanbul', href: '/guides/avoiding-atm-fees-istanbul' },
       { label: 'Kadıköy vs. Beşiktaş: Best Neighborhoods for Expats', href: '/guides/kadikoy-vs-besiktas' },
     ],
   },

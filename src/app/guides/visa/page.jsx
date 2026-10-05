@@ -196,15 +196,15 @@ const RELATED_RESOURCES = [
     category: 'Banking & Financial Logistics',
     links: [
       { label: 'How to Open a Turkish Bank Account Without an İkamet Card', href: '/guides/bank-account-without-ikamet' },
-      { label: 'How to Avoid Excessive ATM Conversion Fees in Istanbul', href: '/guides/avoid-atm-conversion-fees' },
+      { label: 'How to Avoid Excessive ATM Conversion Fees in Istanbul', href: '/guides/avoiding-atm-fees-istanbul' },
       { label: 'Is the Türkiye Digital Nomad Visa Tax-Free? Remote Tax Guide', href: '/guides/digital-nomad-visa-tax-guide' },
     ],
   },
   {
     category: 'Housing & Settle-In Support',
     links: [
-      { label: 'Renting an Apartment in Istanbul: Notary Rules & Lease Registration', href: '/guides/renting-apartment-notary-rules' },
-      { label: 'How to Avoid Rental Scams on sahibinden.com as a Foreigner', href: '/guides/avoid-rental-scams-sahibinden' },
+      { label: 'Renting an Apartment in Istanbul: Notary Rules & Lease Registration', href: '/guides/mastering-turkish-rental-contracts' },
+      { label: 'How to Avoid Rental Scams on sahibinden.com as a Foreigner', href: '/guides/avoiding-rental-scams-istanbul' },
       { label: 'Kadıköy vs. Beşiktaş: The Best Neighborhoods for Expats', href: '/guides/kadikoy-vs-besiktas' },
       { label: 'Monthly Cost of Living in Istanbul for Expats & Nomads', href: '/guides/cost-of-living' },
     ],
