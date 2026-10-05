@@ -44,6 +44,7 @@ export default function Footer() {
               <li><Link href="/guides/cost-of-living" className="text-muted-foreground hover:text-primary">Cost of Living</Link></li>
               <li><Link href="/guides" className="text-muted-foreground hover:text-primary">All Guides</Link></li>
               <li><Link href="/country-guides" className="text-muted-foreground hover:text-primary">Country Guides</Link></li>
+              <li><Link href="/living-in-istanbul" className="text-muted-foreground hover:text-primary">Living in Istanbul</Link></li>
             </ul>
           </div>
           <div>

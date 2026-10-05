@@ -23,6 +23,8 @@ const STATIC_ROUTES = [
   { path: '/guides/housing', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/guides/cost-of-living', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/country-guides', priority: 0.7, changeFrequency: 'weekly' },
+  { path: '/living-in-istanbul', priority: 0.7, changeFrequency: 'monthly' },
+  { path: '/living-in-istanbul/remote-work-cafes', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/field-notes', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/field-notes/anchor-routines', priority: 0.5, changeFrequency: 'yearly' },
   { path: '/field-notes/turkish-numbers-not-grammar', priority: 0.5, changeFrequency: 'yearly' },
