@@ -4,8 +4,8 @@ import GuideLayout from '@/components/GuideLayout';
 import GuideFAQ from '@/components/GuideFAQ';
 
 export const metadata = {
-  title: 'Türkiye Visa & Residence Permit Guide 2026 | Move to Istanbul',
-  description: "e-Visa, tourist entry, and short-term residence permits, with official sources.",
+  title: 'Türkiye Visa & Residence Permit Guide 2026 (Göç İdaresi e-İkamet) | Move to Istanbul',
+  description: "e-Visa, tourist entry, and short-term residence permits via Göç İdaresi's e-İkamet system, with official sources.",
 };
 
 const PATHWAYS = [
@@ -149,6 +149,10 @@ const FAQ = [
     a: 'As of 2025, all foreign visitors to Türkiye are required to complete the Turkey Digital Arrival Card (TRDAC) within 72 hours before arrival. It’s a free online form at register.gov.tr collecting basic travel and accommodation details, and applies to everyone — tourists, business travelers, and returning residence permit holders.',
   },
   {
+    q: 'What is Göç İdaresi e-İkamet and do I have to use it?',
+    a: 'Göç İdaresi e-İkamet (e-ikamet.goc.gov.tr) is the official online portal run by the Directorate of Migration Management (Göç İdaresi Başkanlığı) for filing short-term residence permit applications. Every pathway in this guide — tourist e-İkamet, Digital Nomad Visa conversion, family permits, and property-based permits — is ultimately submitted through this same system, so yes, it is mandatory and there is no paper or in-person alternative for the initial filing.',
+  },
+  {
     q: 'Can I work for a Turkish company on a Digital Nomad Visa or e-İkamet?',
     a: 'No. Neither the Digital Nomad Visa nor a standard short-term tourist residence permit grants local employment rights. Working legally for a Turkish company requires an official Work Permit (Çalışma İzni) sponsored directly by a Turkish employer through the Ministry of Labor and Social Security (ÇSGB).',
   },
@@ -243,7 +247,7 @@ export default function GuideVisaPage() {
           Relocating to Türkiye has undergone significant legal and administrative updates. Türkiye&apos;s Directorate of Migration Management (Göç İdaresi Başkanlığı) has tightened residency criteria, introduced strict neighborhood foreign population quotas (the 25% rule), and established dedicated pathways for remote workers—most notably the Türkiye Digital Nomad Visa (DNV) program.
         </p>
         <p className="text-foreground/80 leading-relaxed mb-6">
-          Whether you are moving to Istanbul for a 6-month remote work stint or planning a multi-year relocation, obtaining a legal residence permit—known locally as an e-İkamet—is the foundational step for opening bank accounts, signing utility contracts, and staying in the country past standard tourist allowances.
+          Whether you are moving to Istanbul for a 6-month remote work stint or planning a multi-year relocation, obtaining a legal residence permit—known locally as an e-İkamet—is the foundational step for opening bank accounts, signing utility contracts, and staying in the country past standard tourist allowances. Every application, regardless of pathway, is ultimately filed and approved through Göç İdaresi e-İkamet, the Directorate of Migration Management&apos;s online residence-permit system at e-ikamet.goc.gov.tr.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="rounded-xl border border-border bg-card p-4">
