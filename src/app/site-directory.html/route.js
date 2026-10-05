@@ -52,6 +52,8 @@ export async function GET() {
     ['/guides', 'Guides'], ['/guides/visa', 'Visa Guide'], ['/guides/housing', 'Housing Guide'],
     ['/guides/cost-of-living', 'Cost of Living'], ['/country-guides', 'Country Guides'],
     ['/living-in-istanbul', 'Living in Istanbul'], ['/living-in-istanbul/remote-work-cafes', 'Remote Work Cafés'],
+    ['/living-in-istanbul/annual-passes-guide', 'Museum Annual Passes'], ['/living-in-istanbul/weekend-logistics', 'Weekend Logistics'],
+    ['/living-in-istanbul/local-routines', 'Local Routines'], ['/living-in-istanbul/hands-on-workshops', 'Hands-On Workshops'],
     ['/onboarding', 'Plan My Trip'], ['/itinerary', 'Itinerary'], ['/relocation-quiz', 'Relocation Quiz'],
     ['/concierge', 'Concierge'], ['/dashboard', 'Dashboard'], ['/about', 'About'], ['/contact', 'Contact'],
   ]
