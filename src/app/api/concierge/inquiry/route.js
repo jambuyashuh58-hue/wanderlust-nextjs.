@@ -61,7 +61,7 @@ export async function POST(request) {
         <p><strong>Budget range:</strong> ${budget_range || '—'}</p>
         <p><strong>Timeline:</strong> ${timeline || '—'}</p>
         <p><strong>Message:</strong><br/>${(message || '—').replace(/\n/g, '<br/>')}</p>
-        <p><a href="https://movetoistanbul.online/admin/concierge">View in admin →</a></p>
+        <p><a href="https://www.movetoistanbul.online/admin/concierge">View in admin →</a></p>
       `,
     }).catch(() => {});
 

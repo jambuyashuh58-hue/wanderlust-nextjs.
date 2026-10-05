@@ -5,14 +5,17 @@
 // engines about every URL up front, with priority/change-frequency hints,
 // so a domain cutover or a fresh crawl doesn't have to wait on link discovery.
 //
-// Base URL: hardcoded to the production domain (movetoistanbul.online) since
-// that's what search engines should always see regardless of which Vercel
-// preview/alias served the request. Update SITE_URL if the domain changes.
+// Base URL: hardcoded to the production domain since that's what search
+// engines should always see regardless of which Vercel preview/alias served
+// the request. www, not the bare apex -- Vercel's domain config 308-redirects
+// the apex to www, so submitting apex URLs here had every one of them
+// resolving through a redirect, splitting indexing/impressions across both
+// hosts in Search Console. Update SITE_URL if the canonical host changes.
 import { getCollections, getAllActivities, getCities, getCountryGuides } from '@/lib/supabaseServer';
 
 export const revalidate = 3600;
 
-const SITE_URL = 'https://movetoistanbul.online';
+const SITE_URL = 'https://www.movetoistanbul.online';
 
 const STATIC_ROUTES = [
   { path: '/', priority: 1.0, changeFrequency: 'daily' },

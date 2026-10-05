@@ -1,7 +1,14 @@
 import './globals.css';
 import SiteChrome from '@/components/SiteChrome';
 
-const SITE_URL = 'https://movetoistanbul.online';
+// www is the canonical host -- Vercel's domain config 308-redirects the bare
+// apex (movetoistanbul.online) to this one, so metadataBase (which every
+// page's relative `alternates.canonical` resolves against) must match it.
+// Using the apex here was splitting indexing/impressions across both hosts
+// in Search Console (confirmed via GSC: the same URL showing separate
+// impression counts under each host, plus several pages flagged "Duplicate,
+// Google chose different canonical than user"). (for=code)
+const SITE_URL = 'https://www.movetoistanbul.online';
 const TITLE = 'Move to Istanbul — Discover Türkiye with AI';
 const DESCRIPTION = 'Move to Istanbul — AI-powered travel discovery for Türkiye. Find museums, hidden gems, and cultural experiences across Istanbul, Cappadocia, Antalya and beyond.';
 
