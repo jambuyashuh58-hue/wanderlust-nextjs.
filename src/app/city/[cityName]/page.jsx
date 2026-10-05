@@ -12,6 +12,10 @@ export async function generateMetadata({ params }) {
   return {
     title: `${city.name} — Things to Do | Move to Istanbul`,
     description: city.description,
+    // Thin aggregator pages (a short blurb + a grid of activity cards),
+    // kept out of the index for the same reason as activity/[id] -- see
+    // the comment there. (for=code)
+    robots: { index: false, follow: true },
   };
 }
 

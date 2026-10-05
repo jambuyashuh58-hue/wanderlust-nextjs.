@@ -16,6 +16,14 @@ export async function generateMetadata({ params }) {
   return {
     title: `${activity.title} — Prices, Duration & Booking | Move to Istanbul`,
     description: activity.description?.slice(0, 160),
+    // These pages are thin (title + one short partner-sourced paragraph +
+    // an affiliate link) and there are 700+ of them -- crawlable but kept
+    // out of the index so they don't read as thin/doorway content to
+    // Google (this was flagged in a GSC indexing audit and is also why
+    // AdSense's automated review rejected the site for "low value
+    // content"). Still reachable via internal links/city pages, just not
+    // indexed or in the sitemap. (for=code)
+    robots: { index: false, follow: true },
   };
 }
 

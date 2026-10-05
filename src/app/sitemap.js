@@ -8,7 +8,7 @@
 // Base URL: hardcoded to the production domain (movetoistanbul.online) since
 // that's what search engines should always see regardless of which Vercel
 // preview/alias served the request. Update SITE_URL if the domain changes.
-import { getCollections, getAllActivities, getCities, getCountryGuides } from '@/lib/supabaseServer';
+import { getCollections, getCountryGuides } from '@/lib/supabaseServer';
 
 export const revalidate = 3600;
 
@@ -37,10 +37,12 @@ const STATIC_ROUTES = [
 ];
 
 export default async function sitemap() {
-  const [collections, activities, cities, countryGuides] = await Promise.all([
+  // activity/[id] and city/[cityName] are deliberately left out: they're
+  // thin, auto-generated pages (noindexed at the page level -- see their
+  // generateMetadata) and submitting them in the sitemap would just be
+  // asking Google to index exactly the pages told not to be indexed. (for=code)
+  const [collections, countryGuides] = await Promise.all([
     getCollections().catch(() => []),
-    getAllActivities(2000).catch(() => []),
-    getCities().catch(() => []),
     getCountryGuides().catch(() => []),
   ]);
 
@@ -56,20 +58,6 @@ export default async function sitemap() {
   const collectionEntries = (collections || []).map((c) => ({
     url: `${SITE_URL}/collections/${c.slug}`,
     lastModified: c.updated_date ? new Date(c.updated_date) : now,
-    changeFrequency: 'weekly',
-    priority: 0.7,
-  }));
-
-  const activityEntries = (activities || []).map((a) => ({
-    url: `${SITE_URL}/activity/${a.id}`,
-    lastModified: a.updated_date ? new Date(a.updated_date) : now,
-    changeFrequency: 'monthly',
-    priority: 0.6,
-  }));
-
-  const cityEntries = (cities || []).map((c) => ({
-    url: `${SITE_URL}/city/${encodeURIComponent(c.name.toLowerCase())}`,
-    lastModified: now,
     changeFrequency: 'weekly',
     priority: 0.7,
   }));
@@ -109,8 +97,6 @@ export default async function sitemap() {
   return [
     ...staticEntries,
     ...collectionEntries,
-    ...activityEntries,
-    ...cityEntries,
     ...countryGuideEntries,
     ...trStaticEntries,
     ...trCountryGuideEntries,
