@@ -8,6 +8,7 @@ import { notFound } from 'next/navigation';
 import { ArrowLeft, BookOpen, MessageCircle } from 'lucide-react';
 import { getCollectionBySlug } from '@/lib/supabaseServer';
 import GuideBody from '@/components/GuideBody';
+import RichGuideBody from '@/components/RichGuideBody';
 
 const CONCIERGE_URL = 'https://www.instagram.com/move_istanbul';
 
@@ -25,6 +26,16 @@ export async function generateMetadata({ params }) {
 export default async function DynamicGuidePage({ params }) {
   const guide = await getCollectionBySlug(params.slug);
   if (!guide || guide.display_style !== 'guide') notFound();
+
+  // Guides authored with the richer `guide_data` jsonb schema (tables,
+  // checklists, FAQ accordions, etc. -- see RichGuideBody) carry no plain
+  // `intro` text at all, so falling through to GuideBody below would render
+  // an empty body. /collections/[slug]/page.jsx already branches on this;
+  // mirror that here so the same collection renders identically at its
+  // /guides/<slug> URL instead of showing blank.
+  if (guide.guide_data) {
+    return <RichGuideBody collection={guide} />;
+  }
 
   return (
     <div className="pt-16 md:pt-20 min-h-screen">
