@@ -127,9 +127,10 @@ export default function RelocationQuizClient({ collections = [] }) {
         <div className="flex flex-col gap-3 mb-8">
           {rec.collection && (
             <Link
-              // Guide-type collections are canonicalized to /guides/<slug>
-              // (see collections/[slug]/page.jsx) -- link there directly.
-              href={rec.collection.display_style === 'guide' ? `/guides/${rec.collection.slug}` : `/collections/${rec.collection.slug}`}
+              // Guide-type collections are canonicalized to /guides/<slug>;
+              // everything else to /living-in-istanbul/<slug> -- see
+              // collections/[slug]/page.jsx.
+              href={rec.collection.display_style === 'guide' ? `/guides/${rec.collection.slug}` : `/living-in-istanbul/${rec.collection.slug}`}
               className="flex items-center justify-between px-5 py-4 rounded-xl border border-border bg-card hover:border-primary transition-colors"
             >
               <span className="font-semibold">{rec.collection.title}</span>

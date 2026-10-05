@@ -32,12 +32,13 @@ export async function GET() {
     .map((c) => `<li><a href="/city/${encodeURIComponent(c.name.toLowerCase())}">${escapeHtml(c.name)}</a></li>`)
     .join('\n');
 
-  // Guide-type collections canonicalize to /guides/<slug> (see
-  // collections/[slug]/page.jsx) -- link there directly so this directory
-  // isn't itself a source of non-canonical internal links.
+  // Guide-type collections canonicalize to /guides/<slug>; everything else
+  // to /living-in-istanbul/<slug> (see collections/[slug]/page.jsx) -- link
+  // directly so this directory isn't itself a source of non-canonical
+  // internal links.
   const collectionSection = (collections || [])
     .map((c) => {
-      const href = c.display_style === 'guide' ? `/guides/${encodeURIComponent(c.slug)}` : `/collections/${encodeURIComponent(c.slug)}`;
+      const href = c.display_style === 'guide' ? `/guides/${encodeURIComponent(c.slug)}` : `/living-in-istanbul/${encodeURIComponent(c.slug)}`;
       return `<li><a href="${href}">${escapeHtml(c.title || c.slug)}</a></li>`;
     })
     .join('\n');

@@ -81,11 +81,11 @@ export default function CollectionsFilters({ collections, cities }) {
           {filtered.map((c) => {
             const isRanking = c.display_style === 'ranking';
             const isGuide = c.display_style === 'guide';
-            // Guide-type collections are canonicalized to /guides/<slug> (see
-            // collections/[slug]/page.jsx and guides/[slug]/page.jsx) --
-            // link to that URL directly instead of the /collections/<slug>
-            // duplicate, so link equity flows to the canonical page.
-            const href = isGuide ? `/guides/${c.slug}` : `/collections/${c.slug}`;
+            // Guide-type collections are canonicalized to /guides/<slug>;
+            // everything else is canonicalized to /living-in-istanbul/<slug>
+            // (see collections/[slug]/page.jsx) -- link directly to the
+            // canonical URL so link equity flows there, not to a duplicate.
+            const href = isGuide ? `/guides/${c.slug}` : `/living-in-istanbul/${c.slug}`;
             return (
               <Link key={c.id} href={href} className="block rounded-2xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-lg transition-all group h-full">
                 <div className="relative aspect-[4/3] bg-muted overflow-hidden">

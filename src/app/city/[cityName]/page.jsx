@@ -79,9 +79,10 @@ export default async function CityDetailPage({ params }) {
           <h2 className="text-2xl font-bold mb-6">Guides for {city.name}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {collections.map((c) => (
-              // Guide-type collections canonicalize to /guides/<slug> -- see
+              // Guide-type collections canonicalize to /guides/<slug>;
+              // everything else to /living-in-istanbul/<slug> -- see
               // collections/[slug]/page.jsx -- link there directly.
-              <Link key={c.id} href={c.display_style === 'guide' ? `/guides/${c.slug}` : `/collections/${c.slug}`} className="block p-4 rounded-xl border border-border hover:border-primary/40 hover:shadow-sm transition-all">
+              <Link key={c.id} href={c.display_style === 'guide' ? `/guides/${c.slug}` : `/living-in-istanbul/${c.slug}`} className="block p-4 rounded-xl border border-border hover:border-primary/40 hover:shadow-sm transition-all">
                 <div className="font-semibold text-sm mb-1">{c.title}</div>
                 {c.meta_description && <div className="text-xs text-muted-foreground line-clamp-2">{c.meta_description}</div>}
               </Link>

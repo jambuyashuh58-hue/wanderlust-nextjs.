@@ -59,13 +59,14 @@ export default async function sitemap() {
 
   // Guide-type collections render at both /collections/<slug> and
   // /guides/<slug> (same row, same template -- see guides/[slug]/page.jsx),
-  // and their canonical tag now points at /guides/<slug> as the preferred
-  // URL. Submit that URL here too, so the sitemap isn't asking Google to
-  // index the non-canonical one.
+  // canonical to /guides/<slug>. Every other collection now also renders at
+  // /living-in-istanbul/<slug> (see CollectionView.jsx) and is canonical
+  // there as that cluster becomes its permanent home. Submit whichever URL
+  // is canonical so the sitemap isn't asking Google to index a duplicate.
   const collectionEntries = (collections || []).map((c) => ({
     url: c.display_style === 'guide'
       ? `${SITE_URL}/guides/${c.slug}`
-      : `${SITE_URL}/collections/${c.slug}`,
+      : `${SITE_URL}/living-in-istanbul/${c.slug}`,
     lastModified: c.updated_date ? new Date(c.updated_date) : now,
     changeFrequency: 'weekly',
     priority: 0.7,
