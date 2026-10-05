@@ -33,11 +33,24 @@ export const viewport = {
   themeColor: '#2463EB',
 };
 
+// Site-wide Organization schema, present once in <head> on every page --
+// individual pages (e.g. the /services products) add their own Service/
+// Product JSON-LD on top of this rather than repeating organization info.
+const ORGANIZATION_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Move to Istanbul',
+  url: SITE_URL,
+  description: DESCRIPTION,
+  sameAs: ['https://www.instagram.com/move_istanbul'],
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSON_LD) }} />
       </head>
       <body>
         <SiteChrome>{children}</SiteChrome>

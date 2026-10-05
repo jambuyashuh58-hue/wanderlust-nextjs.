@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, FileCheck, FileText, Languages, RefreshCw, AlertTriangle } from 'lucide-react';
+import { ArrowRight, FileCheck, FileText, Languages, RefreshCw, AlertTriangle, Flag } from 'lucide-react';
 
 export const revalidate = 86400;
 
@@ -15,6 +15,7 @@ const PAGES = [
   { href: '/visa-residence/translation-legalization', icon: Languages, title: 'Translation & Legalization', description: 'Which documents need a sworn Turkish translation or an apostille, and where to get it done.' },
   { href: '/visa-residence/immigration-follow-up', icon: RefreshCw, title: 'Immigration Follow-Up', description: 'What a request for additional documents means, and how to respond.' },
   { href: '/visa-residence/common-mistakes', icon: AlertTriangle, title: 'Common Mistakes', description: 'The application errors that cause delays or rejections most often.' },
+  { href: '/visa-residence/by-nationality', icon: Flag, title: 'By Nationality', description: 'Entry rules and document legalization notes for 10 nationalities, from the US to Saudi Arabia.' },
 ];
 
 export default function VisaResidencePage() {
@@ -47,7 +48,7 @@ export default function VisaResidencePage() {
         </div>
         <div className="mt-8 rounded-2xl border border-border bg-muted/40 p-5">
           <p className="text-sm text-muted-foreground leading-relaxed">
-            <strong className="text-foreground">Note on scope:</strong> we don't yet have dedicated per-nationality pages here — the process has country-specific nuances (which countries need a visa before entry, embassy-specific document legalization rules, bilateral agreements) that deserve real verified research per country rather than a generic template. If you want your exact nationality's route mapped out now, the <Link href="/services/istanbul-route-check" className="text-primary hover:underline">Istanbul Route Check</Link> covers that directly.
+            <strong className="text-foreground">Rules vary by nationality:</strong> which countries need a visa before entry, how long a visa-free stay lasts, and how foreign documents get legalized for a residence permit all depend on your passport. See the <Link href="/visa-residence/by-nationality" className="text-primary hover:underline">By Nationality</Link> pages for specifics, or let the <Link href="/services/istanbul-route-check" className="text-primary hover:underline">Istanbul Route Check</Link> map out your exact route.
           </p>
         </div>
       </div>

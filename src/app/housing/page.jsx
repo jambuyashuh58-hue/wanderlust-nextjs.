@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, AlertTriangle, ClipboardCheck, FileSearch, PackageCheck, Handshake } from 'lucide-react';
+import { ArrowRight, AlertTriangle, ClipboardCheck, FileSearch, PackageCheck, Handshake, MapPin } from 'lucide-react';
 
 export const revalidate = 86400;
 
@@ -10,6 +10,7 @@ export const metadata = {
 };
 
 const PAGES = [
+  { href: '/housing/neighborhoods', icon: MapPin, title: 'Neighborhood Guides', description: 'Deep dives on 7 districts — rent, who it suits, commute, nightlife, and registration status.' },
   { href: '/housing/rental-red-flags', icon: AlertTriangle, title: 'Rental Red Flags', description: 'The listing and landlord patterns that mean walk away.' },
   { href: '/housing/viewing-checklist', icon: ClipboardCheck, title: 'Viewing Checklist', description: 'What to actually check in person before you fall for a nice photo set.' },
   { href: '/housing/contract-review', icon: FileSearch, title: 'Contract Review', description: 'The clauses in a Turkish rental contract worth reading twice.' },
@@ -44,11 +45,6 @@ export default function HousingPage() {
             <p className="text-sm text-muted-foreground leading-relaxed mb-4">The full district-by-district breakdown with current rent ranges and registration status.</p>
             <span className="inline-flex items-center gap-1 text-sm font-medium text-primary">Read <ArrowRight className="w-4 h-4" /></span>
           </Link>
-        </div>
-        <div className="mt-8 rounded-2xl border border-border bg-muted/40 p-5">
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            <strong className="text-foreground">Note on scope:</strong> dedicated deep-dive pages for each individual neighborhood (beyond the comparison already in our housing guide) are a planned follow-up — getting those right means verifying current rent ranges and registration status per district rather than estimating, and we'd rather ship that accurately than fast.
-          </p>
         </div>
       </div>
     </div>

@@ -17,9 +17,20 @@ const INCLUDES = [
   'Guidance on negotiating rent and deposit',
 ];
 
+const JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Housing Shortlist File',
+  description: '5-8 real, pre-screened rental listings matched to your budget and neighborhood in Türkiye, with video walkthroughs and a contract checklist.',
+  provider: { '@type': 'Organization', name: 'Move to Istanbul', url: 'https://movetoistanbul.online' },
+  areaServed: 'Türkiye',
+  offers: { '@type': 'Offer', price: '449', priceCurrency: 'USD', url: 'https://movetoistanbul.online/services/housing-shortlist-file' },
+};
+
 export default function HousingShortlistFilePage() {
   return (
     <div className="pt-16 md:pt-20 min-h-screen">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <Link href="/services" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"><ArrowLeft className="w-4 h-4" /> All services</Link>
         <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">Housing Shortlist File</span>
