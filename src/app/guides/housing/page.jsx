@@ -6,6 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Finding Housing in Türkiye: Renting in Istanbul as a Foreigner (2026) | Move to Istanbul',
   description: 'Neighborhood breakdown, rent ranges, and the full apartment-search process.',
+  alternates: { canonical: '/guides/housing' },
 };
 
 const DISTRICTS = [

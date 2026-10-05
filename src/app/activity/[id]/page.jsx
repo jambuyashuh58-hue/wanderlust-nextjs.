@@ -207,7 +207,9 @@ export default async function ActivityDetailPage({ params }) {
               <section>
                 <h2 className="text-xl font-bold mb-4">{activity.city_name} Guides</h2>
                 <Link
-                  href={`/collections/${relatedGuide.slug}`}
+                  // Guide-type collections canonicalize to /guides/<slug>
+                  // -- see collections/[slug]/page.jsx.
+                  href={relatedGuide.display_style === 'guide' ? `/guides/${relatedGuide.slug}` : `/collections/${relatedGuide.slug}`}
                   className="group flex items-center gap-4 p-4 rounded-2xl border border-border bg-card hover:border-primary/40 hover:shadow-lg transition-all"
                 >
                   <div className="w-11 h-11 rounded-xl bg-muted flex items-center justify-center shrink-0"><BookOpen className="w-5 h-5 text-primary" /></div>

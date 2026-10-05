@@ -18,6 +18,10 @@ import ConciergeCTA from '@/components/ConciergeCTA';
 
 export const revalidate = 3600;
 
+export const metadata = {
+  alternates: { canonical: '/' },
+};
+
 function SectionHeader({ eyebrow, title, href }) {
   return (
     <div className="flex items-end justify-between mb-5">
@@ -139,8 +143,11 @@ export default async function HomePage() {
             <SectionHeader eyebrow="Guides" title="Curated Collections" href="/collections" />
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
               {collections.slice(0, 12).map((c, i) => {
+                // Guide-type collections canonicalize to /guides/<slug> --
+                // see collections/[slug]/page.jsx -- link there directly.
+                const href = c.display_style === 'guide' ? `/guides/${c.slug}` : `/collections/${c.slug}`;
                 const card = (
-                  <Link href={`/collections/${c.slug}`} className="group block rounded-xl overflow-hidden border border-border hover:border-primary/40 hover:shadow-md transition-all bg-card">
+                  <Link href={href} className="group block rounded-xl overflow-hidden border border-border hover:border-primary/40 hover:shadow-md transition-all bg-card">
                     <div className="relative aspect-[4/3] bg-muted overflow-hidden">
                       {c.hero_image_url && <img src={c.hero_image_url} alt={c.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />}
                     </div>

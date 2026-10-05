@@ -13,13 +13,24 @@ export async function generateMetadata({ params }) {
   if (!guide) return { title: 'Guide not found' };
   const title = pick(guide, 'title', locale);
   const description = pick(guide, 'meta_description', locale);
+  // An untranslated guide (no title_tr) renders the same English content
+  // at /tr/country-guides/<slug> as a fallback -- that's not a real
+  // translation, it's the same page under a second URL, so its canonical
+  // stays pointed at the English URL even when visited via /tr (matching
+  // the /tr filter already applied in sitemap.js). Only a guide with real
+  // _tr content gets its own canonical at the /tr URL.
+  const hasTranslation = Boolean(guide.title_tr);
+  const canonicalPath = locale === 'tr' && hasTranslation
+    ? `/tr/country-guides/${params.slug}`
+    : `/country-guides/${params.slug}`;
   return {
     title: `${title} — ${locale === 'tr' ? 'Ülke Rehberi' : 'Country Guide'} | Move to Istanbul`,
     description: description || undefined,
     alternates: {
+      canonical: canonicalPath,
       languages: {
         en: `/country-guides/${params.slug}`,
-        tr: `/tr/country-guides/${params.slug}`,
+        ...(hasTranslation ? { tr: `/tr/country-guides/${params.slug}` } : {}),
       },
     },
   };

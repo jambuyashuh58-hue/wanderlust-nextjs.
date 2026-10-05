@@ -5,6 +5,7 @@ import GuideLayout from '@/components/GuideLayout';
 export const metadata = {
   title: 'Why I Stopped Chasing Perfection and Started Building Anchor Routines | Move to Istanbul',
   description: 'Moving to Istanbul feels chaotic until you build anchor routines. Learn why small, consistent habits reduce relocation stress more than any checklist.',
+  alternates: { canonical: '/field-notes/anchor-routines' },
 };
 
 export default function AnchorRoutinesPage() {

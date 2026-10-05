@@ -14,9 +14,18 @@ export const revalidate = 3600;
 export async function generateMetadata({ params }) {
   const collection = await getCollectionBySlug(params.slug);
   if (!collection) return { title: 'Collection not found' };
+  // Guide-type collections render identically at /collections/<slug> and
+  // /guides/<slug> (see src/app/guides/[slug]/page.jsx) -- same row, same
+  // template, two URLs. That's duplicate content, and Google will pick a
+  // canonical for us if we don't. Internal links point at /guides/<slug>
+  // for these, so that's the URL we tell Google to index too.
+  const canonicalPath = collection.display_style === 'guide'
+    ? `/guides/${params.slug}`
+    : `/collections/${params.slug}`;
   return {
     title: `${collection.title} | Move to Istanbul`,
     description: collection.meta_description || collection.intro?.slice(0, 160),
+    alternates: { canonical: canonicalPath },
   };
 }
 

@@ -81,8 +81,13 @@ export default function CollectionsFilters({ collections, cities }) {
           {filtered.map((c) => {
             const isRanking = c.display_style === 'ranking';
             const isGuide = c.display_style === 'guide';
+            // Guide-type collections are canonicalized to /guides/<slug> (see
+            // collections/[slug]/page.jsx and guides/[slug]/page.jsx) --
+            // link to that URL directly instead of the /collections/<slug>
+            // duplicate, so link equity flows to the canonical page.
+            const href = isGuide ? `/guides/${c.slug}` : `/collections/${c.slug}`;
             return (
-              <Link key={c.id} href={`/collections/${c.slug}`} className="block rounded-2xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-lg transition-all group h-full">
+              <Link key={c.id} href={href} className="block rounded-2xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-lg transition-all group h-full">
                 <div className="relative aspect-[4/3] bg-muted overflow-hidden">
                   {/* Plain <img>, not next/image -- these hero_image_url values
                       come from arbitrary third-party hosts (stock photo sites,

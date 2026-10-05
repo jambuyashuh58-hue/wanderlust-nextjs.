@@ -32,8 +32,14 @@ export async function GET() {
     .map((c) => `<li><a href="/city/${encodeURIComponent(c.name.toLowerCase())}">${escapeHtml(c.name)}</a></li>`)
     .join('\n');
 
+  // Guide-type collections canonicalize to /guides/<slug> (see
+  // collections/[slug]/page.jsx) -- link there directly so this directory
+  // isn't itself a source of non-canonical internal links.
   const collectionSection = (collections || [])
-    .map((c) => `<li><a href="/collections/${encodeURIComponent(c.slug)}">${escapeHtml(c.title || c.slug)}</a></li>`)
+    .map((c) => {
+      const href = c.display_style === 'guide' ? `/guides/${encodeURIComponent(c.slug)}` : `/collections/${encodeURIComponent(c.slug)}`;
+      return `<li><a href="${href}">${escapeHtml(c.title || c.slug)}</a></li>`;
+    })
     .join('\n');
 
   const activitySection = (activities || [])
