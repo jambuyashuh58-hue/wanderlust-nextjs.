@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Housing Timeline for Moving to Türkiye | Move to Istanbul',
   description: 'When to start looking for an apartment, how long the search actually takes, and what to book before vs. after you land.',
-  alternates: { canonical: '/moving-to-turkiye/housing-timeline' },
+  alternates: { canonical: '/moving-to-turkiye/housing-timeline/' },
 };
 
 const FAQ = [

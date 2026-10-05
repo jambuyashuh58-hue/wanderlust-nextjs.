@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Coworking & Internet Costs in Istanbul | Move to Istanbul',
   description: 'Fiber internet setup, coworking day-rates, and café-working costs for remote workers in Istanbul.',
-  alternates: { canonical: '/cost-of-living/coworking-internet' },
+  alternates: { canonical: '/cost-of-living/coworking-internet/' },
 };
 
 const FAQ = [

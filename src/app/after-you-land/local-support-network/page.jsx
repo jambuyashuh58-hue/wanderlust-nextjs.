@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Building a Local Support Network in Türkiye | Move to Istanbul',
   description: 'Where to find other expats, locals, and the professional contacts (accountant, lawyer, doctor) worth having before you need them.',
-  alternates: { canonical: '/after-you-land/local-support-network' },
+  alternates: { canonical: '/after-you-land/local-support-network/' },
 };
 
 const SOURCES = [

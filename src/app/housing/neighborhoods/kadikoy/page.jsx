@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Living in Kadıköy, Istanbul: Rent, Vibe & Who It\'s For (2026) | Move to Istanbul',
   description: 'Kadıköy neighborhood guide for foreigners — rent ranges, sub-areas like Moda and Caferağa, commute, nightlife, and e-İkamet registration status.',
-  alternates: { canonical: '/housing/neighborhoods/kadikoy' },
+  alternates: { canonical: '/housing/neighborhoods/kadikoy/' },
 };
 
 const SUB_AREAS = [

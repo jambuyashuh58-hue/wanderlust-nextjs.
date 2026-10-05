@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Moving to Türkiye from the US: Visa & Residence Notes | Move to Istanbul',
   description: 'Entry requirements for US citizens visiting Türkiye, and what US-issued documents need before a Turkish residence permit application will accept them.',
-  alternates: { canonical: '/visa-residence/by-nationality/united-states' },
+  alternates: { canonical: '/visa-residence/by-nationality/united-states/' },
 };
 
 const FAQ = [

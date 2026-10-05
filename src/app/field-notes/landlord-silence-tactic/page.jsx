@@ -5,7 +5,7 @@ import GuideLayout from '@/components/GuideLayout';
 export const metadata = {
   title: "Landlord Silence Tactic: How to Respond Without Paying Extra | Move to Istanbul",
   description: "Your landlord went silent after reporting an issue? It's a pressure tactic. Learn how to respond with documentation, not desperation.",
-  alternates: { canonical: '/field-notes/landlord-silence-tactic' },
+  alternates: { canonical: '/field-notes/landlord-silence-tactic/' },
 };
 
 export default function LandlordSilenceTacticPage() {

@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'The Full Sequence: Moving to Türkiye Step by Step | Move to Istanbul',
   description: 'The actual order of operations for moving to Türkiye — what has to happen before what, and which steps can run in parallel.',
-  alternates: { canonical: '/moving-to-turkiye/full-sequence' },
+  alternates: { canonical: '/moving-to-turkiye/full-sequence/' },
 };
 
 const PHASES = [

@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Getting Around Istanbul on a Budget | Move to Istanbul',
   description: 'IstanbulKart, which transit lines matter most, and realistic monthly transport costs for residents.',
-  alternates: { canonical: '/cost-of-living/transport' },
+  alternates: { canonical: '/cost-of-living/transport/' },
 };
 
 const FAQ = [

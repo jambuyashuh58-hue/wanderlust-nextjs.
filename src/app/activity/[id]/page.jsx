@@ -22,7 +22,7 @@ export async function generateMetadata({ params }) {
     // ActivityView.jsx) as that cluster gets built out -- point the
     // canonical there since that's the long-term home, even while this
     // page stays noindexed either way.
-    alternates: { canonical: `/living-in-istanbul/${params.id}` },
+    alternates: { canonical: `/living-in-istanbul/${params.id}/` },
   };
 }
 

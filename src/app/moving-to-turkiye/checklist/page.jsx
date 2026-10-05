@@ -5,7 +5,7 @@ import GuideLayout from '@/components/GuideLayout';
 export const metadata = {
   title: 'Pre-Move Checklist for Türkiye | Move to Istanbul',
   description: 'Everything to sort before you fly to Türkiye, grouped by how far out it needs to start.',
-  alternates: { canonical: '/moving-to-turkiye/checklist' },
+  alternates: { canonical: '/moving-to-turkiye/checklist/' },
 };
 
 const GROUPS = [

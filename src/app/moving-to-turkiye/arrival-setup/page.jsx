@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'First-Week Arrival Setup in Türkiye | Move to Istanbul',
   description: 'The logistics that only make sense once you\'re physically in Türkiye: SIM/phone registration, IstanbulKart, banking, and your tax ID number.',
-  alternates: { canonical: '/moving-to-turkiye/arrival-setup' },
+  alternates: { canonical: '/moving-to-turkiye/arrival-setup/' },
 };
 
 const STEPS = [

@@ -16,7 +16,7 @@ const CATEGORIES = [
 export const metadata = {
   title: 'Monthly Expenses by Category in Türkiye | Move to Istanbul',
   description: 'Category-by-category monthly cost ranges for living in Türkiye, budget vs. comfortable tier.',
-  alternates: { canonical: '/cost-of-living/monthly-expenses' },
+  alternates: { canonical: '/cost-of-living/monthly-expenses/' },
 };
 
 export default function MonthlyExpensesPage() {

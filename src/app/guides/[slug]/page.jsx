@@ -22,7 +22,7 @@ export async function generateMetadata({ params }) {
     // This is the preferred URL for guide-type collections -- see the
     // matching canonical override in collections/[slug]/page.jsx, which
     // points the duplicate /collections/<slug> URL back to this one.
-    alternates: { canonical: `/guides/${params.slug}` },
+    alternates: { canonical: `/guides/${params.slug}/` },
   };
 }
 

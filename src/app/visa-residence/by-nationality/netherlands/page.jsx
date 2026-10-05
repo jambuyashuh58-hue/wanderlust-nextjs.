@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Moving to Türkiye from the Netherlands: Visa & Residence Notes | Move to Istanbul',
   description: 'Entry requirements for Dutch citizens visiting Türkiye, and what Dutch-issued documents need before a Turkish residence permit application will accept them.',
-  alternates: { canonical: '/visa-residence/by-nationality/netherlands' },
+  alternates: { canonical: '/visa-residence/by-nationality/netherlands/' },
 };
 
 const FAQ = [

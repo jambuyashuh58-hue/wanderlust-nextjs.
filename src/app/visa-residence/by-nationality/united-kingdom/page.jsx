@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Moving to Türkiye from the UK: Visa & Residence Notes | Move to Istanbul',
   description: 'Entry requirements for UK citizens visiting Türkiye, and what UK-issued documents need before a Turkish residence permit application will accept them.',
-  alternates: { canonical: '/visa-residence/by-nationality/united-kingdom' },
+  alternates: { canonical: '/visa-residence/by-nationality/united-kingdom/' },
 };
 
 const FAQ = [

@@ -17,7 +17,7 @@ export async function generateMetadata() {
         title: 'Türkiye\'ye Taşınma Rehberleri | Move to Istanbul',
         description: 'Türkiye\'ye taşınmak için ülkeye özel rehberler.',
         alternates: {
-          canonical: '/tr/country-guides',
+          canonical: '/tr/country-guides/',
           languages: { en: '/country-guides', tr: '/tr/country-guides' },
         },
       }
@@ -25,7 +25,7 @@ export async function generateMetadata() {
         title: 'Country Relocation Guides | Move to Istanbul',
         description: 'Nationality-specific guides for moving to Türkiye.',
         alternates: {
-          canonical: '/country-guides',
+          canonical: '/country-guides/',
           languages: { en: '/country-guides', tr: '/tr/country-guides' },
         },
       };

@@ -7,6 +7,7 @@ import {
   MapPin, BedDouble, ExternalLink, ChevronDown, MessageCircle,
 } from 'lucide-react';
 import { getSavedActivities, subscribeSavedActivities } from '@/lib/savedActivities';
+import QuickEstimateCalculator from '@/components/QuickEstimateCalculator';
 
 const STORAGE_KEY = 'wanderlust_relocation_plan';
 
@@ -248,6 +249,8 @@ export default function RelocationDashboard({ listings }) {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
+        <QuickEstimateCalculator />
+
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <SummaryCard icon={Wallet} iconBg="bg-primary/10" iconColor="text-primary" label="One-time relocation costs" value={fmt(oneTimeCosts, plan.currency)} sub="Visa + flight + deposit + experiences" />
           <SummaryCard icon={Home} iconBg="bg-success/10" iconColor="text-success" label="Monthly living estimate" value={fmt(monthlyEstimate, plan.currency)} sub="Rent + daily living costs" />

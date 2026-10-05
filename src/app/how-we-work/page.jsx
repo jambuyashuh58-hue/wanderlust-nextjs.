@@ -4,7 +4,7 @@ import { ArrowRight, MessageSquare, FileCheck, Users, Clock } from 'lucide-react
 export const metadata = {
   title: 'How We Work | Move to Istanbul',
   description: 'How our relocation services actually run — async by default, real people behind every reply, and what you can expect at each step.',
-  alternates: { canonical: '/how-we-work' },
+  alternates: { canonical: '/how-we-work/' },
 };
 
 const PRINCIPLES = [

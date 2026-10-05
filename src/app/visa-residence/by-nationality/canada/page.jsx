@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Moving to Türkiye from Canada: Visa & Residence Notes | Move to Istanbul',
   description: 'Entry requirements for Canadian citizens visiting Türkiye, and a recent change in how Canadian-issued documents get legalized for a residence permit.',
-  alternates: { canonical: '/visa-residence/by-nationality/canada' },
+  alternates: { canonical: '/visa-residence/by-nationality/canada/' },
 };
 
 const FAQ = [

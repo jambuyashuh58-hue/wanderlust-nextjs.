@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Living in Fatih, Istanbul: Rent, Vibe & Registration Status (2026) | Move to Istanbul',
   description: 'Fatih neighborhood guide for foreigners — rent ranges, sub-areas like Fener and Balat, commute, and why most of Fatih is closed to new e-İkamet registrations.',
-  alternates: { canonical: '/housing/neighborhoods/fatih' },
+  alternates: { canonical: '/housing/neighborhoods/fatih/' },
 };
 
 const SUB_AREAS = [

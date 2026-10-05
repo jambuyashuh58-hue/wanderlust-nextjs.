@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 export const metadata = {
   title: 'Our Partner Network | Move to Istanbul',
   description: 'How we work with booking platforms and local specialists, and how that affects — or doesn\'t affect — our recommendations.',
-  alternates: { canonical: '/partner-network' },
+  alternates: { canonical: '/partner-network/' },
 };
 
 export default function PartnerNetworkPage() {

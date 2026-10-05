@@ -13,7 +13,7 @@ const RED_FLAGS = [
 export const metadata = {
   title: 'Rental Scam & Red Flag Checklist for Türkiye | Move to Istanbul',
   description: 'The listing and landlord patterns that mean walk away when renting an apartment in Türkiye as a foreigner.',
-  alternates: { canonical: '/housing/rental-red-flags' },
+  alternates: { canonical: '/housing/rental-red-flags/' },
 };
 
 export default function RentalRedFlagsPage() {

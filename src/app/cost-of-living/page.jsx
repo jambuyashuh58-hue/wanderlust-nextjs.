@@ -6,7 +6,7 @@ export const revalidate = 86400;
 export const metadata = {
   title: 'Cost of Living Breakdown: Budget, Banking & Transport | Move to Istanbul',
   description: 'The practical cost-of-living topics for Türkiye beyond the headline monthly number — your first 3-month budget, banking, health insurance, transport, and coworking.',
-  alternates: { canonical: '/cost-of-living' },
+  alternates: { canonical: '/cost-of-living/' },
 };
 
 const PAGES = [

@@ -12,7 +12,7 @@ const STEPS = [
 export const metadata = {
   title: 'Your First 7 Days in Türkiye | Move to Istanbul',
   description: 'Tax ID, banking decisions, and starting the apartment search in your first week in Türkiye.',
-  alternates: { canonical: '/after-you-land/first-7-days' },
+  alternates: { canonical: '/after-you-land/first-7-days/' },
 };
 
 export default function First7DaysPage() {

@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 export const metadata = {
   title: 'Full Move File ($999) | Move to Istanbul',
   description: 'Hand us the whole first month — visa, housing, banking, and settling in — with a bilingual local specialist, airport logistics, and weekly async check-ins.',
-  alternates: { canonical: '/services/full-move-file' },
+  alternates: { canonical: '/services/full-move-file/' },
 };
 
 const INCLUDES = [
@@ -16,6 +16,8 @@ const INCLUDES = [
   'Priority response time',
   'Weekly async check-ins until you\'re settled',
 ];
+
+const NOT_THIS = 'What this is NOT: visa sponsorship, a law firm, or an immigration agency. We coordinate independent planning and logistics — all filings and appointments are still yours to complete.';
 
 const JSON_LD = {
   '@context': 'https://schema.org',
@@ -47,6 +49,7 @@ export default function FullMoveFilePage() {
             ))}
           </ul>
         </div>
+        <p className="text-xs text-muted-foreground leading-relaxed mb-8">{NOT_THIS}</p>
         <Link href="/services?tier=full" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-gradient-primary text-white font-semibold hover:scale-[1.02] transition-transform">
           Request the Full Move File <ArrowRight className="w-4 h-4" />
         </Link>

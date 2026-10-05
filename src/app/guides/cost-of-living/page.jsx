@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Monthly Cost of Living in Istanbul for Expats & Digital Nomads (2026) | Move to Istanbul',
   description: 'Real numbers on housing, food, transportation, and monthly expenses.',
-  alternates: { canonical: '/guides/cost-of-living' },
+  alternates: { canonical: '/guides/cost-of-living/' },
 };
 
 const TIERS = [

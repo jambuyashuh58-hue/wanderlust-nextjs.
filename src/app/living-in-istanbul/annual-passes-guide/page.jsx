@@ -10,7 +10,7 @@ export const revalidate = 3600;
 export const metadata = {
   title: 'Museums Worth Joining for Annual Passes | Move to Istanbul',
   description: 'Is the Istanbul Museum Pass worth it once you live here, not just visit? How the pass works, what it covers, and the break-even math for residents.',
-  alternates: { canonical: '/living-in-istanbul/annual-passes-guide' },
+  alternates: { canonical: '/living-in-istanbul/annual-passes-guide/' },
 };
 
 const INCLUDED_SITES = [

@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Istanbul for Digital Nomads: Visa, Cost & Where to Work | Move to Istanbul',
   description: 'The digital-nomad-specific picture of Istanbul: the Digital Nomad Visa, realistic remote-worker costs, internet reliability, and where to actually work from.',
-  alternates: { canonical: '/istanbul-for-digital-nomads' },
+  alternates: { canonical: '/istanbul-for-digital-nomads/' },
 };
 
 const PILLARS = [

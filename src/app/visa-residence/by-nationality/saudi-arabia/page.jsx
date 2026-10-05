@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Moving to Türkiye from Saudi Arabia: Visa & Residence Notes | Move to Istanbul',
   description: 'Entry requirements for Saudi citizens visiting Türkiye, and what Saudi-issued documents need before a Turkish residence permit application will accept them.',
-  alternates: { canonical: '/visa-residence/by-nationality/saudi-arabia' },
+  alternates: { canonical: '/visa-residence/by-nationality/saudi-arabia/' },
 };
 
 const FAQ = [

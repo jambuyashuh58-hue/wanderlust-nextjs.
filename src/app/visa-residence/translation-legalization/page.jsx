@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Document Translation & Legalization for Türkiye Residence | Move to Istanbul',
   description: 'Which documents need a sworn Turkish translation or an apostille for a residence permit application, and how that process works.',
-  alternates: { canonical: '/visa-residence/translation-legalization' },
+  alternates: { canonical: '/visa-residence/translation-legalization/' },
 };
 
 const FAQ = [

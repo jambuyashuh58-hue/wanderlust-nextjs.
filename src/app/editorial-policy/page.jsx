@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 export const metadata = {
   title: 'Editorial Policy | Move to Istanbul',
   description: 'How we research, verify, and update the guides on Move to Istanbul, and how affiliate and service revenue relates to our editorial choices.',
-  alternates: { canonical: '/editorial-policy' },
+  alternates: { canonical: '/editorial-policy/' },
 };
 
 export default function EditorialPolicyPage() {

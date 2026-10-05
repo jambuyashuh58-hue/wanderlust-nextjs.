@@ -13,7 +13,7 @@ const MISTAKES = [
 export const metadata = {
   title: 'Common Residence Permit Mistakes | Move to Istanbul',
   description: 'The most common application errors that cause delays or document-request rounds for Türkiye residence permit applicants.',
-  alternates: { canonical: '/visa-residence/common-mistakes' },
+  alternates: { canonical: '/visa-residence/common-mistakes/' },
 };
 
 export default function VisaCommonMistakesPage() {

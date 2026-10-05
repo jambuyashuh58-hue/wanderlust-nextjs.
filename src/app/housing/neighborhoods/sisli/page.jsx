@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Living in Şişli, Istanbul: Rent, Vibe & Who It\'s For (2026) | Move to Istanbul',
   description: 'Şişli neighborhood guide for foreigners — rent ranges, sub-areas like Bomonti and Nişantaşı, commute, nightlife, and e-İkamet registration status.',
-  alternates: { canonical: '/housing/neighborhoods/sisli' },
+  alternates: { canonical: '/housing/neighborhoods/sisli/' },
 };
 
 const SUB_AREAS = [

@@ -4,7 +4,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Administrative Identity in Türkiye: Tax ID & YKN | Move to Istanbul',
   description: 'The ID numbers you\'ll actually be asked for as a foreign resident in Türkiye — tax ID and the YKN residence permit number.',
-  alternates: { canonical: '/after-you-land/administrative-identity' },
+  alternates: { canonical: '/after-you-land/administrative-identity/' },
 };
 
 const FAQ = [

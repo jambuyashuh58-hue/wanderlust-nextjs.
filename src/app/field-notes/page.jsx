@@ -4,7 +4,7 @@ import { Compass, ArrowRight, BookOpen } from 'lucide-react';
 export const metadata = {
   title: 'Field Notes | Move to Istanbul',
   description: 'Reflective notes on moving to Istanbul — practical wisdom on mindset, language, and housing from the quiet operator behind Move to Istanbul.',
-  alternates: { canonical: '/field-notes' },
+  alternates: { canonical: '/field-notes/' },
 };
 
 const POSTS = [

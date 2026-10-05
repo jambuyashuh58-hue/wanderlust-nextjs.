@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Negotiating Rent in Türkiye | Move to Istanbul',
   description: 'What\'s actually negotiable on rent, deposit, and included furnishing when renting an apartment in Türkiye.',
-  alternates: { canonical: '/housing/negotiation-tips' },
+  alternates: { canonical: '/housing/negotiation-tips/' },
 };
 
 const FAQ = [

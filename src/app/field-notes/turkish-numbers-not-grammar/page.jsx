@@ -5,7 +5,7 @@ import GuideLayout from '@/components/GuideLayout';
 export const metadata = {
   title: "Turkish Numbers Not Grammar: A Survival Guide for Expats | Move to Istanbul",
   description: 'Stop trying to speak fluent Turkish. Learn numbers, addresses, and polite phrases instead. Clarity beats accuracy in daily survival.',
-  alternates: { canonical: '/field-notes/turkish-numbers-not-grammar' },
+  alternates: { canonical: '/field-notes/turkish-numbers-not-grammar/' },
 };
 
 export default function TurkishNumbersPage() {

@@ -8,7 +8,7 @@ import RelocationQuizClient from '@/components/RelocationQuizClient';
 export const metadata = {
   title: 'Relocation Quiz — Move to Istanbul',
   description: 'Answer a few quick questions and get pointed to exactly what\'s useful for your Türkiye trip or move.',
-  alternates: { canonical: '/relocation-quiz' },
+  alternates: { canonical: '/relocation-quiz/' },
 };
 
 export const revalidate = 3600;

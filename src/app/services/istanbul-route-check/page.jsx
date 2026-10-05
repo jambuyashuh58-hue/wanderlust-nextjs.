@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 export const metadata = {
   title: 'Istanbul Route Check ($99) | Move to Istanbul',
   description: 'A focused 45-minute strategy call plus a personalized visa-route checklist for your nationality — map your exact path before you commit to anything.',
-  alternates: { canonical: '/services/istanbul-route-check' },
+  alternates: { canonical: '/services/istanbul-route-check/' },
 };
 
 const INCLUDES = [
@@ -14,6 +14,8 @@ const INCLUDES = [
   'Help booking your e-ikamet appointment',
   'Access to our long-stay guides',
 ];
+
+const NOT_THIS = 'What this is NOT: a filed application, legal representation, or a guarantee of approval. It’s an independent planning review — you still file your own paperwork with Turkish authorities.';
 
 const JSON_LD = {
   '@context': 'https://schema.org',
@@ -45,6 +47,7 @@ export default function IstanbulRouteCheckPage() {
             ))}
           </ul>
         </div>
+        <p className="text-xs text-muted-foreground leading-relaxed mb-8">{NOT_THIS}</p>
         <Link href="/services?tier=paperwork" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-gradient-primary text-white font-semibold hover:scale-[1.02] transition-transform">
           Request the Route Check <ArrowRight className="w-4 h-4" />
         </Link>

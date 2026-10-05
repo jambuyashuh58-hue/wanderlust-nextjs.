@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Health Insurance for Türkiye Residence | Move to Istanbul',
   description: 'What a compliant private health insurance policy needs to cover for a Turkish residence permit, and realistic cost ranges.',
-  alternates: { canonical: '/cost-of-living/health-insurance' },
+  alternates: { canonical: '/cost-of-living/health-insurance/' },
 };
 
 const FAQ = [

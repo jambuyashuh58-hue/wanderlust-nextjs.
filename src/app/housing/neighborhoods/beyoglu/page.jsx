@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Living in Beyoğlu, Istanbul: Rent, Vibe & Who It\'s For (2026) | Move to Istanbul',
   description: 'Beyoğlu neighborhood guide for foreigners — rent ranges, sub-areas like Cihangir and Galata, commute, nightlife, and e-İkamet registration status.',
-  alternates: { canonical: '/housing/neighborhoods/beyoglu' },
+  alternates: { canonical: '/housing/neighborhoods/beyoglu/' },
 };
 
 const SUB_AREAS = [

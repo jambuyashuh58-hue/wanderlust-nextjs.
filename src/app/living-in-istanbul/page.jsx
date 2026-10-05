@@ -7,7 +7,7 @@ export const revalidate = 3600;
 export const metadata = {
   title: 'Living in Istanbul | Move to Istanbul',
   description: 'Guides for actually living in Istanbul day to day — not sightseeing. Routines, neighborhood life, and the logistics of settling in.',
-  alternates: { canonical: '/living-in-istanbul' },
+  alternates: { canonical: '/living-in-istanbul/' },
 };
 
 // Only list guides that exist. A "coming soon" card for an unwritten page

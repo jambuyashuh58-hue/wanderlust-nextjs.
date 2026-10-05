@@ -32,7 +32,7 @@ const MISTAKES = [
 export const metadata = {
   title: 'Common Mistakes Moving to Türkiye | Move to Istanbul',
   description: 'The avoidable mistakes that cost newcomers to Türkiye the most time and money.',
-  alternates: { canonical: '/moving-to-turkiye/common-mistakes' },
+  alternates: { canonical: '/moving-to-turkiye/common-mistakes/' },
 };
 
 export default function CommonMistakesPage() {

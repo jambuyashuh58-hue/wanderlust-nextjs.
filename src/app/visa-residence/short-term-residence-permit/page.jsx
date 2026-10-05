@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'How the Short-Term Residence Permit (e-İkamet) Works | Move to Istanbul',
   description: 'Step-by-step walkthrough of applying for a short-term tourist residence permit in Türkiye, from notarized lease to appointment to card delivery.',
-  alternates: { canonical: '/visa-residence/short-term-residence-permit' },
+  alternates: { canonical: '/visa-residence/short-term-residence-permit/' },
 };
 
 const STEPS = [

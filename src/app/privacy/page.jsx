@@ -2,7 +2,7 @@ export const metadata = {
   title: 'Privacy Policy | Move to Istanbul',
   description: 'How Move to Istanbul collects, uses, and protects your information.',
   robots: { index: true, follow: true },
-  alternates: { canonical: '/privacy' },
+  alternates: { canonical: '/privacy/' },
 };
 
 const LAST_UPDATED = 'September 29, 2026';

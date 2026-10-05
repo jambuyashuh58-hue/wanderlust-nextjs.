@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Moving to Türkiye from Germany: Visa & Residence Notes | Move to Istanbul',
   description: 'Entry requirements for German citizens visiting Türkiye, and what German-issued documents need before a Turkish residence permit application will accept them.',
-  alternates: { canonical: '/visa-residence/by-nationality/germany' },
+  alternates: { canonical: '/visa-residence/by-nationality/germany/' },
 };
 
 const FAQ = [

@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Best Cafés in Istanbul for Remote Workers (Wi-Fi, Plugs, Noise Levels) | Move to Istanbul',
   description: 'A neighborhood-by-neighborhood guide to laptop-friendly cafés in Kadıköy, Nişantaşı/Şişli, and Beşiktaş/Beyoğlu — with real notes on Wi-Fi, outlets, and how loud they actually get.',
-  alternates: { canonical: '/living-in-istanbul/remote-work-cafes' },
+  alternates: { canonical: '/living-in-istanbul/remote-work-cafes/' },
 };
 
 // Noise scale used consistently across every café card below:

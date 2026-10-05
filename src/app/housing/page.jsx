@@ -6,7 +6,7 @@ export const revalidate = 86400;
 export const metadata = {
   title: 'Renting in Türkiye: Red Flags, Contracts & Negotiation | Move to Istanbul',
   description: 'The process side of renting in Türkiye as a foreigner — spotting rental red flags, what to check at a viewing, reading the contract, and negotiating.',
-  alternates: { canonical: '/housing' },
+  alternates: { canonical: '/housing/' },
 };
 
 const PAGES = [

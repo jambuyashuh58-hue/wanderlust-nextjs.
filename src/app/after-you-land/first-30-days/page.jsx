@@ -12,7 +12,7 @@ const STEPS = [
 export const metadata = {
   title: 'Your First 30 Days in Türkiye | Move to Istanbul',
   description: 'Lease signed, residence permit application submitted, routines forming — your first month in Türkiye.',
-  alternates: { canonical: '/after-you-land/first-30-days' },
+  alternates: { canonical: '/after-you-land/first-30-days/' },
 };
 
 export default function First30DaysPage() {

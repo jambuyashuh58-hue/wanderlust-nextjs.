@@ -18,8 +18,8 @@ export async function generateMetadata({ params }) {
   // This page stays live and reachable either way; it just isn't the URL
   // we ask Google to index.
   const canonicalPath = collection.display_style === 'guide'
-    ? `/guides/${params.slug}`
-    : `/living-in-istanbul/${params.slug}`;
+    ? `/guides/${params.slug}/`
+    : `/living-in-istanbul/${params.slug}/`;
   return {
     title: `${collection.title} | Move to Istanbul`,
     description: collection.meta_description || collection.intro?.slice(0, 160),

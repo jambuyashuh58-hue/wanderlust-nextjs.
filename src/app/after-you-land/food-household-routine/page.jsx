@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Building a Food & Household Routine in Türkiye | Move to Istanbul',
   description: 'How to go from eating out of necessity to an actual food and household routine in your first weeks in Türkiye — kitchen basics, laundry, cleaning, and trash.',
-  alternates: { canonical: '/after-you-land/food-household-routine' },
+  alternates: { canonical: '/after-you-land/food-household-routine/' },
 };
 
 const STEPS = [

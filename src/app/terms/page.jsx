@@ -2,7 +2,7 @@ export const metadata = {
   title: 'Terms of Service | Move to Istanbul',
   description: 'The terms that apply to using Move to Istanbul and its concierge service.',
   robots: { index: true, follow: true },
-  alternates: { canonical: '/terms' },
+  alternates: { canonical: '/terms/' },
 };
 
 const LAST_UPDATED = 'September 29, 2026';

@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'The Relocation Recovery Method | Move to Istanbul',
   description: 'A practical framework for when something about your move to Türkiye isn\'t working — name the problem, test whether it\'s fixable, and know who to ask for help.',
-  alternates: { canonical: '/after-you-land/relocation-recovery-method' },
+  alternates: { canonical: '/after-you-land/relocation-recovery-method/' },
 };
 
 const STEPS = [

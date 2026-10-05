@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight, MessageCircle } from 'lucide-react';
 export const metadata = {
   title: 'Book a Free Call | Move to Istanbul',
   description: 'Not sure which relocation service fits your move? Book a short, free call and we\'ll help you figure out what you actually need.',
-  alternates: { canonical: '/services/book-a-call' },
+  alternates: { canonical: '/services/book-a-call/' },
 };
 
 // Reuses the same NEXT_PUBLIC_CALENDLY_URL env var already wired up for

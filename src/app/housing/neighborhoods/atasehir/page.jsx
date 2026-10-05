@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Living in Ataşehir, Istanbul: Rent, Vibe & Who It\'s For (2026) | Move to Istanbul',
   description: 'Ataşehir neighborhood guide for foreigners — rent ranges, sub-areas like Barbaros and İçerenköy, commute, and e-İkamet registration status.',
-  alternates: { canonical: '/housing/neighborhoods/atasehir' },
+  alternates: { canonical: '/housing/neighborhoods/atasehir/' },
 };
 
 const SUB_AREAS = [

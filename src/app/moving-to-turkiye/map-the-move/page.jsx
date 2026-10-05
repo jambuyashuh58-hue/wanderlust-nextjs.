@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Map the Move: Scout First or Commit Outright? | Move to Istanbul',
   description: 'Deciding your entry point into Türkiye, your timeline, and whether to take a scouting trip before committing to a full move.',
-  alternates: { canonical: '/moving-to-turkiye/map-the-move' },
+  alternates: { canonical: '/moving-to-turkiye/map-the-move/' },
 };
 
 const FAQ = [

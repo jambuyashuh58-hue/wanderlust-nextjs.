@@ -12,7 +12,7 @@ const STEPS = [
 export const metadata = {
   title: 'Your First 24 Hours in Türkiye | Move to Istanbul',
   description: 'The absolute essentials for your first day after landing in Türkiye: SIM, cash, transit, and getting to where you\'re staying.',
-  alternates: { canonical: '/after-you-land/first-24-hours' },
+  alternates: { canonical: '/after-you-land/first-24-hours/' },
 };
 
 export default function First24HoursPage() {

@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Moving to Türkiye from France: Visa & Residence Notes | Move to Istanbul',
   description: 'Entry requirements for French citizens visiting Türkiye, and what French-issued documents need before a Turkish residence permit application will accept them.',
-  alternates: { canonical: '/visa-residence/by-nationality/france' },
+  alternates: { canonical: '/visa-residence/by-nationality/france/' },
 };
 
 const FAQ = [

@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Reading a Turkish Rental Contract | Move to Istanbul',
   description: 'The clauses in a Turkish rental contract worth reading twice before you sign, and why notarization matters.',
-  alternates: { canonical: '/housing/contract-review' },
+  alternates: { canonical: '/housing/contract-review/' },
 };
 
 const CLAUSES = [

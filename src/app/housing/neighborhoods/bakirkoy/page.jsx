@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Living in Bakırköy, Istanbul: Rent, Vibe & Who It\'s For (2026) | Move to Istanbul',
   description: 'Bakırköy neighborhood guide for foreigners — rent ranges, sub-areas like Yeşilköy and Ataköy, commute, and e-İkamet registration status.',
-  alternates: { canonical: '/housing/neighborhoods/bakirkoy' },
+  alternates: { canonical: '/housing/neighborhoods/bakirkoy/' },
 };
 
 const SUB_AREAS = [

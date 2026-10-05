@@ -5,7 +5,7 @@ import GuideLayout from '@/components/GuideLayout';
 export const metadata = {
   title: '3-Month Starter Budget for Türkiye | Move to Istanbul',
   description: 'What to realistically set aside to cover your first 3 months in Türkiye, one-time moving costs included.',
-  alternates: { canonical: '/cost-of-living/3-month-budget' },
+  alternates: { canonical: '/cost-of-living/3-month-budget/' },
 };
 
 const ROWS = [

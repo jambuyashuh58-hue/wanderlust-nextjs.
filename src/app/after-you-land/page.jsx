@@ -6,7 +6,7 @@ export const revalidate = 86400;
 export const metadata = {
   title: 'After You Land in Türkiye: First 24 Hours to First 30 Days | Move to Istanbul',
   description: 'What to actually do in your first 24 hours, first week, and first month after landing in Türkiye, plus the administrative and utility setup that follows.',
-  alternates: { canonical: '/after-you-land' },
+  alternates: { canonical: '/after-you-land/' },
 };
 
 const PAGES = [

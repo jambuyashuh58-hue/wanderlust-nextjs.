@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Moving to Türkiye from India: Visa & Residence Notes | Move to Istanbul',
   description: 'Entry requirements for Indian citizens visiting Türkiye — including e-Visa eligibility rules — and what Indian-issued documents need before a Turkish residence permit application will accept them.',
-  alternates: { canonical: '/visa-residence/by-nationality/india' },
+  alternates: { canonical: '/visa-residence/by-nationality/india/' },
 };
 
 const FAQ = [

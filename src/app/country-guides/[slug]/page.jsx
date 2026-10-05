@@ -21,16 +21,16 @@ export async function generateMetadata({ params }) {
   // _tr content gets its own canonical at the /tr URL.
   const hasTranslation = Boolean(guide.title_tr);
   const canonicalPath = locale === 'tr' && hasTranslation
-    ? `/tr/country-guides/${params.slug}`
-    : `/country-guides/${params.slug}`;
+    ? `/tr/country-guides/${params.slug}/`
+    : `/country-guides/${params.slug}/`;
   return {
     title: `${title} — ${locale === 'tr' ? 'Ülke Rehberi' : 'Country Guide'} | Move to Istanbul`,
     description: description || undefined,
     alternates: {
       canonical: canonicalPath,
       languages: {
-        en: `/country-guides/${params.slug}`,
-        ...(hasTranslation ? { tr: `/tr/country-guides/${params.slug}` } : {}),
+        en: `/country-guides/${params.slug}/`,
+        ...(hasTranslation ? { tr: `/tr/country-guides/${params.slug}/` } : {}),
       },
     },
   };

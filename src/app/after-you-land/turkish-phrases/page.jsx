@@ -16,7 +16,7 @@ const PHRASES = [
 export const metadata = {
   title: 'Turkish Phrases for Daily Admin | Move to Istanbul',
   description: 'The handful of Turkish phrases that actually help with daily admin as a new resident — not a tourist phrasebook.',
-  alternates: { canonical: '/after-you-land/turkish-phrases' },
+  alternates: { canonical: '/after-you-land/turkish-phrases/' },
 };
 
 export default function TurkishPhrasesPage() {

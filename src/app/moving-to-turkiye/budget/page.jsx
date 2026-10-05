@@ -13,7 +13,7 @@ const ONE_TIME_COSTS = [
 export const metadata = {
   title: 'Real Moving Costs for Türkiye | Move to Istanbul',
   description: 'The actual one-time and first-month costs of moving to Türkiye — deposits, fees, and insurance, not just the ongoing monthly budget.',
-  alternates: { canonical: '/moving-to-turkiye/budget' },
+  alternates: { canonical: '/moving-to-turkiye/budget/' },
 };
 
 export default function MovingBudgetPage() {

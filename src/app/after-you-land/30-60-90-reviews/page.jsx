@@ -5,7 +5,7 @@ import GuideLayout from '@/components/GuideLayout';
 export const metadata = {
   title: '30-60-90 Day Reviews After Moving to Türkiye | Move to Istanbul',
   description: 'A concrete checklist for the three checkpoints that actually matter after relocating: 30, 60, and 90 days in — budget, routine, admin, and whether this is working.',
-  alternates: { canonical: '/after-you-land/30-60-90-reviews' },
+  alternates: { canonical: '/after-you-land/30-60-90-reviews/' },
 };
 
 const CHECKPOINTS = [

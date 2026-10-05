@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Moving to Türkiye from Russia: Visa & Residence Notes | Move to Istanbul',
   description: 'Entry requirements for Russian citizens visiting Türkiye, including the shorter visa-free stay allowance, and document legalization notes for a residence permit.',
-  alternates: { canonical: '/visa-residence/by-nationality/russia' },
+  alternates: { canonical: '/visa-residence/by-nationality/russia/' },
 };
 
 const FAQ = [

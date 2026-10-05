@@ -6,7 +6,7 @@ export const revalidate = 86400;
 export const metadata = {
   title: 'Türkiye Visa & Residence Rules by Nationality | Move to Istanbul',
   description: 'Entry requirements and residence-permit document notes for Türkiye, broken out by nationality — United States, United Kingdom, Germany, France, Netherlands, Canada, India, UAE, Saudi Arabia, and Russia.',
-  alternates: { canonical: '/visa-residence/by-nationality' },
+  alternates: { canonical: '/visa-residence/by-nationality/' },
 };
 
 const COUNTRIES = [

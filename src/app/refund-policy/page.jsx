@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 export const metadata = {
   title: 'Refund Policy | Move to Istanbul',
   description: 'Our refund policy for the Istanbul Route Check, Housing Shortlist File, and Full Move File services.',
-  alternates: { canonical: '/refund-policy' },
+  alternates: { canonical: '/refund-policy/' },
 };
 
 export default function RefundPolicyPage() {

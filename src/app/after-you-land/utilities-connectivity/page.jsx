@@ -11,7 +11,7 @@ const UTILITIES = [
 export const metadata = {
   title: 'Setting Up Utilities & Internet in Türkiye | Move to Istanbul',
   description: 'Getting water, gas, electric, and internet switched on in your name as a new resident of Türkiye.',
-  alternates: { canonical: '/after-you-land/utilities-connectivity' },
+  alternates: { canonical: '/after-you-land/utilities-connectivity/' },
 };
 
 export default function UtilitiesConnectivityPage() {

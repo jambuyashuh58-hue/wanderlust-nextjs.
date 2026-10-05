@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Moving to Türkiye from the UAE: Visa & Residence Notes | Move to Istanbul',
   description: 'Entry requirements for UAE citizens visiting Türkiye, and a recent change in how UAE-issued documents get legalized for a residence permit.',
-  alternates: { canonical: '/visa-residence/by-nationality/uae' },
+  alternates: { canonical: '/visa-residence/by-nationality/uae/' },
 };
 
 const FAQ = [

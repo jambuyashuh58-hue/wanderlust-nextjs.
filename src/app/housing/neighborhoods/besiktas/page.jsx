@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Living in Beşiktaş, Istanbul: Rent, Vibe & Who It\'s For (2026) | Move to Istanbul',
   description: 'Beşiktaş neighborhood guide for foreigners — rent ranges, sub-areas like Cihannüma and Ihlamurdere, commute, nightlife, and e-İkamet registration status.',
-  alternates: { canonical: '/housing/neighborhoods/besiktas' },
+  alternates: { canonical: '/housing/neighborhoods/besiktas/' },
 };
 
 const SUB_AREAS = [

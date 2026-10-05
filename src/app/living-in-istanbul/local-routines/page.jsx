@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Local Routines in Istanbul: Markets, Pharmacies & Gyms | Move to Istanbul',
   description: 'Grocery shopping vs. eating out, the weekly neighborhood pazar, finding a 24-hour pharmacy, and gym options — the everyday routine, not the sightseeing.',
-  alternates: { canonical: '/living-in-istanbul/local-routines' },
+  alternates: { canonical: '/living-in-istanbul/local-routines/' },
 };
 
 const SUPERMARKET_TIERS = [

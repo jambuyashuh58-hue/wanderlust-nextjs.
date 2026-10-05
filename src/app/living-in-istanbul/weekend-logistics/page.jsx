@@ -10,7 +10,7 @@ export const revalidate = 3600;
 export const metadata = {
   title: 'Using the Ferry as a Daily Commute Hack, Plus Weekend Getaways from Istanbul | Move to Istanbul',
   description: "How Istanbul's ferry transfer-discount actually works, and the cost and logistics of planning a weekend getaway once you live here.",
-  alternates: { canonical: '/living-in-istanbul/weekend-logistics' },
+  alternates: { canonical: '/living-in-istanbul/weekend-logistics/' },
 };
 
 const FERRY_FARES = [

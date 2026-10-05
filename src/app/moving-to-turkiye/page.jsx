@@ -6,7 +6,7 @@ export const revalidate = 86400;
 export const metadata = {
   title: 'Moving to Türkiye: The Full Sequence | Move to Istanbul',
   description: 'The order things actually need to happen in when you move to Türkiye — checklist, timeline, documents, housing, and budget, laid out as one sequence instead of scattered guides.',
-  alternates: { canonical: '/moving-to-turkiye' },
+  alternates: { canonical: '/moving-to-turkiye/' },
 };
 
 const PAGES = [

@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Work & Study Setup in Türkiye: Remote, Freelance, Employed | Move to Istanbul',
   description: 'How your setup differs depending on whether you\'re working remotely for a foreign employer, freelancing locally, taking local employment, or studying in Türkiye.',
-  alternates: { canonical: '/after-you-land/work-study-setup' },
+  alternates: { canonical: '/after-you-land/work-study-setup/' },
 };
 
 const PATHS = [

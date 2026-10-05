@@ -5,7 +5,7 @@ import GuideLayout from '@/components/GuideLayout';
 export const metadata = {
   title: 'Visa & Documents for Moving to Türkiye | Move to Istanbul',
   description: 'Which visa pathway fits you, and the document trail each one needs — pointing to the full pathway comparison and our visa-residence cluster.',
-  alternates: { canonical: '/moving-to-turkiye/visa-and-documents' },
+  alternates: { canonical: '/moving-to-turkiye/visa-and-documents/' },
 };
 
 export default function VisaAndDocumentsPage() {

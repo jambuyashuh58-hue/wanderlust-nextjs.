@@ -4,7 +4,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Banking & Payments in Türkiye | Move to Istanbul',
   description: 'Turkish bank accounts, multi-currency accounts, and avoiding the ATM dynamic-currency-conversion markup.',
-  alternates: { canonical: '/cost-of-living/banking-payments' },
+  alternates: { canonical: '/cost-of-living/banking-payments/' },
 };
 
 const FAQ = [

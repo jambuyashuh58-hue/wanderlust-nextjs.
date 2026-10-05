@@ -14,7 +14,7 @@ const STEPS = [
 export const metadata = {
   title: 'Apartment Handover Inspection Checklist | Move to Istanbul',
   description: 'Documenting a Turkish rental\'s condition before you get the keys, so your deposit isn\'t at risk at move-out.',
-  alternates: { canonical: '/housing/handover-inspection' },
+  alternates: { canonical: '/housing/handover-inspection/' },
 };
 
 export default function HandoverInspectionPage() {

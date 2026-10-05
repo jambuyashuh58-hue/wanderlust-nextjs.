@@ -6,7 +6,7 @@ export const revalidate = 86400;
 export const metadata = {
   title: 'Türkiye Residence Permit: The Short-Term Permit Explained | Move to Istanbul',
   description: 'A deeper look at the short-term residence permit (e-İkamet) process — documents, translation and legalization, and what to do if your application needs a follow-up.',
-  alternates: { canonical: '/visa-residence' },
+  alternates: { canonical: '/visa-residence/' },
 };
 
 const PAGES = [

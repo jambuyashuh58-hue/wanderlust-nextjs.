@@ -6,7 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Immigration Asked for More Documents — What Now? | Move to Istanbul',
   description: 'What a request for additional documents from Göç İdaresi means, and how to respond without losing your place in the queue.',
-  alternates: { canonical: '/visa-residence/immigration-follow-up' },
+  alternates: { canonical: '/visa-residence/immigration-follow-up/' },
 };
 
 const FAQ = [

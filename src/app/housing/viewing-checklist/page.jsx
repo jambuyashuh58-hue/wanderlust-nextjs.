@@ -16,7 +16,7 @@ const CHECKLIST = [
 export const metadata = {
   title: 'Apartment Viewing Checklist for Türkiye | Move to Istanbul',
   description: 'What to actually check in person on an apartment viewing in Türkiye, beyond what a nice photo set shows you.',
-  alternates: { canonical: '/housing/viewing-checklist' },
+  alternates: { canonical: '/housing/viewing-checklist/' },
 };
 
 export default function ViewingChecklistPage() {

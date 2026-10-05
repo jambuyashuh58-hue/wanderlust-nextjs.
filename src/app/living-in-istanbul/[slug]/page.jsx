@@ -30,8 +30,8 @@ export async function generateMetadata({ params }) {
     // /guides/<slug> -- see collections/[slug]/page.jsx for why. Everything
     // else is canonical here.
     const canonicalPath = collection.display_style === 'guide'
-      ? `/guides/${params.slug}`
-      : `/living-in-istanbul/${params.slug}`;
+      ? `/guides/${params.slug}/`
+      : `/living-in-istanbul/${params.slug}/`;
     return {
       title: `${collection.title} | Move to Istanbul`,
       description: collection.meta_description || collection.intro?.slice(0, 160),
@@ -47,7 +47,7 @@ export async function generateMetadata({ params }) {
     // URL serves it. Revisit once this content gets subcategorized with
     // real editorial framing, not before.
     robots: { index: false, follow: true },
-    alternates: { canonical: `/living-in-istanbul/${params.slug}` },
+    alternates: { canonical: `/living-in-istanbul/${params.slug}/` },
   };
 }
 

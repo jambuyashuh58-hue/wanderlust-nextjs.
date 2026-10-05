@@ -17,7 +17,7 @@ const DOCUMENTS = [
 export const metadata = {
   title: 'Residence Permit Document Checklist | Move to Istanbul',
   description: 'The complete document stack for a short-term residence permit application in Türkiye, and which ones trip people up most.',
-  alternates: { canonical: '/visa-residence/documents' },
+  alternates: { canonical: '/visa-residence/documents/' },
 };
 
 export default function DocumentsPage() {

@@ -7,7 +7,7 @@ import { CheckCircle2, ArrowRight } from 'lucide-react';
 export const metadata = {
   title: 'Thank You | Move to Istanbul',
   description: 'Your request has been received.',
-  alternates: { canonical: '/thank-you' },
+  alternates: { canonical: '/thank-you/' },
   robots: { index: false, follow: true },
 };
 

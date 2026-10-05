@@ -10,7 +10,7 @@ export const revalidate = 3600;
 export const metadata = {
   title: 'Skills Worth Picking Up as an Istanbul Resident (Workshops, Hamam, Cooking) | Move to Istanbul',
   description: 'Carpet weaving, Turkish cooking classes, and hamam rituals read as one-off tourist activities. Here\'s how to turn a few of them into a real local routine.',
-  alternates: { canonical: '/living-in-istanbul/hands-on-workshops' },
+  alternates: { canonical: '/living-in-istanbul/hands-on-workshops/' },
 };
 
 const FAQ = [

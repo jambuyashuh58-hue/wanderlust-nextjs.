@@ -6,7 +6,7 @@ export const revalidate = 86400;
 export const metadata = {
   title: 'Istanbul Neighborhood Guides for Foreigners (2026) | Move to Istanbul',
   description: 'Deep-dive guides to 7 Istanbul neighborhoods — rent ranges, who each suits, commute and nightlife, and e-İkamet registration status.',
-  alternates: { canonical: '/housing/neighborhoods' },
+  alternates: { canonical: '/housing/neighborhoods/' },
 };
 
 const STATUS_ICON = {
