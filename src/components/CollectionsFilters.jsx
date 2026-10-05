@@ -3,11 +3,10 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { LayoutGrid, BookOpen, Sparkles, Trophy, MapPin } from 'lucide-react';
+import { LayoutGrid, Sparkles, Trophy, MapPin } from 'lucide-react';
 
 const TYPE_TABS = [
   { id: 'all', label: 'All', icon: LayoutGrid },
-  { id: 'guide', label: 'Guides', icon: BookOpen },
   { id: 'collection', label: 'Collections', icon: Sparkles },
 ];
 

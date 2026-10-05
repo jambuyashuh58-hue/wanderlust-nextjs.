@@ -1,5 +1,9 @@
 import Link from 'next/link';
 import { Stamp, Home, Wallet, TrendingUp, HeartPulse, GraduationCap, Brain, Smartphone, CreditCard, ArrowRight, BookOpen, LayoutGrid, Building2, Landmark, ShieldCheck } from 'lucide-react';
+import { getCollections, getCities } from '@/lib/supabaseServer';
+import AllGuidesGrid from '@/components/AllGuidesGrid';
+
+export const revalidate = 3600;
 
 export const metadata = {
   title: 'Türkiye Long-Stay Guides | Move to Istanbul',
@@ -24,7 +28,12 @@ const SPECIALIZED_GUIDES = [
   { slug: 'send-usd-to-turkish-bank-account', icon: Landmark, title: 'Send USD to a Turkish Bank Account', description: 'Wise vs. SWIFT vs. Payoneer vs. Revolut — the fastest, cheapest way to move your own money.', color: 'text-secondary' },
 ];
 
-export default function GuidesPage() {
+export default async function GuidesPage() {
+  const [dbGuides, cities] = await Promise.all([
+    getCollections({ displayStyle: 'guide' }),
+    getCities(),
+  ]);
+
   return (
     <div className="pt-16 md:pt-20 min-h-screen">
       <div className="relative overflow-hidden border-b border-border">
@@ -69,8 +78,14 @@ export default function GuidesPage() {
             ))}
           </div>
         </div>
+        {dbGuides.length > 0 && (
+          <div>
+            <h2 className="text-xl font-bold mb-5">All Türkiye guides</h2>
+            <AllGuidesGrid guides={dbGuides} cities={cities} />
+          </div>
+        )}
         <Link href="/collections" className="group flex items-center justify-between gap-4 p-6 rounded-2xl border border-border bg-gradient-to-br from-primary/5 to-secondary/5 hover:border-primary/40 transition-all">
-          <div><h3 className="font-bold mb-1 flex items-center gap-2"><LayoutGrid className="w-5 h-5 text-primary" /> Destination guides & things to do</h3><p className="text-sm text-muted-foreground">Browse every city guide and curated experience set.</p></div>
+          <div><h3 className="font-bold mb-1 flex items-center gap-2"><LayoutGrid className="w-5 h-5 text-primary" /> Destination collections & things to do</h3><p className="text-sm text-muted-foreground">Browse curated experience sets and "Best Of" lists for every city.</p></div>
           <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary shrink-0" />
         </Link>
       </div>

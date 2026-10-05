@@ -9,7 +9,11 @@ export const metadata = {
 };
 
 export default async function CollectionsPage() {
-  const [collections, cities] = await Promise.all([getCollections(), getCities()]);
+  const [allCollections, cities] = await Promise.all([getCollections(), getCities()]);
+  // Long-form guide content (display_style: 'guide') now lives exclusively
+  // on /guides -- this page is for curated experience/attraction
+  // collections (plain collections and "Best Of" rankings) only.
+  const collections = allCollections.filter((c) => c.display_style !== 'guide');
 
   return (
     <div className="pt-16 md:pt-20 min-h-screen">
