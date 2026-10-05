@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Stamp, Home, Wallet, TrendingUp, ArrowRight, BookOpen, LayoutGrid } from 'lucide-react';
+import { Stamp, Home, Wallet, TrendingUp, HeartPulse, GraduationCap, Brain, Smartphone, ArrowRight, BookOpen, LayoutGrid } from 'lucide-react';
 
 export const metadata = {
   title: 'Türkiye Long-Stay Guides | Move to Istanbul',
@@ -11,6 +11,13 @@ const LONG_STAY_GUIDES = [
   { slug: 'housing', icon: Home, title: 'Finding a Home in Istanbul', description: 'Neighborhood breakdown, rent ranges, contracts, and scams to avoid.', color: 'text-secondary' },
   { slug: 'cost-of-living', icon: Wallet, title: 'Monthly Cost of Living in Istanbul', description: 'A real budget breakdown — rent, groceries, transport.', color: 'text-accent' },
   { slug: 'kira-artis-orani', icon: TrendingUp, title: 'Turkey Rent Increase Rate 2026 (TÜİK / TÜFE)', description: 'The legal cap on your rent increase, updated monthly from TÜİK data.', color: 'text-primary' },
+];
+
+const SPECIALIZED_GUIDES = [
+  { slug: 'medical-tourism-istanbul', icon: HeartPulse, title: 'Medical Tourism in Istanbul 2026', description: 'Procedure costs, clinic verification, and medical residence permit rules.', color: 'text-destructive' },
+  { slug: 'international-schools-istanbul', icon: GraduationCap, title: 'International Schools for Expat Families', description: 'Curricula, top schools by district, tuition benchmarks, and visa rules for kids.', color: 'text-secondary' },
+  { slug: 'culture-shock-istanbul', icon: Brain, title: 'Expat Culture Shock in Istanbul', description: 'The 4 phases of adjustment and a practical plan to integrate faster.', color: 'text-accent' },
+  { slug: 'esim-vs-local-sim-turkey', icon: Smartphone, title: 'eSIM vs. Local SIM in Türkiye', description: 'The 120-day IMEI rule, the airport SIM trap, and the hybrid setup that works.', color: 'text-primary' },
 ];
 
 export default function GuidesPage() {
@@ -32,15 +39,31 @@ export default function GuidesPage() {
         </div>
       </div>
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {LONG_STAY_GUIDES.map((g) => (
+        <div>
+          <h2 className="text-xl font-bold mb-5">Long-stay essentials</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {LONG_STAY_GUIDES.map((g) => (
             <Link key={g.slug} href={`/guides/${g.slug}`} className="group block h-full bg-card rounded-2xl border border-border p-6 hover:border-primary/40 hover:shadow-lg transition-all">
               <div className="w-11 h-11 rounded-xl bg-muted flex items-center justify-center mb-4"><g.icon className={`w-5 h-5 ${g.color}`} /></div>
               <h3 className="font-bold mb-2 group-hover:text-primary transition-colors">{g.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed mb-4">{g.description}</p>
               <span className="inline-flex items-center gap-1 text-sm font-medium text-primary">Read guide <ArrowRight className="w-4 h-4" /></span>
             </Link>
-          ))}
+            ))}
+          </div>
+        </div>
+        <div>
+          <h2 className="text-xl font-bold mb-5">Specialized guides</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {SPECIALIZED_GUIDES.map((g) => (
+              <Link key={g.slug} href={`/guides/${g.slug}`} className="group block h-full bg-card rounded-2xl border border-border p-6 hover:border-primary/40 hover:shadow-lg transition-all">
+                <div className="w-11 h-11 rounded-xl bg-muted flex items-center justify-center mb-4"><g.icon className={`w-5 h-5 ${g.color}`} /></div>
+                <h3 className="font-bold mb-2 group-hover:text-primary transition-colors">{g.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-4">{g.description}</p>
+                <span className="inline-flex items-center gap-1 text-sm font-medium text-primary">Read guide <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+            ))}
+          </div>
         </div>
         <Link href="/collections" className="group flex items-center justify-between gap-4 p-6 rounded-2xl border border-border bg-gradient-to-br from-primary/5 to-secondary/5 hover:border-primary/40 transition-all">
           <div><h3 className="font-bold mb-1 flex items-center gap-2"><LayoutGrid className="w-5 h-5 text-primary" /> Destination guides & things to do</h3><p className="text-sm text-muted-foreground">Browse every city guide and curated experience set.</p></div>

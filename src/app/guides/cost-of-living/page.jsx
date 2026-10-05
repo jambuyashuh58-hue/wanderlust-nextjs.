@@ -160,6 +160,15 @@ const RELATED_RESOURCES = [
     links: [
       { label: 'How to Open a Turkish Bank Account Without an İkamet Card', href: '/guides/bank-account-without-ikamet' },
       { label: 'How to Cancel Your Turkish Residence Permit When You Leave', href: '/guides/cancel-residence-permit' },
+      { label: 'eSIM vs. Local SIM Card in Türkiye: 2026 Comparison', href: '/guides/esim-vs-local-sim-turkey' },
+    ],
+  },
+  {
+    category: 'Family & Settling In',
+    links: [
+      { label: 'International Schools in Istanbul for Expat Families', href: '/guides/international-schools-istanbul' },
+      { label: 'Expat Culture Shock Living in Istanbul: What to Expect', href: '/guides/culture-shock-istanbul' },
+      { label: 'Medical Tourism in Istanbul 2026: The Complete Guide', href: '/guides/medical-tourism-istanbul' },
     ],
   },
 ];
