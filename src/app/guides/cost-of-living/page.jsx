@@ -160,6 +160,7 @@ const RELATED_RESOURCES = [
     links: [
       { label: 'How to Open a Turkish Bank Account Without an İkamet Card', href: '/guides/bank-account-without-ikamet' },
       { label: 'How to Cancel Your Turkish Residence Permit When You Leave', href: '/guides/cancel-residence-permit' },
+      { label: 'PayPal and Stripe Alternatives for Freelancers in Türkiye', href: '/guides/paypal-stripe-alternatives-turkey' },
       { label: 'eSIM vs. Local SIM Card in Türkiye: 2026 Comparison', href: '/guides/esim-vs-local-sim-turkey' },
     ],
   },

@@ -30,6 +30,7 @@ const STATIC_ROUTES = [
   { path: '/guides/international-schools-istanbul', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/guides/culture-shock-istanbul', priority: 0.5, changeFrequency: 'monthly' },
   { path: '/guides/esim-vs-local-sim-turkey', priority: 0.5, changeFrequency: 'monthly' },
+  { path: '/guides/paypal-stripe-alternatives-turkey', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/country-guides', priority: 0.7, changeFrequency: 'weekly' },
   { path: '/onboarding', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/relocation-quiz', priority: 0.5, changeFrequency: 'monthly' },

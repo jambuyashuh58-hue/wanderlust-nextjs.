@@ -182,6 +182,7 @@ const RELATED_RESOURCES = [
       { label: 'How to Open a Turkish Bank Account Without an İkamet Card', href: '/guides/bank-account-without-ikamet' },
       { label: 'How to Avoid Excessive ATM Conversion Fees in Istanbul', href: '/guides/avoiding-atm-fees-istanbul' },
       { label: 'Kadıköy vs. Beşiktaş: Best Neighborhoods for Expats', href: '/guides/kadikoy-vs-besiktas' },
+      { label: 'PayPal and Stripe Alternatives for Freelancers in Türkiye', href: '/guides/paypal-stripe-alternatives-turkey' },
       { label: 'eSIM vs. Local SIM Card in Türkiye: 2026 Comparison', href: '/guides/esim-vs-local-sim-turkey' },
     ],
   },
