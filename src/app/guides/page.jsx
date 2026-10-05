@@ -10,7 +10,7 @@ const LONG_STAY_GUIDES = [
   { slug: 'visa', icon: Stamp, title: 'Türkiye Visas for Remote Workers', description: 'e-Visa vs sticker visa vs residence permit — what applies to you.', color: 'text-primary' },
   { slug: 'housing', icon: Home, title: 'Finding a Home in Istanbul', description: 'Neighborhood breakdown, rent ranges, contracts, and scams to avoid.', color: 'text-secondary' },
   { slug: 'cost-of-living', icon: Wallet, title: 'Monthly Cost of Living in Istanbul', description: 'A real budget breakdown — rent, groceries, transport.', color: 'text-accent' },
-  { slug: 'kira-artis-orani', icon: TrendingUp, title: 'Kira Artış Oranı 2026 (TÜİK / TÜFE)', description: 'Güncel kira artış oranı ve enflasyon verileri — her ay güncellenir.', color: 'text-primary' },
+  { slug: 'kira-artis-orani', icon: TrendingUp, title: 'Turkey Rent Increase Rate 2026 (TÜİK / TÜFE)', description: 'The legal cap on your rent increase, updated monthly from TÜİK data.', color: 'text-primary' },
 ];
 
 export default function GuidesPage() {

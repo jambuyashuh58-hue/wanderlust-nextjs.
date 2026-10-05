@@ -90,6 +90,7 @@ export default async function sitemap() {
   const trStaticEntries = [
     { path: '/tr', priority: 1.0, changeFrequency: 'daily' },
     { path: '/tr/country-guides', priority: 0.7, changeFrequency: 'weekly' },
+    { path: '/tr/guides/kira-artis-orani', priority: 0.6, changeFrequency: 'monthly' },
   ].map(({ path, priority, changeFrequency }) => ({
     url: `${SITE_URL}${path}`,
     lastModified: now,
