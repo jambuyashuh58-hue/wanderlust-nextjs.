@@ -127,6 +127,25 @@ export async function getCollectionBySlug(slug) {
   return { ...collection, activities };
 }
 
+// Collections that actually feature this activity (its id is in their
+// activity_ids array) -- as opposed to getCollections({ city }), which only
+// matches on city_name and can return a collection that has nothing to do
+// with this specific activity, or nothing at all for a city whose
+// collections happen to be titled/tagged differently. Used by the activity
+// detail page so its "back to guide" link is never a mismatched or broken
+// one. (for=code)
+export async function getCollectionsContainingActivity(activityId) {
+  const supabase = getSupabaseServer();
+  const { data, error } = await supabase
+    .from('collection')
+    .select('*')
+    .eq('published', true)
+    .contains('activity_ids', [activityId])
+    .order('sort_order', { ascending: true, nullsFirst: false });
+  if (error) throw error;
+  return data;
+}
+
 export async function getCollections({ city, displayStyle } = {}) {
   const supabase = getSupabaseServer();
   let query = supabase.from('collection').select('*').eq('published', true);

@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, MapPin, Star, Clock, Wallet, Building2, Check, Accessibility, BookOpen, ArrowRight } from 'lucide-react';
-import { getActivityById, getActivitiesByCity, getCollections } from '@/lib/supabaseServer';
+import { getActivityById, getActivitiesByCity, getCollections, getCollectionsContainingActivity } from '@/lib/supabaseServer';
 import ActivityCard from '@/components/ActivityCard';
 import GuideFAQ from '@/components/GuideFAQ';
 import NewsletterSignup from '@/components/NewsletterSignup';
@@ -25,12 +25,23 @@ export default async function ActivityDetailPage({ params }) {
   const activity = await getActivityById(params.id);
   if (!activity) notFound();
 
-  const [nearbyRaw, relatedGuides] = await Promise.all([
+  const [nearbyRaw, containingCollections, cityCollections] = await Promise.all([
     activity.city_name ? getActivitiesByCity(activity.city_name, 11) : Promise.resolve([]),
+    getCollectionsContainingActivity(activity.id),
     activity.city_name ? getCollections({ city: activity.city_name }) : Promise.resolve([]),
   ]);
   const nearby = nearbyRaw.filter((a) => a.id !== activity.id).slice(0, 10);
-  const relatedGuide = relatedGuides?.[0] || null;
+  // Prefer a collection that actually features this activity (its id is in
+  // that collection's activity_ids) over one merely matched by city_name --
+  // the latter can point to a collection with nothing to do with this
+  // specific activity, or be empty for a city whose collections are tagged
+  // differently. If this activity isn't in any collection yet, the
+  // city-matched one is still a reasonable fallback; if there's no
+  // collection at all, fall back further to the city hub page so every
+  // activity page always links back to *something* real rather than being
+  // an indexable dead end. (for=code)
+  const relatedGuide = containingCollections?.[0] || cityCollections?.[0] || null;
+  const relatedGuideIsExactMatch = (containingCollections?.length || 0) > 0;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -196,9 +207,11 @@ export default async function ActivityDetailPage({ params }) {
               </section>
             )}
 
-            {relatedGuide && (
+            {relatedGuide ? (
               <section>
-                <h2 className="text-xl font-bold mb-4">{activity.city_name} Guides</h2>
+                <h2 className="text-xl font-bold mb-4">
+                  {relatedGuideIsExactMatch ? `${activity.city_name} Guide` : `${activity.city_name} Guides`}
+                </h2>
                 <Link
                   href={`/collections/${relatedGuide.slug}`}
                   className="group flex items-center gap-4 p-4 rounded-2xl border border-border bg-card hover:border-primary/40 hover:shadow-lg transition-all"
@@ -211,7 +224,29 @@ export default async function ActivityDetailPage({ params }) {
                   <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary shrink-0" />
                 </Link>
               </section>
-            )}
+            ) : activity.city_name ? (
+              // No collection -- exact or city-matched -- features this activity at
+              // all, so fall back to the city hub page. Every activity page always
+              // has activity.city_name (it's a required field), so this branch is
+              // effectively unreachable in practice, but it's kept as a last-resort
+              // guard so no activity page can ever end up with zero internal "back"
+              // link, which is what makes those orphaned pages look like crawl
+              // dead-ends to Google. (for=code)
+              <section>
+                <h2 className="text-xl font-bold mb-4">More in {activity.city_name}</h2>
+                <Link
+                  href={`/city/${encodeURIComponent(activity.city_name.toLowerCase())}`}
+                  className="group flex items-center gap-4 p-4 rounded-2xl border border-border bg-card hover:border-primary/40 hover:shadow-lg transition-all"
+                >
+                  <div className="w-11 h-11 rounded-xl bg-muted flex items-center justify-center shrink-0"><BookOpen className="w-5 h-5 text-primary" /></div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold group-hover:text-primary transition-colors truncate">Explore {activity.city_name}</h3>
+                    <p className="text-sm text-muted-foreground line-clamp-1">More things to do nearby</p>
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary shrink-0" />
+                </Link>
+              </section>
+            ) : null}
 
             <section className="rounded-2xl border border-border bg-background px-6 py-7">
               <h2 className="text-xl font-bold mb-1.5">One email a week. Live better in Türkiye.</h2>
