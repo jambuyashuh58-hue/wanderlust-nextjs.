@@ -6,6 +6,7 @@ import { LogOut, Compass } from 'lucide-react';
 
 const NAV = [
   { href: '/admin', label: 'Dashboard' },
+  { href: '/admin/crm', label: 'CRM' },
   { href: '/admin/concierge', label: 'Concierge Inquiries' },
   { href: '/admin/activities', label: 'Activities' },
   { href: '/admin/collections', label: 'Collections & Guides' },
