@@ -19,11 +19,15 @@ const Yes = ({ v }) => (v ? <span className="text-success font-semibold">Yes</sp
 
 export default async function AdminCrmPage() {
   const supabase = getSupabaseServer();
-  const [{ data: contacts, error }, { count: totalItineraries }, { count: anonItineraries }] = await Promise.all([
+  const [{ data: contacts, error }, { count: totalItineraries }, { count: anonItineraries }, { data: affClicks }, { data: actClicks }, { data: colClicks }] = await Promise.all([
     supabase.from('crm_contact').select('*').order('last_seen', { ascending: false, nullsFirst: false }),
     supabase.from('shareable_itinerary').select('*', { count: 'exact', head: true }),
     supabase.from('travel_preference').select('*', { count: 'exact', head: true }).or('email.is.null,email.eq.'),
+    supabase.from('affiliate_click').select('activity_title').limit(5000),
+    supabase.from('activity_click').select('activity_title').limit(5000),
+    supabase.from('collection_click').select('collection_title').limit(5000),
   ]);
+  const top = (arr, key) => Object.entries((arr || []).reduce((m, r) => { const k = r[key] || '—'; m[k] = (m[k] || 0) + 1; return m; }, {})).sort((a, b) => b[1] - a[1]).slice(0, 5);
 
   const rows = contacts || [];
   const stats = [
@@ -47,6 +51,17 @@ export default async function AdminCrmPage() {
           <div key={s.label} className="rounded-2xl border border-border bg-card p-4">
             <div className="text-2xl font-bold">{s.value}</div>
             <div className="text-xs text-muted-foreground mt-1">{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+        {[['Booking clicks (affiliate)', affClicks, 'activity_title'], ['Activity page clicks', actClicks, 'activity_title'], ['Collection clicks', colClicks, 'collection_title']].map(([label, arr, key]) => (
+          <div key={label} className="rounded-2xl border border-border bg-card p-4">
+            <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">{label}</div>
+            <div className="text-xl font-bold mb-2">{(arr || []).length}</div>
+            {top(arr, key).map(([t, n]) => <div key={t} className="flex justify-between gap-3 text-xs py-0.5"><span className="truncate">{t}</span><span className="font-semibold">{n}</span></div>)}
+            {(arr || []).length === 0 && <div className="text-xs text-muted-foreground">No clicks recorded yet.</div>}
           </div>
         ))}
       </div>

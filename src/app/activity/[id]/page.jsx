@@ -260,7 +260,7 @@ export default async function ActivityDetailPage({ params }) {
               <div className="text-3xl font-bold mb-1">{activity.free ? 'Free Entry' : (activity.price != null ? `₺${activity.price}` : '—')}</div>
               {!activity.free && <p className="text-sm text-muted-foreground mb-4">per person</p>}
               {activity.booking_url ? (
-                <a href={activity.booking_url} target="_blank" rel="sponsored noopener noreferrer" className="block w-full py-3.5 rounded-xl bg-gradient-primary text-white text-center font-semibold hover:scale-[1.02] transition-transform mb-3">
+                <a href={activity.booking_url} data-track="affiliate" data-component="booking_sidebar" data-activity-id={activity.id} data-title={activity.title} data-price={activity.price ?? ""} target="_blank" rel="sponsored noopener noreferrer" className="block w-full py-3.5 rounded-xl bg-gradient-primary text-white text-center font-semibold hover:scale-[1.02] transition-transform mb-3">
                   Book Now
                 </a>
               ) : (

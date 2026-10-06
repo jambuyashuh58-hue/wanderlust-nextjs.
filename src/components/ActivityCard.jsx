@@ -26,7 +26,7 @@ export default function ActivityCard({ activity }) {
 
   return (
     <div className="group relative bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl hover:shadow-black/5 transition-all duration-300">
-      <Link href={`/activity/${activity.id}`} className="block">
+      <Link href={`/activity/${activity.id}`} className="block" data-track="activity" data-activity-id={activity.id} data-title={activity.title} data-city={activity.city_name || ""} data-category={activity.category || ""}>
         <div className="relative aspect-[4/3] overflow-hidden bg-muted">
           {activity.image_url && (
             <Image src={activity.image_url} alt={activity.title} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover group-hover:scale-110 transition-transform duration-500" />

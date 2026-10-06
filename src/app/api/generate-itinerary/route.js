@@ -606,7 +606,7 @@ async function generateItinerary(params) {
   await Promise.allSettled([
     supabase.from('travel_preference').insert({
       first_name: firstName || null,
-      email: email || null,
+      email: email ? String(email).trim().toLowerCase() : null,
       gender: gender || null,
       age_group: ageGroup || null,
       has_children: typeof hasChildren === 'boolean' ? hasChildren : null,
@@ -622,6 +622,14 @@ async function generateItinerary(params) {
       accessibility: accessibility || null,
       newsletter_opt_in: !!newsletterOptIn,
     }),
+    // Opted in to tips -> also a newsletter subscriber (ignoreDuplicates so an
+    // existing row, e.g. a guide download, keeps its original source).
+    ...(email && newsletterOptIn
+      ? [supabase.from('newsletter_subscriber').upsert(
+          { email: String(email).trim().toLowerCase(), first_name: firstName || null, source_page: '/onboarding' },
+          { onConflict: 'email', ignoreDuplicates: true }
+        )]
+      : []),
     supabase.from('shareable_itinerary').insert({
       summary: responsePayload.summary,
       itinerary: legs,

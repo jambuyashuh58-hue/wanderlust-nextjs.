@@ -1,5 +1,6 @@
 import './globals.css';
 import SiteChrome from '@/components/SiteChrome';
+import TrackClicks from '@/components/TrackClicks';
 
 // www is the canonical host -- Vercel's domain config 308-redirects the bare
 // apex (movetoistanbul.online) to this one, so metadataBase (which every
@@ -48,6 +49,7 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <SiteChrome>{children}</SiteChrome>
+        <TrackClicks />
       </body>
     </html>
   );

@@ -334,7 +334,7 @@ export default function OnboardingWizard({ cities = [], activities = [] }) {
           budget: form.budget ? Number(form.budget) : undefined,
           accessibility: form.accessibility,
           firstName: form.firstName || undefined,
-          email: form.email || undefined,
+          email: form.email.trim().toLowerCase() || undefined,
           gender: form.gender || undefined,
           ageGroup: form.ageGroup || undefined,
           hasChildren: form.hasChildren === null ? undefined : form.hasChildren,
@@ -692,10 +692,11 @@ export default function OnboardingWizard({ cities = [], activities = [] }) {
 
       {current === 'contact' && (
         <>
-          <h1 className="text-2xl md:text-3xl font-bold mb-2">Stay in the loop</h1>
-          <p className="text-sm text-muted-foreground mb-6">Optional — get your itinerary emailed to you and occasional Türkiye travel tips.</p>
+          <h1 className="text-2xl md:text-3xl font-bold mb-2">Where should we send your itinerary?</h1>
+          <p className="text-sm text-muted-foreground mb-6">We'll save your plan to this email so you can come back to it. Required to build your itinerary.</p>
           <input
             type="email"
+            required
             value={form.email}
             onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
             placeholder="you@example.com"
@@ -725,7 +726,7 @@ export default function OnboardingWizard({ cities = [], activities = [] }) {
         ) : <span />}
         <button
           onClick={next}
-          disabled={(current === 'destination' && form.cities.length === 0) || submitting}
+          disabled={(current === 'destination' && form.cities.length === 0) || (current === 'contact' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(form.email.trim())) || submitting}
           className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-primary text-white font-semibold disabled:opacity-50"
         >
           {submitting ? (

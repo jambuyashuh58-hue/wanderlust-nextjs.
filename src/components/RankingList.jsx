@@ -45,6 +45,7 @@ export default function RankingList({ activities }) {
               {a.booking_url && (
                 <a
                   href={a.booking_url}
+                  data-track="affiliate" data-component="collection_page" data-activity-id={a.id} data-title={a.title} data-price={a.price ?? ""}
                   target="_blank"
                   rel="noopener noreferrer sponsored"
                   className="inline-flex items-center justify-center w-fit mt-1.5 px-4 py-1.5 rounded-full bg-gradient-primary text-white text-xs font-semibold hover:scale-[1.02] transition-transform"

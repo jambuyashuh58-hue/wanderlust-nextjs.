@@ -82,7 +82,7 @@ export default function CollectionsFilters({ collections, cities }) {
             const isRanking = c.display_style === 'ranking';
             const isGuide = c.display_style === 'guide';
             return (
-              <Link key={c.id} href={`/collections/${c.slug}`} className="block rounded-2xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-lg transition-all group h-full">
+              <Link key={c.id} href={`/collections/${c.slug}`} data-track="collection" data-collection-id={c.id} data-slug={c.slug} data-title={c.title} className="block rounded-2xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-lg transition-all group h-full">
                 <div className="relative aspect-[4/3] bg-muted overflow-hidden">
                   {c.hero_image_url && (
                     <Image src={c.hero_image_url} alt={c.title} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover group-hover:scale-105 transition-transform duration-300" />

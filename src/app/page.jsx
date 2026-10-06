@@ -119,7 +119,7 @@ export default async function HomePage() {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
               {collections.slice(0, 12).map((c, i) => {
                 const card = (
-                  <Link href={`/collections/${c.slug}`} className="group block rounded-xl overflow-hidden border border-border hover:border-primary/40 hover:shadow-md transition-all bg-card">
+                  <Link href={`/collections/${c.slug}`} data-track="collection" data-collection-id={c.id} data-slug={c.slug} data-title={c.title} className="group block rounded-xl overflow-hidden border border-border hover:border-primary/40 hover:shadow-md transition-all bg-card">
                     <div className="relative aspect-[4/3] bg-muted overflow-hidden">
                       {c.hero_image_url && <img src={c.hero_image_url} alt={c.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />}
                     </div>
