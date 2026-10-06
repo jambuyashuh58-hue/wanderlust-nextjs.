@@ -12,6 +12,7 @@ const STAGE_LABELS = {
   concierge_inquiry: 'Concierge inquiry',
   guide_lead: 'Guide download',
   itinerary_user: 'Itinerary user',
+  quiz_taker: 'Quiz taker',
   subscriber: 'Subscriber',
 };
 
@@ -19,13 +20,14 @@ const Yes = ({ v }) => (v ? <span className="text-success font-semibold">Yes</sp
 
 export default async function AdminCrmPage() {
   const supabase = getSupabaseServer();
-  const [{ data: contacts, error }, { count: totalItineraries }, { count: anonItineraries }, { data: affClicks }, { data: actClicks }, { data: colClicks }] = await Promise.all([
+  const [{ data: contacts, error }, { count: totalItineraries }, { count: anonItineraries }, { data: affClicks }, { data: actClicks }, { data: colClicks }, { count: quizTotal }] = await Promise.all([
     supabase.from('crm_contact').select('*').order('last_seen', { ascending: false, nullsFirst: false }),
     supabase.from('shareable_itinerary').select('*', { count: 'exact', head: true }),
     supabase.from('travel_preference').select('*', { count: 'exact', head: true }).or('email.is.null,email.eq.'),
     supabase.from('affiliate_click').select('activity_title').limit(5000),
     supabase.from('activity_click').select('activity_title').limit(5000),
     supabase.from('collection_click').select('collection_title').limit(5000),
+    supabase.from('quiz_response').select('*', { count: 'exact', head: true }),
   ]);
   const top = (arr, key) => Object.entries((arr || []).reduce((m, r) => { const k = r[key] || '—'; m[k] = (m[k] || 0) + 1; return m; }, {})).sort((a, b) => b[1] - a[1]).slice(0, 5);
 
@@ -35,6 +37,8 @@ export default async function AdminCrmPage() {
     { label: 'Downloaded guide', value: rows.filter((r) => r.downloaded_guide).length },
     { label: 'Subscribed', value: rows.filter((r) => r.subscribed).length },
     { label: 'Used itinerary (with email)', value: rows.filter((r) => r.itineraries_built > 0).length },
+    { label: 'Took quiz (with email)', value: rows.filter((r) => r.took_quiz).length },
+    { label: 'Quiz completions (all)', value: quizTotal ?? 0 },
     { label: 'Concierge inquiries', value: rows.filter((r) => r.concierge_inquiries > 0).length },
     { label: 'Itineraries built (all)', value: totalItineraries ?? 0 },
     { label: 'Itinerary users with no email', value: anonItineraries ?? 0 },
@@ -70,14 +74,14 @@ export default async function AdminCrmPage() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border bg-muted/40 text-left text-xs text-muted-foreground uppercase tracking-wide">
-              {['Contact', 'Stage', 'Guide', 'Subscribed', 'Itineraries', 'Concierge', 'Interested in', 'Last seen'].map((h) => (
+              {['Contact', 'Stage', 'Guide', 'Subscribed', 'Itineraries', 'Quiz', 'Concierge', 'Interested in', 'Last seen'].map((h) => (
                 <th key={h} className="px-4 py-3 font-semibold whitespace-nowrap">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {rows.length === 0 ? (
-              <tr><td colSpan={8} className="px-4 py-10 text-center text-muted-foreground">Nothing here yet.</td></tr>
+              <tr><td colSpan={9} className="px-4 py-10 text-center text-muted-foreground">Nothing here yet.</td></tr>
             ) : rows.map((r) => (
               <tr key={r.email} className="border-b border-border last:border-0 hover:bg-muted/30">
                 <td className="px-4 py-3 whitespace-nowrap">
@@ -88,6 +92,7 @@ export default async function AdminCrmPage() {
                 <td className="px-4 py-3"><Yes v={r.downloaded_guide} /></td>
                 <td className="px-4 py-3"><Yes v={r.subscribed} /></td>
                 <td className="px-4 py-3">{r.itineraries_built || '—'}</td>
+                <td className="px-4 py-3 whitespace-nowrap">{r.took_quiz ? [r.quiz_priority, r.quiz_visa && `visa: ${r.quiz_visa}`].filter(Boolean).join(', ') : '—'}</td>
                 <td className="px-4 py-3 whitespace-nowrap">{r.concierge_inquiries ? `${r.tier_interested || 'yes'} (${r.inquiry_status})` : '—'}</td>
                 <td className="px-4 py-3 whitespace-nowrap max-w-xs truncate">{r.destination || '—'}</td>
                 <td className="px-4 py-3 whitespace-nowrap">{r.last_seen ? new Date(r.last_seen).toLocaleDateString() : '—'}</td>

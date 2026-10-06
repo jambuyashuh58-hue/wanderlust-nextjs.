@@ -214,6 +214,7 @@ export default async function ActivityDetailPage({ params }) {
                 </h2>
                 <Link
                   href={`/collections/${relatedGuide.slug}`}
+                  data-track="collection" data-collection-id={relatedGuide.id} data-slug={relatedGuide.slug} data-title={relatedGuide.title}
                   className="group flex items-center gap-4 p-4 rounded-2xl border border-border bg-card hover:border-primary/40 hover:shadow-lg transition-all"
                 >
                   <div className="w-11 h-11 rounded-xl bg-muted flex items-center justify-center shrink-0"><BookOpen className="w-5 h-5 text-primary" /></div>

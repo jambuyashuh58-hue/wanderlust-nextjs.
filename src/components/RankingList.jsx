@@ -32,7 +32,7 @@ export default function RankingList({ activities }) {
               )}
             </Link>
             <div className="flex-1 min-w-0 flex flex-col justify-center gap-1">
-              <Link href={`/activity/${a.id}`} className="font-semibold text-sm sm:text-base leading-snug line-clamp-2 hover:text-primary transition-colors">
+              <Link href={`/activity/${a.id}`} data-track="activity" data-activity-id={a.id} data-title={a.title} data-city={a.city_name || ""} data-category={a.category || ""} className="font-semibold text-sm sm:text-base leading-snug line-clamp-2 hover:text-primary transition-colors">
                 <span className="sm:hidden text-muted-foreground font-bold mr-1">{rank}.</span>{a.title}
               </Link>
               <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted-foreground">

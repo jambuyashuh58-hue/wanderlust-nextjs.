@@ -5,7 +5,7 @@
 // against the real `collections` passed in from the server page, so nothing
 // here can point at a dead/fabricated slug.
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { ArrowRight, ArrowLeft, Sparkles, CheckCircle2 } from 'lucide-react';
 
@@ -102,6 +102,33 @@ export default function RelocationQuizClient({ collections = [] }) {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState({});
   const [done, setDone] = useState(false);
+  const [responseId, setResponseId] = useState(null);
+  const [email, setEmail] = useState('');
+  const [emailState, setEmailState] = useState('idle'); // idle | saving | saved | error
+  const savedRef = useRef(false);
+
+  // Save the answers once, the moment the quiz finishes (anonymous until the
+  // visitor optionally leaves an email below). Feeds the admin CRM. (for=code)
+  useEffect(() => {
+    if (!done || savedRef.current) return;
+    savedRef.current = true;
+    const rec = getRecommendation(answers, collections);
+    fetch('/api/quiz', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ answers, headline: rec.headline, recommended_tier: rec.concierge }),
+    }).then((r) => r.json()).then((d) => d?.id && setResponseId(d.id)).catch(() => {});
+  }, [done]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function saveEmail(e) {
+    e.preventDefault();
+    if (!responseId) return;
+    setEmailState('saving');
+    try {
+      const r = await fetch('/api/quiz', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: responseId, email }) });
+      setEmailState(r.ok ? 'saved' : 'error');
+    } catch { setEmailState('error'); }
+  }
 
   function selectAnswer(key, value) {
     const next = { ...answers, [key]: value };
@@ -128,6 +155,7 @@ export default function RelocationQuizClient({ collections = [] }) {
           {rec.collection && (
             <Link
               href={`/collections/${rec.collection.slug}`}
+              data-track="collection" data-collection-id={rec.collection.id} data-slug={rec.collection.slug} data-title={rec.collection.title}
               className="flex items-center justify-between px-5 py-4 rounded-xl border border-border bg-card hover:border-primary transition-colors"
             >
               <span className="font-semibold">{rec.collection.title}</span>
@@ -142,6 +170,21 @@ export default function RelocationQuizClient({ collections = [] }) {
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
+
+        <form onSubmit={saveEmail} className="rounded-2xl border border-border bg-card p-5 mb-8">
+          <p className="font-semibold mb-1">Want this plan in your inbox?</p>
+          <p className="text-sm text-muted-foreground mb-3">Optional. Leave your email and we'll send your result and follow up with the next step.</p>
+          {emailState === 'saved' ? (
+            <p className="text-sm font-semibold text-success">Saved. We'll be in touch.</p>
+          ) : (
+            <div className="flex gap-2">
+              <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com"
+                className="flex-1 min-w-0 px-4 py-2.5 rounded-xl border border-border bg-background focus:outline-none focus:border-primary" />
+              <button type="submit" disabled={!responseId || emailState === 'saving'} className="px-5 py-2.5 rounded-full bg-gradient-primary text-white text-sm font-semibold disabled:opacity-50">Send</button>
+            </div>
+          )}
+          {emailState === 'error' && <p className="text-xs text-destructive mt-2">Something went wrong. Please try again.</p>}
+        </form>
 
         {rec.concierge && (
           <div className="rounded-2xl bg-gradient-primary text-white p-6">
