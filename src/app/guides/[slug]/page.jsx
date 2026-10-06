@@ -20,6 +20,7 @@ export async function generateMetadata({ params }) {
   return {
     title: `${guide.title} | Move to Istanbul`,
     description: guide.meta_description || undefined,
+    alternates: { canonical: `/guides/${params.slug}` },
   };
 }
 

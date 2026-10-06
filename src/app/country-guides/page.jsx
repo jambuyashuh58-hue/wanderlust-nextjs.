@@ -17,12 +17,12 @@ export async function generateMetadata() {
     ? {
         title: 'Türkiye\'ye Taşınma Rehberleri | Move to Istanbul',
         description: 'Türkiye\'ye taşınmak için ülkeye özel rehberler.',
-        alternates: { languages: { en: '/country-guides', tr: '/tr/country-guides' } },
+        alternates: { canonical: '/tr/country-guides', languages: { en: '/country-guides', tr: '/tr/country-guides' } },
       }
     : {
         title: 'Country Relocation Guides | Move to Istanbul',
         description: 'Nationality-specific guides for moving to Türkiye.',
-        alternates: { languages: { en: '/country-guides', tr: '/tr/country-guides' } },
+        alternates: { canonical: '/country-guides', languages: { en: '/country-guides', tr: '/tr/country-guides' } },
       };
 }
 

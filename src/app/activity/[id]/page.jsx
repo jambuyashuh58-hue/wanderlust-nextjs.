@@ -17,6 +17,7 @@ export async function generateMetadata({ params }) {
   return {
     title: `${activity.title} — Prices, Duration & Booking | Move to Istanbul`,
     description: activity.description?.slice(0, 160),
+    alternates: { canonical: `/activity/${params.id}` },
   };
 }
 

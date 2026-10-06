@@ -6,6 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'PayPal and Stripe Alternatives for Freelancers in Türkiye (2026 Guide) | Move to Istanbul',
   description: "Why PayPal doesn't work in Türkiye, the real payment gateways freelancers use instead (Wise, Payoneer, SWIFT), and the Article 89/13 tax setup that makes it 0% income tax.",
+  alternates: { canonical: '/guides/paypal-stripe-alternatives-turkey' },
 };
 
 const GATEWAYS = [

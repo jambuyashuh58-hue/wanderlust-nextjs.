@@ -8,6 +8,11 @@ export const dynamic = 'force-dynamic';
 export const metadata = {
   title: 'Discover Experiences in Türkiye | Move to Istanbul',
   description: 'Search and filter 700+ activities, museums, tours, and hidden gems across 17 Turkish cities.',
+  // Canonicalize every filtered/paginated query-string variant (?city=...,
+  // ?category=...) back to the bare path -- this page is filtered entirely
+  // via searchParams, so without this every combination a visitor filters to
+  // would otherwise count as a distinct, Google-indexable URL.
+  alternates: { canonical: '/discover' },
 };
 
 export default async function DiscoverPage({ searchParams }) {

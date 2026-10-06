@@ -6,6 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Medical Tourism in Istanbul 2026: The Complete Patient & Logistics Guide | Move to Istanbul',
   description: 'Procedure costs, USHAŞ/TÜRSAB verification, medical residence permit rules, and first-48-hours recovery logistics for international patients in Istanbul.',
+  alternates: { canonical: '/guides/medical-tourism-istanbul' },
 };
 
 const PROCEDURES = [

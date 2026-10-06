@@ -6,6 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Türkiye Visa & Residence Permit Guide 2026 (Göç İdaresi e-İkamet) | Move to Istanbul',
   description: "e-Visa, tourist entry, and short-term residence permits via Göç İdaresi's e-İkamet system, with official sources.",
+  alternates: { canonical: '/guides/visa' },
 };
 
 const PATHWAYS = [

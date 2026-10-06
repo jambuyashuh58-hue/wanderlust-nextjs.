@@ -6,6 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Best Way to Send USD to a Turkish Bank Account: 2026 Expat Guide | Move to Istanbul',
   description: 'Wise vs. SWIFT vs. Payoneer vs. Revolut compared, the forced-conversion trap to avoid, and the optimal transfer pipeline for paying rent and bills in Türkiye.',
+  alternates: { canonical: '/guides/send-usd-to-turkish-bank-account' },
 };
 
 const METHODS = [

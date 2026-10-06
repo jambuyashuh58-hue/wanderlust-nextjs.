@@ -6,6 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'eSIM vs. Local SIM Card in Türkiye: 2026 Comparison & Setup Guide | Move to Istanbul',
   description: 'The 120-day IMEI registration rule, a head-to-head eSIM vs. local SIM comparison, the airport SIM trap, and the hybrid strategy long-term expats actually use.',
+  alternates: { canonical: '/guides/esim-vs-local-sim-turkey' },
 };
 
 const COMPARISON = [

@@ -8,6 +8,7 @@ export const revalidate = 3600;
 export const metadata = {
   title: 'Türkiye Long-Stay Guides | Move to Istanbul',
   description: 'Free relocation guides for moving to Türkiye — visas, housing, and cost of living.',
+  alternates: { canonical: '/guides' },
 };
 
 const LONG_STAY_GUIDES = [

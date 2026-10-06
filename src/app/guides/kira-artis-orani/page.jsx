@@ -184,6 +184,7 @@ export async function generateMetadata() {
     title: `${c.metaTitle} | Move to Istanbul`,
     description: c.metaDescription,
     alternates: {
+      canonical: locale === 'tr' ? '/tr/guides/kira-artis-orani' : '/guides/kira-artis-orani',
       languages: {
         en: '/guides/kira-artis-orani',
         tr: '/tr/guides/kira-artis-orani',

@@ -18,6 +18,14 @@ import ConciergeCTA from '@/components/ConciergeCTA';
 
 export const revalidate = 3600;
 
+// The homepage had no metadata export of its own -- it fell through to the
+// root layout's title/description/openGraph with no explicit canonical, the
+// same gap that produced several "Duplicate, Google chose different
+// canonical than user" flags in Search Console on other pages. (for=code)
+export const metadata = {
+  alternates: { canonical: '/' },
+};
+
 function SectionHeader({ eyebrow, title, href }) {
   return (
     <div className="flex items-end justify-between mb-5">

@@ -13,6 +13,7 @@ export async function generateMetadata({ params }) {
   return {
     title: `${city.name} — Things to Do | Move to Istanbul`,
     description: city.description,
+    alternates: { canonical: `/city/${params.cityName}` },
   };
 }
 

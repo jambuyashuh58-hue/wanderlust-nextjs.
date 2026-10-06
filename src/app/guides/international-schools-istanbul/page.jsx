@@ -6,6 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'International Schools in Istanbul for Expat Families: 2026 Guide | Move to Istanbul',
   description: 'Curricula, top schools by district, 2026 tuition benchmarks, and the e-İkamet rules for enrolling your children in Istanbul.',
+  alternates: { canonical: '/guides/international-schools-istanbul' },
 };
 
 const CURRICULA = [

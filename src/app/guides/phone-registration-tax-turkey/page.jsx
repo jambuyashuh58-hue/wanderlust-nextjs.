@@ -12,6 +12,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Phone Registration Tax in Türkiye (2026): IMEI Lock Rules & How to Avoid Paying It | Move to Istanbul',
   description: 'The 120-day IMEI rule, 2026 registration tax costs, the 240-day dual-SIM workaround, and the official registration process for residents.',
+  alternates: { canonical: '/guides/phone-registration-tax-turkey' },
 };
 
 const OPTIONS = [

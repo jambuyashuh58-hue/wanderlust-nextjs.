@@ -6,6 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Best Property Management Companies in Istanbul for Overseas Owners: 2026 Guide | Move to Istanbul',
   description: 'Agent vs. dedicated property management compared, the 3 legal pillars that protect absentee landlords, and the end-to-end management workflow.',
+  alternates: { canonical: '/guides/property-management-istanbul' },
 };
 
 const COMPARISON = [

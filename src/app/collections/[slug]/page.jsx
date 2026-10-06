@@ -19,6 +19,7 @@ export async function generateMetadata({ params }) {
   return {
     title: `${collection.title} | Move to Istanbul`,
     description: collection.meta_description || collection.intro?.slice(0, 160),
+    alternates: { canonical: `/collections/${params.slug}` },
   };
 }
 

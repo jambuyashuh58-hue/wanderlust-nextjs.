@@ -17,6 +17,7 @@ export async function generateMetadata({ params }) {
     title: `${title} — ${locale === 'tr' ? 'Ülke Rehberi' : 'Country Guide'} | Move to Istanbul`,
     description: description || undefined,
     alternates: {
+      canonical: locale === 'tr' ? `/tr/country-guides/${params.slug}` : `/country-guides/${params.slug}`,
       languages: {
         en: `/country-guides/${params.slug}`,
         tr: `/tr/country-guides/${params.slug}`,

@@ -6,6 +6,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 export const metadata = {
   title: 'Expat Culture Shock Living in Istanbul: What to Expect & How to Adapt (2026) | Move to Istanbul',
   description: 'The 4 phases of culture shock, the real friction points newcomers hit, and a practical adaptation plan for living in Istanbul.',
+  alternates: { canonical: '/guides/culture-shock-istanbul' },
 };
 
 const PHASES = [

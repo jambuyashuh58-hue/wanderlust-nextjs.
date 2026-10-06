@@ -4,6 +4,7 @@ import ConciergeInteractive from '@/components/ConciergeInteractive';
 export const metadata = {
   title: 'Relocation Concierge Service | Move to Istanbul',
   description: 'Visa paperwork, apartment hunting, and your first-month setup — done for you, async, no calls required.',
+  alternates: { canonical: '/concierge' },
 };
 
 export default function ConciergeServicePage() {
