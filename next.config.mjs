@@ -7,6 +7,12 @@ const nextConfig = {
     // or shared (social bios, old emails, etc).
     return [
       { source: '/guide', destination: '/free-guide', permanent: true },
+      // /home has no page in this app and nothing in the codebase ever
+      // linked to it, but Search Console flagged it as a "Soft 404" --
+      // some stray external/old link evidently points there. A real
+      // redirect is a cleaner signal to Google than a 404 for a URL that
+      // still gets requested. (for=code)
+      { source: '/home', destination: '/', permanent: true },
     ];
   },
   images: {

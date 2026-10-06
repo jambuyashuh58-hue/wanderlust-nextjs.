@@ -21,8 +21,16 @@ export default async function CityDetailPage({ params }) {
   const city = await getCityByName(params.cityName);
   if (!city) notFound();
 
+  // 60, not the old 12 -- every city except Istanbul (302 activities) has
+  // 45 or fewer, so this gives every one of those cities' activity pages a
+  // real, topically-relevant internal link from their city page instead of
+  // relying solely on the single /discover mega-grid for link equity. That
+  // gap (most activities having only one inbound internal link, crowded
+  // onto one page) is a likely contributor to the ~680 activity/collection
+  // pages Search Console reports as "Discovered/Crawled - currently not
+  // indexed" -- thin internal-link signal, not thin content. (for=code)
   const [activities, collections] = await Promise.all([
-    getActivitiesByCity(city.name, 12),
+    getActivitiesByCity(city.name, 60),
     getCollections({ city: city.name }),
   ]);
 
