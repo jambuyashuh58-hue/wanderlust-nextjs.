@@ -54,13 +54,33 @@ export async function middleware(request) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-locale', isTurkish ? 'tr' : 'en');
 
+  // HTTP canonical (Link: rel="canonical"), sent on every page response.
+  // Search Console was flagging "Duplicate without user-selected canonical"
+  // (pages with no <link rel=canonical>, notably /tr/* variants) and
+  // "Duplicate, Google chose different canonical" (apex vs www). One
+  // header-level rule fixes both for every route without touching each page:
+  //  - always the www host (the apex 308-redirects to it);
+  //  - never the query string (filter/search URLs consolidate to the bare path);
+  //  - /tr/* URLs that are NOT genuinely translated are English duplicates, so
+  //    they point at the English page. The translated set mirrors sitemap.js.
+  const TR_LOCALIZED = [/^\/tr$/, /^\/tr\/country-guides(\/.*)?$/, /^\/tr\/guides\/kira-artis-orani$/];
+  let canonicalPath = pathname.replace(/\/+$/, '') || '/';
+  if (isTurkish && !TR_LOCALIZED.some((re) => re.test(canonicalPath))) {
+    canonicalPath = canonicalPath.replace(/^\/tr/, '') || '/';
+  }
+  const canonicalHeader = `<https://www.movetoistanbul.online${canonicalPath === '/' ? '/' : encodeURI(canonicalPath)}>; rel="canonical"`;
+
   if (isTurkish) {
     const rewritten = request.nextUrl.clone();
     rewritten.pathname = pathname.replace(/^\/tr/, '') || '/';
-    return NextResponse.rewrite(rewritten, { request: { headers: requestHeaders } });
+    const res = NextResponse.rewrite(rewritten, { request: { headers: requestHeaders } });
+    res.headers.set('Link', canonicalHeader);
+    return res;
   }
 
-  return NextResponse.next({ request: { headers: requestHeaders } });
+  const res = NextResponse.next({ request: { headers: requestHeaders } });
+  res.headers.set('Link', canonicalHeader);
+  return res;
 }
 
 export const config = {

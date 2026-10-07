@@ -15,6 +15,7 @@ import VideoBlogs from '@/components/VideoBlogs';
 import RankBadge from '@/components/RankBadge';
 import RelocationQuizCTA from '@/components/RelocationQuizCTA';
 import ConciergeCTA from '@/components/ConciergeCTA';
+import { getLocale } from '@/lib/i18nServer';
 
 export const revalidate = 3600;
 
@@ -22,9 +23,12 @@ export const revalidate = 3600;
 // root layout's title/description/openGraph with no explicit canonical, the
 // same gap that produced several "Duplicate, Google chose different
 // canonical than user" flags in Search Console on other pages. (for=code)
-export const metadata = {
-  alternates: { canonical: '/' },
-};
+export async function generateMetadata() {
+  const tr = (await getLocale()) === 'tr';
+  return {
+    alternates: { canonical: tr ? '/tr' : '/', languages: { en: '/', tr: '/tr' } },
+  };
+}
 
 function SectionHeader({ eyebrow, title, href }) {
   return (
