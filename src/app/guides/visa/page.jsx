@@ -4,8 +4,8 @@ import GuideLayout from '@/components/GuideLayout';
 import GuideFAQ from '@/components/GuideFAQ';
 
 export const metadata = {
-  title: 'Türkiye Visa & Residence Permit Guide 2026 (Göç İdaresi e-İkamet) | Move to Istanbul',
-  description: "e-Visa, tourist entry, and short-term residence permits via Göç İdaresi's e-İkamet system, with official sources.",
+  title: 'Türkiye Visa, Residence Permit & Digital Arrival Card (TRDAC) Guide 2026 | Move to Istanbul',
+  description: "e-Visa, TRDAC digital arrival card, digital nomad visa and short-term residence permits (e-İkamet) for Türkiye in 2026, with official sources.",
   alternates: { canonical: '/guides/visa' },
 };
 
@@ -147,7 +147,7 @@ const FAQ = [
   },
   {
     q: 'What is the Digital Arrival Card (TRDAC) and do I need it?',
-    a: 'As of 2025, all foreign visitors to Türkiye are required to complete the Turkey Digital Arrival Card (TRDAC) within 72 hours before arrival. It’s a free online form at register.gov.tr collecting basic travel and accommodation details, and applies to everyone — tourists, business travelers, and returning residence permit holders.',
+    a: 'TRDAC is the Türkiye Digital Arrival Card, an online entry-registration form that travel sources report is now required for most foreign visitors, free of charge, submitted before you travel (reported window: within 72 hours before arrival), with separate forms for children. Reported exemptions include Turkish citizens and holders of a valid Turkish residence permit. We could not confirm the exact rules, URL or exemptions on a Turkish government page, so check with your airline and the official e-Visa portal (evisa.gov.tr) before you fly, and avoid third-party sites that charge a fee for it.',
   },
   {
     q: 'What is Göç İdaresi e-İkamet and do I have to use it?',
@@ -229,7 +229,7 @@ const OFFICIAL_SOURCES = [
   { label: 'Interactive Tax Office (GİB) — generate your Potential Tax Number', href: 'https://ivd.gib.gov.tr/' },
   { label: 'e-Devlet National Gateway — digital government services for residents', href: 'https://www.turkiye.gov.tr/' },
   { label: 'Republic of Türkiye e-Visa Application System — official visa portal', href: 'https://www.evisa.gov.tr/' },
-  { label: 'Türkiye Digital Arrival Card (TRDAC) — required within 72 hours of arrival', href: 'https://register.gov.tr/' },
+  { label: 'Official e-Visa portal — check current entry requirements, including the TRDAC arrival card', href: 'https://www.evisa.gov.tr/' },
 ];
 
 export default function GuideVisaPage() {
