@@ -61,13 +61,20 @@ export default async function CollectionDetailPage({ params }) {
     ],
   } : null;
 
-  let relatedVisa = [];
-  if (params.slug.startsWith('turkey-visa')) {
-    try {
-      const all = await getCollections();
-      relatedVisa = (all || []).filter((c) => c.slug?.startsWith('turkey-visa') && c.slug !== params.slug).slice(0, 12);
-    } catch {}
-  }
+  let related = [];
+  let relatedHeading = 'More Türkiye guides';
+  try {
+    const all = (await getCollections()) || [];
+    const others = all.filter((c) => c.slug && c.slug !== params.slug);
+    if (params.slug.startsWith('turkey-visa')) {
+      related = others.filter((c) => c.slug.startsWith('turkey-visa'));
+      relatedHeading = 'More Türkiye visa guides';
+    } else if (collection.city_name) {
+      related = others.filter((c) => c.city_name === collection.city_name);
+      relatedHeading = `More ${collection.city_name} guides`;
+    }
+    related = related.slice(0, 12);
+  } catch {}
 
   const jsonLd = guideLd || {
     '@context': 'https://schema.org',
@@ -86,11 +93,11 @@ export default async function CollectionDetailPage({ params }) {
       <>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <RichGuideBody collection={collection} />
-        {relatedVisa.length > 0 && (
-          <nav aria-label="More Türkiye visa guides" className="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
-            <h2 className="text-lg font-bold mb-3">More Türkiye visa guides</h2>
+        {related.length > 0 && (
+          <nav aria-label={relatedHeading} className="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
+            <h2 className="text-lg font-bold mb-3">{relatedHeading}</h2>
             <ul className="grid sm:grid-cols-2 gap-2 text-sm">
-              {relatedVisa.map((c) => (
+              {related.map((c) => (
                 <li key={c.slug}><Link href={`/collections/${c.slug}`} className="text-primary hover:underline">{c.title}</Link></li>
               ))}
             </ul>
@@ -151,6 +158,16 @@ export default async function CollectionDetailPage({ params }) {
           </div>
         )}
       </div>
+        {related.length > 0 && (
+          <nav aria-label={relatedHeading} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+            <h2 className="text-lg font-bold mb-3">{relatedHeading}</h2>
+            <ul className="grid sm:grid-cols-2 gap-2 text-sm">
+              {related.map((c) => (
+                <li key={c.slug}><Link href={`/collections/${c.slug}`} className="text-primary hover:underline">{c.title}</Link></li>
+              ))}
+            </ul>
+          </nav>
+        )}
     </div>
   );
 }
