@@ -16,7 +16,12 @@ export async function generateMetadata({ params }) {
   if (!activity) return { title: 'Activity not found' };
   return {
     title: `${activity.title} — Prices, Duration & Booking | Move to Istanbul`,
-    description: activity.description?.slice(0, 160),
+    description: (() => {
+      const facts = [activity.duration && `${activity.duration}`, activity.rating != null && `rated ${activity.rating}/5${activity.review_count ? ` from ${activity.review_count} reviews` : ''}`].filter(Boolean).join(', ');
+      const base = `${activity.title}${facts ? `: ${facts}` : ''}. `;
+      const rest = (activity.description || '').replace(/\s+/g, ' ').trim();
+      return (base + rest).slice(0, 160).replace(/\s+\S*$/, '').trim() || undefined;
+    })(),
     alternates: { canonical: `/activity/${params.id}` },
   };
 }
@@ -40,7 +45,7 @@ export default async function ActivityDetailPage({ params }) {
   // collection at all, fall back further to the city hub page so every
   // activity page always links back to *something* real rather than being
   // an indexable dead end. (for=code)
-  const relatedGuide = containingCollections?.[0] || cityCollections?.[0] || null;
+  const relatedGuide = containingCollections?.[0] || cityCollections?.find((c) => c.display_style === 'guide') || cityCollections?.[0] || null;
   const relatedGuideIsExactMatch = (containingCollections?.length || 0) > 0;
 
   const jsonLd = {
