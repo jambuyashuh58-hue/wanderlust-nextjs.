@@ -55,8 +55,18 @@ export default async function ActivityDetailPage({ params }) {
     offers: {
       '@type': 'Offer',
       priceCurrency: 'TRY',
-      price: activity.price != null ? String(activity.price) : '0',
+      price: activity.price != null ? String(activity.price) : (activity.free ? '0' : undefined),
       availability: 'https://schema.org/InStock',
+      url: `https://www.movetoistanbul.online/activity/${activity.id}`,
+      // Bookings are fulfilled by the third-party partner (Viator /
+      // GetYourGuide), whose own cancellation terms apply -- so the return
+      // policy is declared as unspecified rather than invented. Satisfies
+      // Merchant listings' hasMerchantReturnPolicy warning. (for=code)
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: 'TR',
+        returnPolicyCategory: 'https://schema.org/MerchantReturnUnspecified',
+      },
     },
   };
 
