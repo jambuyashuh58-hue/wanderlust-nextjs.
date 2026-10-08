@@ -76,7 +76,15 @@ export default async function CollectionDetailPage({ params }) {
     related = related.slice(0, 12);
   } catch {}
 
-  const jsonLd = guideLd || {
+  const crumbLd = {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Collections', item: `${SITE}/collections` },
+      { '@type': 'ListItem', position: 3, name: collection.title, item: url },
+    ],
+  };
+  const listLd = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: collection.title,
@@ -87,6 +95,7 @@ export default async function CollectionDetailPage({ params }) {
       item: { '@type': 'TouristAttraction', name: a.title, image: a.image_url },
     })),
   };
+  const jsonLd = guideLd || { '@context': 'https://schema.org', '@graph': [{ ...listLd, '@context': undefined }, crumbLd] };
 
   if (isRichGuide) {
     return (

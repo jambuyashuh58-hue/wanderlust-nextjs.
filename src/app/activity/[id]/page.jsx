@@ -15,7 +15,7 @@ export async function generateMetadata({ params }) {
   const activity = await getActivityById(params.id);
   if (!activity) return { title: 'Activity not found' };
   return {
-    title: `${activity.title} — Prices, Duration & Booking | Move to Istanbul`,
+    title: `${activity.title}${activity.city_name && !activity.title.toLowerCase().includes(activity.city_name.toLowerCase()) ? ` (${activity.city_name})` : ''} — Prices, Duration & Booking | Move to Istanbul`,
     description: (() => {
       const facts = [activity.duration && `${activity.duration}`, activity.rating != null && `rated ${activity.rating}/5${activity.review_count ? ` from ${activity.review_count} reviews` : ''}`].filter(Boolean).join(', ');
       const base = `${activity.title}${facts ? `: ${facts}` : ''}. `;
@@ -89,9 +89,29 @@ export default async function ActivityDetailPage({ params }) {
     activity.best_time_to_visit && { q: 'When is the best time to visit?', a: activity.best_time_to_visit },
   ].filter(Boolean);
 
+  const SITE = 'https://www.movetoistanbul.online';
+  const extraLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+          ...(activity.city_name ? [{ '@type': 'ListItem', position: 2, name: activity.city_name, item: `${SITE}/city/${encodeURIComponent(activity.city_name.toLowerCase())}` }] : []),
+          { '@type': 'ListItem', position: activity.city_name ? 3 : 2, name: activity.title, item: `${SITE}/activity/${activity.id}` },
+        ],
+      },
+      ...(faqItems.length ? [{
+        '@type': 'FAQPage',
+        mainEntity: faqItems.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: String(i.a) } })),
+      }] : []),
+    ],
+  };
+
   return (
     <div className="pt-16 md:pt-20 min-h-screen">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(extraLd) }} />
 
       <div className="relative h-[50vh] md:h-[60vh] overflow-hidden bg-muted">
         {activity.image_url && <Image src={activity.image_url} alt={activity.title} fill priority sizes="100vw" className="object-cover" />}
@@ -112,7 +132,12 @@ export default async function ActivityDetailPage({ params }) {
       </div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Link href="/discover" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"><ArrowLeft className="w-4 h-4" /> Back to experiences</Link>
+        <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground mb-8">
+          <Link href="/" className="hover:text-foreground">Home</Link>
+          <span aria-hidden="true">›</span>
+          <Link href="/discover" className="hover:text-foreground">Experiences</Link>
+          {activity.city_name && (<><span aria-hidden="true">›</span><Link href={`/city/${encodeURIComponent(activity.city_name.toLowerCase())}`} className="hover:text-foreground">{activity.city_name}</Link></>)}
+        </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
