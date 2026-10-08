@@ -64,6 +64,7 @@ export async function getActivitiesByCity(cityName, limit = 12) {
   const { data, error } = await supabase
     .from('activity')
     .select('*')
+    .eq('hidden', false)
     .ilike('city_name', cityName)
     .order('popularity_score', { ascending: false, nullsFirst: false })
     .limit(limit);
@@ -73,7 +74,7 @@ export async function getActivitiesByCity(cityName, limit = 12) {
 
 export async function getActivityById(id) {
   const supabase = getSupabaseServer();
-  const { data, error } = await supabase.from('activity').select('*').eq('id', id).maybeSingle();
+  const { data, error } = await supabase.from('activity').select('*').eq('id', id).eq('hidden', false).maybeSingle();
   if (error) throw error;
   return data;
 }
@@ -83,6 +84,7 @@ export async function getAllActivities(limit = 1000) {
   const { data, error } = await supabase
     .from('activity')
     .select('*')
+    .eq('hidden', false)
     .order('popularity_score', { ascending: false, nullsFirst: false })
     .limit(limit);
   if (error) throw error;
@@ -91,7 +93,7 @@ export async function getAllActivities(limit = 1000) {
 
 export async function searchActivities({ q, category, limit = 100 } = {}) {
   const supabase = getSupabaseServer();
-  let query = supabase.from('activity').select('*');
+  let query = supabase.from('activity').select('*').eq('hidden', false);
   if (q) {
     // Search across title and city_name -- matches the Vite version's
     // client-side search behavior, now done server-side in the query itself.
@@ -118,7 +120,7 @@ export async function getCollectionBySlug(slug) {
 
   let activities = [];
   if (collection.activity_ids?.length > 0) {
-    const { data: activityData } = await supabase.from('activity').select('*').in('id', collection.activity_ids);
+    const { data: activityData } = await supabase.from('activity').select('*').in('id', collection.activity_ids).eq('hidden', false);
     if (activityData) {
       const orderMap = new Map(collection.activity_ids.map((id, i) => [id, i]));
       activities = activityData.sort((a, b) => orderMap.get(a.id) - orderMap.get(b.id));
@@ -194,6 +196,7 @@ export async function getActivitiesByCategory(category, limit = 6) {
   const { data, error } = await supabase
     .from('activity')
     .select('*')
+    .eq('hidden', false)
     .eq('category', category)
     .order('popularity_score', { ascending: false, nullsFirst: false })
     .limit(limit);

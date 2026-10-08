@@ -317,6 +317,7 @@ async function findAlternativePackages(supabase, cityNames, totalDays) {
   const { data } = await supabase
     .from('activity')
     .select('id, title, city_name, price, image_url, booking_url, rating, duration, how_long')
+      .eq('hidden', false)
     .or('duration.ilike.%day%,how_long.ilike.%day%,title.ilike.%day%')
     .order('popularity_score', { ascending: false, nullsFirst: false })
     .limit(100);
@@ -355,6 +356,7 @@ async function generateLeg(supabase, { city, days, interests, pace, budget, trav
     supabase
       .from('activity')
       .select('id, title, category, city_name, rating, price, duration, how_long, family_friendly, free, image_url, booking_url, address, latitude, longitude')
+      .eq('hidden', false)
       .ilike('city_name', city)
       .not('category', 'in', '("Transfers","Hotels")')
       .order('popularity_score', { ascending: false, nullsFirst: false })
@@ -442,6 +444,7 @@ async function matchHotel(supabase, city) {
   const { data } = await supabase
     .from('activity')
     .select('id, title, category, city_name, rating, price, image_url, booking_url, address')
+      .eq('hidden', false)
     .eq('category', 'Hotels')
     .ilike('city_name', city)
     .order('popularity_score', { ascending: false, nullsFirst: false })
@@ -461,6 +464,7 @@ async function matchTransfer(supabase, fromCity, toCity) {
   const { data } = await supabase
     .from('activity')
     .select('id, title, category, city_name, rating, price, image_url, booking_url, address')
+      .eq('hidden', false)
     .eq('category', 'Transfers')
     .or(`city_name.ilike.${fromCity},city_name.ilike.${toCity}`)
     .order('popularity_score', { ascending: false, nullsFirst: false })
