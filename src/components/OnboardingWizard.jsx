@@ -8,6 +8,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { track } from '@/lib/analytics';
 import { ArrowRight, ArrowLeft, Sparkles, Loader2, MapPin } from 'lucide-react';
 
 const INTERESTS = ['Museums', 'Historic Sites', 'Food Experiences', 'Boat Tours', 'Hidden Gems', 'Night Activities'];
@@ -350,6 +351,7 @@ export default function OnboardingWizard({ cities = [], activities = [] }) {
         throw new Error(err.error || `Request failed (${res.status})`);
       }
       itinerary = await res.json();
+      track('itinerary_generated', { cities: form.cities?.length || 0, days: form.days });
     } catch (err) {
       // AI call failed (or, via the timeout above, took too long) -- fall
       // back to the rule-based picker rather than stranding the user, but

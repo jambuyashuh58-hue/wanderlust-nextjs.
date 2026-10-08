@@ -9,6 +9,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { track } from '@/lib/analytics';
 import Image from 'next/image';
 import { Sparkles, MapPin, ArrowRight, Sun, Sunset, Moon, Star, Clock, Info, CalendarCheck, Car, Bed, Plane, ExternalLink } from 'lucide-react';
 
@@ -492,6 +493,7 @@ export default function ItineraryPage() {
         </p>
         <Link
           href="/concierge?tier=trip_package"
+          onClick={() => track('upsell_click', { tier: 'trip_package', value: 20, currency: 'USD' })}
           className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-primary text-white font-semibold hover:scale-[1.02] transition-transform"
         >
           Get my trip package plan — $20 <ArrowRight className="w-4 h-4" />

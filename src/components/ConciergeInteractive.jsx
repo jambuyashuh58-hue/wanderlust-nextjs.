@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Check, ShieldAlert, MessageCircle } from 'lucide-react';
+import { Check, ShieldAlert, MessageCircle, CreditCard } from 'lucide-react';
+import { track } from '@/lib/analytics';
 
 const CONCIERGE_TIERS = [
   {
@@ -35,7 +36,7 @@ const CONCIERGE_URL = 'https://www.instagram.com/move_istanbul';
 
 const EMPTY_FORM = { name: '', email: '', instagram_handle: '', nationality: '', budget_range: '', timeline: '', message: '' };
 
-export default function ConciergeInteractive() {
+export default function ConciergeInteractive({ paymentLinks = {} }) {
   const searchParams = useSearchParams();
   const [selectedTier, setSelectedTier] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
@@ -51,6 +52,18 @@ export default function ConciergeInteractive() {
     }
   }, [searchParams]);
 
+  const payLinkFor = (id) => paymentLinks[id] || null;
+  const payNow = (tier) => {
+    const url = payLinkFor(tier.id);
+    if (!url) return;
+    track('begin_checkout', { currency: 'USD', value: tier.price, items: [{ item_id: tier.id, item_name: tier.name, price: tier.price }] });
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+  const choose = (tier) => {
+    setSelectedTier(tier.id);
+    track('select_item', { item_list_name: 'concierge_tiers', items: [{ item_id: tier.id, item_name: tier.name, price: tier.price }] });
+  };
+
   const tierName = CONCIERGE_TIERS.find((t) => t.id === selectedTier)?.name;
   const buttonLabel = status === 'loading' ? 'Sending…' : tierName ? `Request ${tierName}` : 'Send Inquiry';
 
@@ -65,6 +78,8 @@ export default function ConciergeInteractive() {
       });
       if (!res.ok) throw new Error('failed');
       setStatus('success');
+      const t = CONCIERGE_TIERS.find((x) => x.id === selectedTier);
+      track('generate_lead', { currency: 'USD', value: t ? t.price : 0, tier: selectedTier || 'not_sure' });
     } catch {
       setStatus('error');
     }
@@ -89,12 +104,17 @@ export default function ConciergeInteractive() {
                 {tier.includes.map((item, i) => <li key={i} className="flex items-start gap-2 text-sm"><Check className="w-4 h-4 text-success shrink-0 mt-0.5" /><span>{item}</span></li>)}
               </ul>
               <p className="text-[11px] text-muted-foreground leading-snug mb-4">{tier.notThis}</p>
+              {payLinkFor(tier.id) && (
+                <button type="button" onClick={() => payNow(tier)} className="w-full py-3 mb-2 rounded-xl font-semibold bg-gradient-primary text-white inline-flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform">
+                  <CreditCard className="w-4 h-4" /> Pay ${tier.price} now
+                </button>
+              )}
               <button
                 type="button"
-                onClick={() => setSelectedTier(tier.id)}
+                onClick={() => choose(tier)}
                 className={`w-full py-3 rounded-xl font-semibold transition-transform hover:scale-[1.02] ${isSelected ? 'bg-gradient-primary text-white' : 'border border-border text-foreground'}`}
               >
-                {isSelected ? 'Selected' : 'Choose this plan'}
+                {isSelected ? 'Selected' : payLinkFor(tier.id) ? 'Ask a question first' : 'Choose this plan'}
               </button>
             </div>
           );
@@ -115,7 +135,17 @@ export default function ConciergeInteractive() {
         <div className="rounded-2xl border border-border p-8 bg-card h-fit">
           <h2 className="text-xl font-bold mb-6">Tell us about your move</h2>
           {status === 'success' ? (
-            <p className="text-success font-medium">Thanks! We&apos;ll be in touch within 24 hours.</p>
+            <div>
+              <p className="text-success font-medium mb-3">Thanks! We&apos;ll be in touch within 24 hours.</p>
+              {(() => {
+                const t = CONCIERGE_TIERS.find((x) => x.id === selectedTier);
+                return t && payLinkFor(t.id) ? (
+                  <button type="button" onClick={() => payNow(t)} className="w-full py-3.5 rounded-full bg-gradient-primary text-white font-semibold inline-flex items-center justify-center gap-2">
+                    <CreditCard className="w-4 h-4" /> Pay ${t.price} for {t.name}
+                  </button>
+                ) : null;
+              })()}
+            </div>
           ) : (
             <form onSubmit={submit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -174,7 +204,7 @@ export default function ConciergeInteractive() {
           <ol className="space-y-3">
             {[
               'We reply with a short intake — 5 questions, no call needed',
-              'You confirm your tier and pay via PayPal',
+              'You confirm your tier and pay securely online',
               'We deliver async — you get a private status link to track progress',
               'Weekly check-ins until everything\'s settled',
             ].map((step, i) => (

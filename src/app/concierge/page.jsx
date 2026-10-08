@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import ConciergeInteractive from '@/components/ConciergeInteractive';
+import Proof from '@/components/Proof';
 
 export const metadata = {
   title: 'Relocation Concierge Service | Move to Istanbul',
@@ -7,7 +8,22 @@ export const metadata = {
   alternates: { canonical: '/concierge' },
 };
 
-export default function ConciergeServicePage() {
+// Payment links are created in the payment provider's dashboard (PayPal.Me /
+// payment buttons / Stripe Payment Links all work) and supplied as env vars.
+// Only https URLs are passed through; a tier with no link falls back to the
+// inquiry form, so the page never shows a dead Pay button.
+function getPaymentLinks() {
+  const env = {
+    trip_package: process.env.PAYMENT_LINK_TRIP_PACKAGE,
+    paperwork: process.env.PAYMENT_LINK_PAPERWORK,
+    apartment: process.env.PAYMENT_LINK_APARTMENT,
+    full: process.env.PAYMENT_LINK_FULL,
+  };
+  return Object.fromEntries(Object.entries(env).filter(([, v]) => typeof v === 'string' && /^https:\/\//.test(v.trim())).map(([k, v]) => [k, v.trim()]));
+}
+
+export default async function ConciergeServicePage() {
+  const paymentLinks = getPaymentLinks();
   return (
     <div className="pt-16 md:pt-20 min-h-screen">
       <div className="bg-[hsl(221,55%,26%)] text-white">
@@ -20,8 +36,9 @@ export default function ConciergeServicePage() {
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <Proof />
         <Suspense fallback={null}>
-          <ConciergeInteractive />
+          <ConciergeInteractive paymentLinks={paymentLinks} />
         </Suspense>
       </div>
     </div>

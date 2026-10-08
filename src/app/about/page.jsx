@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Heart, Sparkles, Users } from 'lucide-react';
 import AboutFAQ from '@/components/AboutFAQ';
+import Proof from '@/components/Proof';
 
 export const metadata = {
   title: 'About Us | Move to Istanbul',
@@ -14,7 +15,7 @@ const FEATURES = [
   { icon: Users, title: 'Community', body: 'A growing space for travelers who want the deeper story.' },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
   const lastUpdated = new Date().toISOString().slice(0, 10);
 
   return (
@@ -62,6 +63,8 @@ export default function AboutPage() {
             </div>
           ))}
         </div>
+
+        <Proof />
 
         <div className="mb-14">
           <h2 className="text-2xl font-bold mb-1">Frequently Asked Questions</h2>
