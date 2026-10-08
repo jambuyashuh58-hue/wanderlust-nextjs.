@@ -34,7 +34,7 @@ function day2Email(name) {
     html: `
       <p>Hey${name ? ` ${name}` : ''},</p>
       <p>As mentioned in <strong>Module 3</strong> of the guide, paying 6-12 months rent upfront is one of the most common traps foreigners fall into here -- and landlords often hide extra fees in Turkish-only clauses on top of it.</p>
-      <p>We recently helped a client avoid a $3,000 mistake by spotting this exact clause. If you want someone to review your options or handle the hunt entirely, we offer an <strong>Apartment Shortlisting</strong> service for $449.</p>
+      <p>If you want someone to review your options or handle the hunt entirely, we offer an <strong>Apartment Shortlisting</strong> service for $449.</p>
       <p>Want to see how it works? <a href="https://www.movetoistanbul.online/concierge">Take a look here</a>.</p>
     `,
   };

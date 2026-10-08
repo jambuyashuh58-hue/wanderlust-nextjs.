@@ -4,6 +4,7 @@
 // result screen. (for=code)
 import { NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabaseServer';
+import { captureLead, sourceFromRequest } from '@/lib/leads';
 
 const ALLOWED = ['purpose', 'timeframe', 'visa', 'priority'];
 const clean = (v) => (typeof v === 'string' ? v.slice(0, 60) : null);
@@ -36,6 +37,7 @@ export async function PATCH(request) {
     }
     const { error } = await getSupabaseServer().from('quiz_response').update({ email }).eq('id', b.id);
     if (error) throw error;
+    await captureLead({ email, source: sourceFromRequest(request), sourceDetail: 'relocation_quiz' });
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error('quiz email save failed:', err);

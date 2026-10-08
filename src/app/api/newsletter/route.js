@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabaseServer';
 import { sendNotificationEmail } from '@/lib/notify';
+import { captureLead, sourceFromRequest } from '@/lib/leads';
 
 const VALID_SOURCES = ['footer', 'activity_page', 'discover_slidein', 'collection_page'];
 
@@ -35,6 +36,8 @@ export async function POST(request) {
       console.error('newsletter_subscriber upsert failed:', error);
       return NextResponse.json({ error: 'Could not save subscription.' }, { status: 500 });
     }
+
+    await captureLead({ email, source: sourceFromRequest(request), sourceDetail: component || 'newsletter' });
 
     // Fire-and-forget, same reasoning as the concierge route.
     sendNotificationEmail({

@@ -3,6 +3,7 @@ import SiteChrome from '@/components/SiteChrome';
 import TrackClicks from '@/components/TrackClicks';
 import Analytics from '@/components/Analytics';
 import ConsentBanner from '@/components/ConsentBanner';
+import CaptureSource from '@/components/CaptureSource';
 
 // www is the canonical host -- Vercel's domain config 308-redirects the bare
 // apex (movetoistanbul.online) to this one, so metadataBase (which every
@@ -65,6 +66,7 @@ export default function RootLayout({ children }) {
         <TrackClicks />
         <Analytics />
         <ConsentBanner />
+        <CaptureSource />
       </body>
     </html>
   );

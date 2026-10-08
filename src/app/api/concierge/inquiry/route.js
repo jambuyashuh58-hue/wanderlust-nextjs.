@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabaseServer';
 import { sendNotificationEmail } from '@/lib/notify';
+import { captureLead, sourceFromRequest } from '@/lib/leads';
 
 const VALID_TIERS = ['paperwork', 'apartment', 'full', 'trip_package', 'not_sure'];
 
@@ -46,6 +47,9 @@ export async function POST(request) {
       console.error('concierge_inquiry insert failed:', error);
       return NextResponse.json({ error: 'Could not save inquiry.' }, { status: 500 });
     }
+
+    // CRM row (await so it completes before the serverless function freezes).
+    await captureLead({ email, name, source: sourceFromRequest(request), sourceDetail: 'concierge_inquiry', nationality, targetMonth: timeline, tier, notes: message });
 
     // Fire-and-forget: the inquiry is already saved, so a failed notification
     // email should never turn into a failed response to the user.

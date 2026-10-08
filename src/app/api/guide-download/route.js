@@ -13,6 +13,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabaseServer';
 import { sendNotificationEmail, sendSubscriberEmail } from '@/lib/notify';
+import { captureLead, sourceFromRequest } from '@/lib/leads';
 
 const PDF_PATH = '/downloads/istanbul-90-60-30-relocation-guide.pdf';
 
@@ -53,6 +54,8 @@ export async function POST(request) {
       console.error('guide-download upsert failed:', error);
       return NextResponse.json({ error: 'Could not save your download.' }, { status: 500 });
     }
+
+    await captureLead({ email, name, source: sourceFromRequest(request), sourceDetail: 'ebook_guide' });
 
     const downloadUrl = `${request.nextUrl.origin}${PDF_PATH}`;
 
