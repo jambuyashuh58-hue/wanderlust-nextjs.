@@ -86,7 +86,14 @@ export default function Footer() {
           <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
             {[
               ['/guides/visa', 'Türkiye visa & residence permit'],
+              ['/collections/digital-nomad-visa-master-guide', 'Digital nomad visa guide'],
               ['/guides/cost-of-living', 'Cost of living in Istanbul'],
+              ['/collections/turkish-drivers-license-foreigner', "Turkish driver's license"],
+              ['/collections/best-night-activities-istanbul', 'Istanbul at night'],
+              ['/collections/rainy-day-istanbul', 'Rainy-day Istanbul'],
+              ['/collections/best-walking-tours-istanbul', 'Walking tours'],
+              ['/collections/things-to-do-kemer', 'Things to do in Kemer'],
+              ['/collections/things-to-do-canakkale', 'Things to do in Çanakkale'],
               ['/collections/how-to-get-permanent-residency-turkey', 'Permanent residency in Turkey'],
               ['/collections/best-work-cafes-kadikoy', 'Work cafes in Kadıköy'],
               ['/collections/topkapi-sarayi-topkapi-palace', 'Topkapı Palace'],
