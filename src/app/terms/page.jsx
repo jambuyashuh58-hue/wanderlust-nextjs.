@@ -43,7 +43,7 @@ export default function TermsPage() {
             <li>We coordinate and advise; you remain responsible for your own visa applications, contracts, and final decisions. We can&apos;t guarantee any specific visa, permit, or rental outcome, since those are ultimately decided by third parties (government authorities, landlords, etc.) outside our control.</li>
           </ul>
 
-          <h2>Delivery &amp; refunds</h2>
+          <h2 id="delivery-refunds">Delivery &amp; refunds</h2>
           <ul>
             <li>Delivery is async (email/private status link). The Trip Package Planning tier is delivered within 48 hours of payment and a completed intake; other tiers follow the timeline in your intake reply.</li>
             <li>If we haven&apos;t started work on your order, contact us and we&apos;ll refund it. Once work has begun, refunds are handled case by case as described above.</li>
