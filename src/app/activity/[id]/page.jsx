@@ -23,6 +23,11 @@ export async function generateMetadata({ params }) {
       return (base + rest).slice(0, 160).replace(/\s+\S*$/, '').trim() || undefined;
     })(),
     alternates: { canonical: `/activity/${params.id}` },
+    // Pages with almost no original text are what AdSense and Google's quality
+    // systems treat as thin content. Keep them reachable for visitors but out of
+    // the index until they have real copy. Remove this once the description
+    // has 250+ characters.
+    ...((activity.description || '').trim().length < 250 && { robots: { index: false, follow: true } }),
   };
 }
 

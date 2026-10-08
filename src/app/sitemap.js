@@ -68,7 +68,7 @@ export default async function sitemap() {
     priority: 0.7,
   }));
 
-  const activityEntries = (activities || []).map((a) => ({
+  const activityEntries = (activities || []).filter((a) => (a.description || '').trim().length >= 250).map((a) => ({
     url: `${SITE_URL}/activity/${a.id}`,
     lastModified: a.updated_date ? new Date(a.updated_date) : now,
     changeFrequency: 'monthly',
