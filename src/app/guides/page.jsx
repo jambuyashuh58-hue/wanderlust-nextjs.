@@ -82,7 +82,10 @@ export default async function GuidesPage() {
         {dbGuides.length > 0 && (
           <div>
             <h2 className="text-xl font-bold mb-5">All Türkiye guides</h2>
-            <AllGuidesGrid guides={dbGuides} cities={cities} />
+            <AllGuidesGrid
+              guides={dbGuides.map((g) => ({ id: g.id, slug: g.slug, title: g.title, city_name: g.city_name, hero_image_url: g.hero_image_url, _category: g._category, meta_description: g.meta_description }))}
+              cities={cities}
+            />
           </div>
         )}
         <Link href="/collections" className="group flex items-center justify-between gap-4 p-6 rounded-2xl border border-border bg-gradient-to-br from-primary/5 to-secondary/5 hover:border-primary/40 transition-all">
