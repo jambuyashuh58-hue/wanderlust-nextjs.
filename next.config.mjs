@@ -7,6 +7,8 @@ const nextConfig = {
     // or shared (social bios, old emails, etc).
     return [
       { source: '/guide', destination: '/free-guide', permanent: true },
+      // Short link used in social/DM outreach. Query strings (utm_source) pass through. (for=code)
+      { source: '/free-90-60-30-guide', destination: '/free-guide', permanent: true },
       // /home has no page in this app and nothing in the codebase ever
       // linked to it, but Search Console flagged it as a "Soft 404" --
       // some stray external/old link evidently points there. A real
