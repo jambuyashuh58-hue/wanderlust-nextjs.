@@ -4,7 +4,7 @@
 // Import in page.jsx: import HomeHero from '@/components/HomeHero';
 
 import Link from 'next/link';
-import { Sparkles, MapPin, ArrowRight } from 'lucide-react';
+import { Sparkles, MapPin, ArrowRight, FileCheck2 } from 'lucide-react';
 
 export default function HomeHero() {
   return (
@@ -21,19 +21,24 @@ export default function HomeHero() {
 
       <div className="relative max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20 md:pt-36 md:pb-28 text-white">
         <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 text-xs font-semibold uppercase tracking-wider mb-5">
-          <Sparkles className="w-3.5 h-3.5" /> AI-powered travel discovery
+          <Sparkles className="w-3.5 h-3.5" /> Independent relocation planning
         </span>
         <h1 className="text-4xl md:text-6xl font-bold leading-tight max-w-3xl mb-4">
-          Welcome to Türkiye.
+          Moving to Istanbul? We Build Your Move File.
         </h1>
         <p className="text-base md:text-lg text-white/85 max-w-xl mb-8 leading-relaxed">
-          From Istanbul&apos;s hidden courtyards to Cappadocia&apos;s balloons at dawn — real
-          places, ranked honestly, plus a concierge team if you&apos;re staying longer than a trip.
+          Visa route, housing shortlist, budget, and arrival plan—organized by one desk. First response within 12 hours.
         </p>
         <div className="flex flex-wrap gap-3">
           <Link
-            href="/onboarding"
+            href="/concierge"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-primary text-white font-semibold shadow-lg hover:opacity-90 transition-opacity"
+          >
+            <FileCheck2 className="w-4 h-4" /> Start Your Move File
+          </Link>
+          <Link
+            href="/onboarding"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/10 border border-white/30 backdrop-blur-sm font-semibold hover:bg-white/20 transition-colors"
           >
             <Sparkles className="w-4 h-4" /> Plan My Trip
           </Link>
