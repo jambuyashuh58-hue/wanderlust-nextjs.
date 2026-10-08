@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { getCollectionBySlug } from '@/lib/supabaseServer';
+import { getCollectionBySlug, getCollections } from '@/lib/supabaseServer';
 import ActivityCard from '@/components/ActivityCard';
 import GuideBody from '@/components/GuideBody';
 import RichGuideBody from '@/components/RichGuideBody';
@@ -32,7 +32,44 @@ export default async function CollectionDetailPage({ params }) {
   const isRanking = collection.display_style === 'ranking';
   const isRichGuide = isGuide && collection.guide_data;
 
-  const jsonLd = {
+  const SITE = 'https://www.movetoistanbul.online';
+  const url = `${SITE}/collections/${params.slug}`;
+  const plain = (t) => String(t || '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/[*_`#]/g, '').trim();
+  const faqItems = (collection.guide_data?.sections || []).filter((x) => x.type === 'faq').flatMap((x) => x.items || []).filter((i) => i.q && i.a);
+  const guideLd = isRichGuide ? {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Article', headline: collection.title, description: collection.meta_description || undefined,
+        mainEntityOfPage: url, image: collection.hero_image_url || undefined,
+        dateModified: collection.updated_date || collection.updated_at || undefined,
+        author: { '@type': 'Organization', name: 'Move to Istanbul', url: SITE },
+        publisher: { '@type': 'Organization', name: 'Move to Istanbul', url: SITE },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+          { '@type': 'ListItem', position: 2, name: 'Collections', item: `${SITE}/collections` },
+          { '@type': 'ListItem', position: 3, name: collection.title, item: url },
+        ],
+      },
+      ...(faqItems.length ? [{
+        '@type': 'FAQPage',
+        mainEntity: faqItems.map((i) => ({ '@type': 'Question', name: plain(i.q), acceptedAnswer: { '@type': 'Answer', text: plain(i.a) } })),
+      }] : []),
+    ],
+  } : null;
+
+  let relatedVisa = [];
+  if (params.slug.startsWith('turkey-visa')) {
+    try {
+      const all = await getCollections();
+      relatedVisa = (all || []).filter((c) => c.slug?.startsWith('turkey-visa') && c.slug !== params.slug).slice(0, 12);
+    } catch {}
+  }
+
+  const jsonLd = guideLd || {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: collection.title,
@@ -49,6 +86,16 @@ export default async function CollectionDetailPage({ params }) {
       <>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <RichGuideBody collection={collection} />
+        {relatedVisa.length > 0 && (
+          <nav aria-label="More Türkiye visa guides" className="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
+            <h2 className="text-lg font-bold mb-3">More Türkiye visa guides</h2>
+            <ul className="grid sm:grid-cols-2 gap-2 text-sm">
+              {relatedVisa.map((c) => (
+                <li key={c.slug}><Link href={`/collections/${c.slug}`} className="text-primary hover:underline">{c.title}</Link></li>
+              ))}
+            </ul>
+          </nav>
+        )}
       </>
     );
   }
