@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Compass, Menu, X, Sparkles, Instagram, Languages, FileCheck2 } from 'lucide-react';
+import { Menu, X, Instagram, Languages, FileCheck2 } from 'lucide-react';
 import { t } from '@/lib/i18n';
 
 const CONCIERGE_URL = 'https://www.instagram.com/move_istanbul';
@@ -17,13 +17,11 @@ export default function Navbar({ locale = 'en' }) {
   // the prefix depends on the current locale.
   const prefix = locale === 'tr' ? '/tr' : '';
   const NAV_LINKS = [
-    { label: t('nav_discover', locale), path: `${prefix}/discover` },
-    { label: t('nav_collections', locale), path: `${prefix}/collections` },
-    { label: t('nav_guides', locale), path: `${prefix}/guides` },
-    { label: t('nav_country_guides', locale), path: `${prefix}/country-guides` },
-    { label: t('nav_itinerary', locale), path: `${prefix}/itinerary` },
-    { label: t('nav_dashboard', locale), path: `${prefix}/dashboard` },
-    { label: t('nav_concierge', locale), path: `${prefix}/concierge` },
+    { label: locale === 'tr' ? 'Ana Sayfa' : 'Home', path: prefix || '/' },
+    { label: locale === 'tr' ? "Türkiye'ye Taşınma" : 'Moving to Türkiye', path: `${prefix}/guides` },
+    { label: locale === 'tr' ? 'Hizmetler' : 'Services', path: `${prefix}/concierge` },
+    { label: locale === 'tr' ? 'Saha Notları' : 'Field Notes', path: `${prefix}/country-guides` },
+    { label: locale === 'tr' ? 'İletişim' : 'Contact', path: `${prefix}/contact` },
   ];
   // Strip the current locale's prefix to get the "bare" path, then rebuild
   // it under the other locale -- this is what the EN/TR toggle links to.
@@ -38,7 +36,7 @@ export default function Navbar({ locale = 'en' }) {
     return () => { document.body.style.overflow = ''; };
   }, [mobileOpen]);
   useEffect(() => { setMobileOpen(false); }, [pathname]);
-  const isActive = (path) => pathname === path;
+  const isActive = (path) => pathname === path || (path !== '/' && path !== '/tr' && pathname?.startsWith(path + '/'));
 
   return (
     <>
@@ -46,10 +44,10 @@ export default function Navbar({ locale = 'en' }) {
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             <Link href={prefix || '/'} className="flex items-center gap-2 group">
-              <div className="w-9 h-9 rounded-xl bg-gradient-primary flex items-center justify-center group-hover:scale-110 transition-transform"><Compass className="w-5 h-5 text-white" /></div>
-              <span className="text-lg font-bold tracking-tight">Move to Istanbul</span>
+              <div aria-hidden="true" className="w-9 h-9 rounded-xl bg-gradient-primary flex items-center justify-center text-white text-sm font-extrabold tracking-tight group-hover:scale-110 transition-transform">MT</div>
+              <span className="text-lg font-bold tracking-tight">MoveToIstanbul</span>
             </Link>
-            <nav className="hidden md:flex items-center gap-1">
+            <nav aria-label="Primary" className="site-nav hidden md:flex items-center gap-1">
               {NAV_LINKS.map(link => <Link key={link.path} href={link.path} className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${isActive(link.path) ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'}`}>{link.label}</Link>)}
             </nav>
             <div className="flex items-center gap-2">
@@ -58,9 +56,6 @@ export default function Navbar({ locale = 'en' }) {
               </Link>
               <Link href={`${prefix}/concierge`} className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-full border-2 border-primary text-primary text-sm font-semibold hover:bg-primary hover:text-white transition-colors">
                 <FileCheck2 className="w-4 h-4" /> Start Your Move File
-              </Link>
-              <Link href={`${prefix}/onboarding`} className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
-                <Sparkles className="w-4 h-4" /> {t('plan_my_trip', locale)}
               </Link>
               <a href={CONCIERGE_URL} target="_blank" rel="noopener noreferrer" aria-label="Follow Move to Istanbul on Instagram" className="w-11 h-11 flex items-center justify-center rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"><Instagram className="w-5 h-5" /></a>
               <button
@@ -82,16 +77,13 @@ export default function Navbar({ locale = 'en' }) {
         // the screen. overflow-y-auto lets a tall link list scroll on its
         // own if it ever exceeds the viewport height.
         <div className="fixed inset-x-0 top-16 bottom-0 z-40 md:hidden bg-background border-t border-border overflow-y-auto">
-          <nav className="flex flex-col p-4 gap-1">
+          <nav aria-label="Mobile" className="site-nav open flex flex-col p-4 gap-1">
             {NAV_LINKS.map(link => <Link key={link.path} href={link.path} className={`px-4 py-3 rounded-xl font-medium transition-colors ${isActive(link.path) ? 'text-primary bg-primary/10' : 'hover:bg-muted'}`}>{link.label}</Link>)}
             <Link href={`${prefix}/concierge`} className="mt-1 inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl border-2 border-primary text-primary font-semibold">
               <FileCheck2 className="w-4 h-4" /> Start Your Move File
             </Link>
             <Link href={otherLocaleHref} className="mt-1 inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl border border-border font-semibold">
               <Languages className="w-4 h-4" /> {locale === 'tr' ? 'View in English' : "Türkçe'yi görüntüle"}
-            </Link>
-            <Link href={`${prefix}/onboarding`} className="mt-1 inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl bg-gradient-primary text-white font-semibold">
-              <Sparkles className="w-4 h-4" /> {t('plan_my_trip', locale)}
             </Link>
           </nav>
         </div>
