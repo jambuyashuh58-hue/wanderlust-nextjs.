@@ -115,13 +115,13 @@ export default function ChatBubble() {
                 </div>
                 <a href="/onboarding" className="px-4 py-2.5 rounded-xl bg-gradient-primary text-white font-semibold text-center">Plan my trip</a>
                 <a href="/discover" className="px-4 py-2.5 rounded-xl border border-border font-medium text-center">Discover activities</a>
-                <a
+                {WHATSAPP_NUMBER && (<a
                   href={waLink("Hi! I'm visiting Istanbul and had a quick question.")}
                   target="_blank" rel="noopener noreferrer"
                   className="text-xs text-center text-muted-foreground hover:text-foreground underline underline-offset-2 mt-1"
                 >
                   Or message us on WhatsApp
-                </a>
+                </a>)}
               </>
             )}
 
@@ -149,16 +149,16 @@ export default function ChatBubble() {
                     <button type="submit" disabled={leadStatus === 'loading'} className="px-4 py-2.5 rounded-xl bg-gradient-primary text-white font-semibold disabled:opacity-60">
                       {leadStatus === 'loading' ? 'Sending…' : 'Request my free call'}
                     </button>
-                    {leadStatus === 'error' && <p className="text-xs text-destructive text-center">Something went wrong — try WhatsApp instead below.</p>}
+                    {leadStatus === 'error' && <p className="text-xs text-destructive text-center">Something went wrong — email us via the Contact page instead.</p>}
                   </form>
                 )}
-                <a
+                {WHATSAPP_NUMBER && (<a
                   href={waLink("Hi! I'm planning to move to Istanbul and I'd like to talk to someone.")}
                   target="_blank" rel="noopener noreferrer"
                   className="text-xs text-center text-muted-foreground hover:text-foreground underline underline-offset-2 mt-1"
                 >
                   Or continue on WhatsApp
-                </a>
+                </a>)}
                 <a href="/concierge" className="text-xs text-center text-muted-foreground hover:text-foreground underline underline-offset-2">
                   See concierge pricing
                 </a>

@@ -50,6 +50,13 @@ export default function RootLayout({ children }) {
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </head>
       <body>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@graph': [
+            { '@type': 'Organization', '@id': SITE_URL + '/#org', name: 'Move to Istanbul', url: SITE_URL, logo: SITE_URL + '/icon.png', sameAs: ['https://www.instagram.com/move_istanbul'] },
+            { '@type': 'WebSite', '@id': SITE_URL + '/#site', url: SITE_URL, name: 'Move to Istanbul', publisher: { '@id': SITE_URL + '/#org' }, inLanguage: ['en', 'tr'] },
+          ],
+        }) }} />
         <SiteChrome>{children}</SiteChrome>
         <TrackClicks />
         <Analytics />

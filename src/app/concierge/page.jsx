@@ -24,8 +24,20 @@ function getPaymentLinks() {
 
 export default async function ConciergeServicePage() {
   const paymentLinks = getPaymentLinks();
+  const services = [
+    ['Trip Package Planning', 20, 'Day-by-day Türkiye itinerary with activities, hotel range and booking links.'],
+    ['Visa & Paperwork Guidance', 99, '45-minute strategy call and document review for your Türkiye visa route.'],
+    ['Apartment Shortlisting', 449, '5-8 real rental listings matched to your budget, with video walkthroughs.'],
+    ['Full Relocation Concierge', 999, 'First-month relocation support: visa, housing, banking and settling in.'],
+  ].map(([name, price, description]) => ({
+    '@type': 'Service', name, description, serviceType: 'Relocation and travel planning',
+    provider: { '@type': 'Organization', name: 'Move to Istanbul', url: 'https://www.movetoistanbul.online' },
+    areaServed: 'TR',
+    offers: { '@type': 'Offer', price: String(price), priceCurrency: 'USD', url: 'https://www.movetoistanbul.online/concierge' },
+  }));
   return (
     <div className="pt-16 md:pt-20 min-h-screen">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ '@context': 'https://schema.org', '@graph': services }) }} />
       <div className="bg-[hsl(221,55%,26%)] text-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
           <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 text-sm font-medium mb-5">Relocation Concierge</span>

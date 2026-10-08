@@ -26,6 +26,7 @@ export default async function DiscoverPage({ searchParams }) {
         <div className="max-w-[1600px] mx-auto">
           <h1 className="text-2xl md:text-3xl font-bold mb-2">Discover Experiences Across Türkiye</h1>
           <p className="text-foreground/80 max-w-3xl leading-relaxed">Browse real, bookable experiences across 17 Turkish cities.</p>
+          <p className="text-xs text-muted-foreground max-w-3xl mt-2">Disclosure: booking buttons are affiliate links (Viator, GetYourGuide). We may earn a commission if you book, at no extra cost to you. <a href="/terms" className="underline">Details</a></p>
         </div>
       </section>
 
