@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Stamp, Home, Wallet, TrendingUp, HeartPulse, GraduationCap, Brain, Smartphone, CreditCard, ArrowRight, BookOpen, LayoutGrid, Building2, Landmark, ShieldCheck } from 'lucide-react';
 import { getCollections, getCities } from '@/lib/supabaseServer';
 import AllGuidesGrid from '@/components/AllGuidesGrid';
+import PageJsonLd from '@/components/PageJsonLd';
 
 export const revalidate = 3600;
 
@@ -37,6 +38,7 @@ export default async function GuidesPage() {
 
   return (
     <div className="pt-16 md:pt-20 min-h-screen">
+      <PageJsonLd name="Türkiye Long-Stay Guides" description="Free relocation guides for moving to Türkiye — visas, housing, and cost of living." />
       <div className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0 -z-10">
           <img

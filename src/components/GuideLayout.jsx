@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import PageJsonLd from '@/components/PageJsonLd';
 import { ArrowLeft, Clock, MessageCircle } from 'lucide-react';
 
 const CONCIERGE_URL = 'https://www.instagram.com/move_istanbul';
@@ -6,6 +7,7 @@ const CONCIERGE_URL = 'https://www.instagram.com/move_istanbul';
 export default function GuideLayout({ eyebrow, title, description, readTime, updated, sections = [], backHref = '/guides', backLabel = 'All guides', children }) {
   return (
     <div className="pt-16 md:pt-20 min-h-screen">
+      <PageJsonLd type="Article" name={title} description={description} dateModified={updated} crumbs={[{ name: 'Guides', path: '/guides' }]} />
       <div className="bg-gradient-to-br from-primary/5 via-background to-secondary/5 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <Link href={backHref} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"><ArrowLeft className="w-4 h-4" /> {backLabel}</Link>

@@ -26,6 +26,7 @@ export const revalidate = 3600;
 export async function generateMetadata() {
   const tr = (await getLocale()) === 'tr';
   return {
+    ...(!tr && { title: { absolute: 'MoveToIstanbul | Plan Your Move to Türkiye & Settle in Istanbul' } }),
     alternates: { canonical: tr ? '/tr' : '/', languages: { en: '/', tr: '/tr' } },
   };
 }
@@ -54,6 +55,11 @@ export default async function HomePage() {
 
   return (
     <div className="pt-16 md:pt-20">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        '@context': 'https://schema.org', '@type': 'WebSite', '@id': 'https://www.movetoistanbul.online/#site',
+        url: 'https://www.movetoistanbul.online/', name: 'Move to Istanbul', inLanguage: ['en', 'tr'],
+        publisher: { '@id': 'https://www.movetoistanbul.online/#org' },
+      }) }} />
       <HomeHero />
 
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-14">

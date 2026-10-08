@@ -1,10 +1,11 @@
 import { Suspense } from 'react';
 import ConciergeInteractive from '@/components/ConciergeInteractive';
 import Proof from '@/components/Proof';
+import PageJsonLd from '@/components/PageJsonLd';
 
 export const metadata = {
-  title: 'Relocation Concierge Service | Move to Istanbul',
-  description: 'Visa paperwork, apartment hunting, and your first-month setup — done for you, async, no calls required.',
+  title: 'Relocation Concierge: Visa, Housing & Trip Planning from $20 | MoveToIstanbul',
+  description: 'Planning help for people moving to Türkiye. Includes visa-route checklists, apartment shortlists, and clear next steps — async, from $20.',
   alternates: { canonical: '/concierge' },
 };
 
@@ -37,6 +38,7 @@ export default async function ConciergeServicePage() {
   }));
   return (
     <div className="pt-16 md:pt-20 min-h-screen">
+      <PageJsonLd name="Relocation Concierge" description="Visa paperwork, apartment hunting, and your first-month setup." />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ '@context': 'https://schema.org', '@graph': services }) }} />
       <div className="bg-[hsl(221,55%,26%)] text-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">

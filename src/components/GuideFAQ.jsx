@@ -6,7 +6,13 @@ import { ChevronDown } from 'lucide-react';
 export default function GuideFAQ({ items = [] }) {
   const [openIndex, setOpenIndex] = useState(null);
 
+  const faqLd = items.filter((it) => typeof it.q === 'string' && typeof it.a === 'string').map((it) => ({
+    '@type': 'Question', name: it.q, acceptedAnswer: { '@type': 'Answer', text: it.a },
+  }));
+
   return (
+    <>
+    {faqLd.length > 0 && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqLd }) }} />}
     <div className="divide-y divide-border border border-border rounded-2xl overflow-hidden bg-card">
       {items.map((item, i) => {
         const isOpen = openIndex === i;
@@ -28,5 +34,6 @@ export default function GuideFAQ({ items = [] }) {
         );
       })}
     </div>
+    </>
   );
 }

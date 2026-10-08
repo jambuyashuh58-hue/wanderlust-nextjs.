@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Heart, Sparkles, Users } from 'lucide-react';
 import AboutFAQ from '@/components/AboutFAQ';
 import Proof from '@/components/Proof';
+import PageJsonLd from '@/components/PageJsonLd';
 
 export const metadata = {
   title: 'About Us | Move to Istanbul',
@@ -20,6 +21,7 @@ export default async function AboutPage() {
 
   return (
     <div className="pt-16 md:pt-20 min-h-screen">
+      <PageJsonLd type="AboutPage" name="About Move to Istanbul" />
       <div className="bg-[hsl(221,55%,26%)] text-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
           <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 text-sm font-medium mb-5">About Us</span>

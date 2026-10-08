@@ -1,4 +1,5 @@
 import { Mail, Instagram } from 'lucide-react';
+import PageJsonLd from '@/components/PageJsonLd';
 
 const CONTACT_EMAIL = 'hello@movetoistanbul.online';
 const CONCIERGE_URL = 'https://www.instagram.com/move_istanbul';
@@ -12,6 +13,7 @@ export const metadata = {
 export default function ContactPage() {
   return (
     <div className="pt-16 md:pt-20 min-h-screen">
+      <PageJsonLd type="ContactPage" name="Contact Move to Istanbul" description="Get in touch with the Move to Istanbul team." />
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <h1 className="text-3xl md:text-4xl font-bold mb-6">Contact Us</h1>
         <div className="space-y-4">

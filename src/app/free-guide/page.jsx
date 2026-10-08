@@ -3,7 +3,7 @@ import GuideDownloadForm from '@/components/GuideDownloadForm';
 import { CheckCircle2, BookOpen } from 'lucide-react';
 
 export const metadata = {
-  title: 'Free Guide: The 90-60-30 Day Istanbul Relocation Plan | Move to Istanbul',
+  title: 'Relocating to Türkiye: The 90-60-30 Move File | MoveToIstanbul',
   description: 'Download the free 90-60-30 Day Relocation Guide — a comprehensive, step-by-step digital book covering visas, housing, budgeting, and arrival setup for moving to Istanbul.',
   alternates: { canonical: '/free-guide' },
 };

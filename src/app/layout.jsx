@@ -53,8 +53,12 @@ export default function RootLayout({ children }) {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
           '@context': 'https://schema.org',
           '@graph': [
-            { '@type': 'Organization', '@id': SITE_URL + '/#org', name: 'Move to Istanbul', url: SITE_URL, logo: SITE_URL + '/icon.png', sameAs: ['https://www.instagram.com/move_istanbul'] },
-            { '@type': 'WebSite', '@id': SITE_URL + '/#site', url: SITE_URL, name: 'Move to Istanbul', publisher: { '@id': SITE_URL + '/#org' }, inLanguage: ['en', 'tr'] },
+            {
+              '@type': 'ProfessionalService', '@id': SITE_URL + '/#org', name: 'Move to Istanbul',
+              description: 'Independent relocation planning service for people moving to Türkiye.',
+              url: SITE_URL, logo: SITE_URL + '/icon.png', email: 'hello@movetoistanbul.online',
+              areaServed: 'TR', sameAs: ['https://www.instagram.com/move_istanbul'],
+            },
           ],
         }) }} />
         <SiteChrome>{children}</SiteChrome>
