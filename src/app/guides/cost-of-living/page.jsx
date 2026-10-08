@@ -5,7 +5,7 @@ import GuideFAQ from '@/components/GuideFAQ';
 
 export const metadata = {
   title: 'Monthly Cost of Living in Istanbul for Expats & Digital Nomads (2026) | Move to Istanbul',
-  description: 'Real numbers on housing, food, transportation, and monthly expenses.',
+  description: 'What life in Istanbul costs per month for expats and digital nomads: budget, comfortable and premium tiers, plus rent, food, transport and utilities.',
   alternates: { canonical: '/guides/cost-of-living' },
 };
 

@@ -81,6 +81,26 @@ export default function Footer() {
             </div>
           </div>
         </div>
+        <nav aria-label="Popular guides" className="mb-8">
+          <h2 className="font-semibold text-sm mb-3">Popular guides</h2>
+          <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+            {[
+              ['/guides/visa', 'Türkiye visa & residence permit'],
+              ['/guides/cost-of-living', 'Cost of living in Istanbul'],
+              ['/collections/how-to-get-permanent-residency-turkey', 'Permanent residency in Turkey'],
+              ['/collections/best-work-cafes-kadikoy', 'Work cafes in Kadıköy'],
+              ['/collections/topkapi-sarayi-topkapi-palace', 'Topkapı Palace'],
+              ['/collections/yerebatan-sarnici-basilica-cistern', 'Basilica Cistern'],
+              ['/collections/kiz-kulesi-maidens-tower', "Maiden's Tower"],
+              ['/collections/balat-fener-istanbul-neighborhood-guide', 'Balat & Fener'],
+              ['/collections/turk-kahvaltisi-turkish-breakfast-guide', 'Turkish breakfast'],
+              ['/collections/hierapolis-guide-pamukkale', 'Hierapolis & Pamukkale'],
+              ['/collections/cevahir-avm-sisli-shopping-mall', 'Cevahir AVM'],
+            ].map(([href, label]) => (
+              <li key={href}><Link href={href} className="text-muted-foreground hover:text-primary">{label}</Link></li>
+            ))}
+          </ul>
+        </nav>
         <Destinations />
         <div className="pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex flex-col sm:flex-row items-center gap-x-4 gap-y-1">
