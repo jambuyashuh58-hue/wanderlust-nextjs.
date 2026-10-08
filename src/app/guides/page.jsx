@@ -19,17 +19,6 @@ const LONG_STAY_GUIDES = [
   { slug: 'kira-artis-orani', icon: TrendingUp, title: 'Turkey Rent Increase Rate 2026 (TÜİK / TÜFE)', description: 'The legal cap on your rent increase, updated monthly from TÜİK data.', color: 'text-primary' },
 ];
 
-const SPECIALIZED_GUIDES = [
-  { slug: 'medical-tourism-istanbul', icon: HeartPulse, title: 'Medical Tourism in Istanbul 2026', description: 'Procedure costs, clinic verification, and medical residence permit rules.', color: 'text-destructive' },
-  { slug: 'international-schools-istanbul', icon: GraduationCap, title: 'International Schools for Expat Families', description: 'Curricula, top schools by district, tuition benchmarks, and visa rules for kids.', color: 'text-secondary' },
-  { slug: 'culture-shock-istanbul', icon: Brain, title: 'Expat Culture Shock in Istanbul', description: 'The 4 phases of adjustment and a practical plan to integrate faster.', color: 'text-accent' },
-  { slug: 'esim-vs-local-sim-turkey', icon: Smartphone, title: 'eSIM vs. Local SIM in Türkiye', description: 'The 120-day IMEI rule, the airport SIM trap, and the hybrid setup that works.', color: 'text-primary' },
-  { slug: 'paypal-stripe-alternatives-turkey', icon: CreditCard, title: 'PayPal & Stripe Alternatives for Freelancers', description: 'Wise, Payoneer, and SWIFT — plus the tax setup that gets you to 0% income tax.', color: 'text-primary' },
-  { slug: 'property-management-istanbul', icon: Building2, title: 'Property Management for Overseas Owners', description: 'The agent-vs-dedicated-manager tradeoff, and the legal protections Turkish landlords actually need.', color: 'text-accent' },
-  { slug: 'phone-registration-tax-turkey', icon: ShieldCheck, title: 'Phone Registration Tax in Türkiye', description: 'The 120-day IMEI rule, the real cost of registering, and the cheaper workarounds compared.', color: 'text-destructive' },
-  { slug: 'send-usd-to-turkish-bank-account', icon: Landmark, title: 'Send USD to a Turkish Bank Account', description: 'Wise vs. SWIFT vs. Payoneer vs. Revolut — the fastest, cheapest way to move your own money.', color: 'text-secondary' },
-];
-
 export default async function GuidesPage() {
   const [dbGuides, cities] = await Promise.all([
     getCollections({ displayStyle: 'guide' }),
@@ -65,19 +54,6 @@ export default async function GuidesPage() {
               <p className="text-sm text-muted-foreground leading-relaxed mb-4">{g.description}</p>
               <span className="inline-flex items-center gap-1 text-sm font-medium text-primary">Read guide <ArrowRight className="w-4 h-4" /></span>
             </Link>
-            ))}
-          </div>
-        </div>
-        <div>
-          <h2 className="text-xl font-bold mb-5">Specialized guides</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {SPECIALIZED_GUIDES.map((g) => (
-              <Link key={g.slug} href={`/guides/${g.slug}`} className="group block h-full bg-card rounded-2xl border border-border p-6 hover:border-primary/40 hover:shadow-lg transition-all">
-                <div className="w-11 h-11 rounded-xl bg-muted flex items-center justify-center mb-4"><g.icon className={`w-5 h-5 ${g.color}`} /></div>
-                <h3 className="font-bold mb-2 group-hover:text-primary transition-colors">{g.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-4">{g.description}</p>
-                <span className="inline-flex items-center gap-1 text-sm font-medium text-primary">Read guide <ArrowRight className="w-4 h-4" /></span>
-              </Link>
             ))}
           </div>
         </div>
