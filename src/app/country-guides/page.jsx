@@ -20,8 +20,8 @@ export async function generateMetadata() {
         alternates: { canonical: '/tr/country-guides', languages: { en: '/country-guides', tr: '/tr/country-guides' } },
       }
     : {
-        title: 'Country Relocation Guides | Move to Istanbul',
-        description: 'Nationality-specific guides for moving to Türkiye.',
+        title: 'Moving to Türkiye by Nationality: Visa & Relocation Guides (2026) | Move to Istanbul',
+        description: 'Nationality-specific guides for moving to Türkiye: visa and entry rules, residence permit routes, banking and settling in, for US, UK, Indian and other passport holders.',
         alternates: { canonical: '/country-guides', languages: { en: '/country-guides', tr: '/tr/country-guides' } },
       };
 }
