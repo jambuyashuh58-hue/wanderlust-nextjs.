@@ -6,6 +6,7 @@ import { getActivityById, getActivitiesByCity, getCollections, getCollectionsCon
 import ActivityCard from '@/components/ActivityCard';
 import GuideFAQ from '@/components/GuideFAQ';
 import NewsletterSignup from '@/components/NewsletterSignup';
+import AdSlot from '@/components/AdSlot';
 
 export const revalidate = 3600;
 
@@ -251,6 +252,8 @@ export default async function ActivityDetailPage({ params }) {
                 <GuideFAQ items={faqItems} />
               </section>
             )}
+
+            <AdSlot className="!px-0 !my-2" />
 
             {relatedGuide ? (
               <section>
