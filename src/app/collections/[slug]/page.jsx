@@ -103,7 +103,7 @@ export default async function CollectionDetailPage({ params }) {
       <>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <RichGuideBody collection={collection} />
-        <AdSlot />
+        <AdSlot variant="auto" />
         {related.length > 0 && (
           <nav aria-label={relatedHeading} className="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
             <h2 className="text-lg font-bold mb-3">{relatedHeading}</h2>
@@ -169,7 +169,7 @@ export default async function CollectionDetailPage({ params }) {
           </div>
         )}
       </div>
-        <AdSlot />
+        <AdSlot variant="auto" />
         {related.length > 0 && (
           <nav aria-label={relatedHeading} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
             <h2 className="text-lg font-bold mb-3">{relatedHeading}</h2>
