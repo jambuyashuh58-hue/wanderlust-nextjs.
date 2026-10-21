@@ -12,6 +12,8 @@ const BANNER_KEY = '5210b38c1812120f311c97699e6bb12c';
 const BANNER_SRC = `https://bicea.org/22/${BANNER_KEY}`;
 // The 728x90 banner is injected with document.write, so it must live in its own
 // iframe (document.write after page load would otherwise wipe the page).
+// Do NOT add a sandbox attribute here: Adsterra's script renders nothing inside a
+// sandboxed frame (verified on the live site: blank + zero impressions).
 const BANNER_DOC = `<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;padding:0;background:transparent}</style></head><body><script>atOptions={'key':'${BANNER_KEY}','format':'iframe','height':90,'width':728,'params':{}};</script><script src="${BANNER_SRC}"></script></body></html>`;
 
 export default function AdSlot({ variant = 'native', className = '' }) {
@@ -47,7 +49,6 @@ export default function AdSlot({ variant = 'native', className = '' }) {
           height={90}
           scrolling="no"
           loading="lazy"
-          sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
           style={{ border: 0, maxWidth: '100%', display: 'block' }}
         />
       ) : (
