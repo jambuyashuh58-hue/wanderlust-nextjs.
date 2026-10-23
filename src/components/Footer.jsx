@@ -31,7 +31,6 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li><Link href="/guides" className="text-muted-foreground hover:text-primary">Moving to Türkiye Guides</Link></li>
               <li><Link href="/concierge" className="text-muted-foreground hover:text-primary">Concierge Services</Link></li>
-              <li><Link href="/onboarding" className="text-muted-foreground hover:text-primary">Plan My Trip</Link></li>
               <li><Link href="/discover" className="text-muted-foreground hover:text-primary">Discover</Link></li>
               <li><Link href="/collections" className="text-muted-foreground hover:text-primary">Collections</Link></li>
               <li><Link href="/country-guides" className="text-muted-foreground hover:text-primary">Country Guides</Link></li>

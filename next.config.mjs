@@ -6,6 +6,11 @@ const nextConfig = {
     // Relocation Guide -- keep the old URL alive for anyone with it bookmarked
     // or shared (social bios, old emails, etc).
     return [
+      // The itinerary builder / Plan My Trip wizard was removed -- keep old links and indexed URLs landing somewhere useful.
+      { source: '/itinerary', destination: '/', permanent: true },
+      { source: '/onboarding', destination: '/', permanent: true },
+      { source: '/tr/itinerary', destination: '/tr', permanent: true },
+      { source: '/tr/onboarding', destination: '/tr', permanent: true },
       { source: '/guide', destination: '/free-guide', permanent: true },
       // Short link used in social/DM outreach. Query strings (utm_source) pass through. (for=code)
       { source: '/free-90-60-30-guide', destination: '/free-guide', permanent: true },

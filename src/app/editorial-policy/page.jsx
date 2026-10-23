@@ -19,7 +19,7 @@ export default function EditorialPolicyPage() {
           <h2>Affiliate disclosure</h2>
           <p>Some links are affiliate links. We may earn a commission if you book through them, at no extra cost to you. Commissions do not change what we list or how we describe it.</p>
           <h2>AI assistance</h2>
-          <p>Trip itineraries are generated with AI and should be treated as a starting point. Check opening hours, prices, and availability before you travel.</p>
+          <p>Some content is drafted with AI assistance and should be treated as a starting point. Check opening hours, prices, and availability before you travel.</p>
           <h2>Corrections</h2>
           <p>If you spot an error, email <a href="mailto:hello@movetoistanbul.online">hello@movetoistanbul.online</a> and we&apos;ll review it.</p>
           <p><strong>We do not provide legal or tax advice.</strong> Verify requirements via official Republic of Türkiye channels.</p>

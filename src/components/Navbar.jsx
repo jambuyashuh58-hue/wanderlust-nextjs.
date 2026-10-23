@@ -21,7 +21,6 @@ export default function Navbar({ locale = 'en' }) {
     { label: t('nav_collections', locale), path: `${prefix}/collections` },
     { label: t('nav_guides', locale), path: `${prefix}/guides` },
     { label: t('nav_country_guides', locale), path: `${prefix}/country-guides` },
-    { label: t('nav_itinerary', locale), path: `${prefix}/itinerary` },
     { label: t('nav_dashboard', locale), path: `${prefix}/dashboard` },
     { label: t('nav_concierge', locale), path: `${prefix}/concierge` },
   ];
@@ -59,9 +58,6 @@ export default function Navbar({ locale = 'en' }) {
               <Link href={`${prefix}/concierge`} className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-full border-2 border-primary text-primary text-sm font-semibold hover:bg-primary hover:text-white transition-colors">
                 <FileCheck2 className="w-4 h-4" /> Start Your Move File
               </Link>
-              <Link href={`${prefix}/onboarding`} className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
-                <Sparkles className="w-4 h-4" /> {t('plan_my_trip', locale)}
-              </Link>
               <a href={CONCIERGE_URL} target="_blank" rel="noopener noreferrer" aria-label="Follow Move to Istanbul on Instagram" className="w-11 h-11 flex items-center justify-center rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"><Instagram className="w-5 h-5" /></a>
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
@@ -89,9 +85,6 @@ export default function Navbar({ locale = 'en' }) {
             </Link>
             <Link href={otherLocaleHref} className="mt-1 inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl border border-border font-semibold">
               <Languages className="w-4 h-4" /> {locale === 'tr' ? 'View in English' : "Türkçe'yi görüntüle"}
-            </Link>
-            <Link href={`${prefix}/onboarding`} className="mt-1 inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl bg-gradient-primary text-white font-semibold">
-              <Sparkles className="w-4 h-4" /> {t('plan_my_trip', locale)}
             </Link>
           </nav>
         </div>

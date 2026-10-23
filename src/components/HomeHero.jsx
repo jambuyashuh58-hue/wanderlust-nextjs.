@@ -37,12 +37,6 @@ export default function HomeHero() {
             <FileCheck2 className="w-4 h-4" /> Start Your Move File
           </Link>
           <Link
-            href="/onboarding"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/10 border border-white/30 backdrop-blur-sm font-semibold hover:bg-white/20 transition-colors"
-          >
-            <Sparkles className="w-4 h-4" /> Plan My Trip
-          </Link>
-          <Link
             href="/discover"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/10 border border-white/30 backdrop-blur-sm font-semibold hover:bg-white/20 transition-colors"
           >

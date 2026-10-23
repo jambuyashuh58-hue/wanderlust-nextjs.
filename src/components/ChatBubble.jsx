@@ -113,7 +113,6 @@ export default function ChatBubble() {
                 <div className="bg-muted rounded-2xl rounded-tl-sm px-3.5 py-2.5">
                   Great — here's where to start:
                 </div>
-                <a href="/onboarding" className="px-4 py-2.5 rounded-xl bg-gradient-primary text-white font-semibold text-center">Plan my trip</a>
                 <a href="/discover" className="px-4 py-2.5 rounded-xl border border-border font-medium text-center">Discover activities</a>
                 {WHATSAPP_NUMBER && (<a
                   href={waLink("Hi! I'm visiting Istanbul and had a quick question.")}

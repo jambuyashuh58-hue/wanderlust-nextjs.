@@ -35,7 +35,6 @@ const STATIC_ROUTES = [
   { path: '/guides/phone-registration-tax-turkey', priority: 0.5, changeFrequency: 'monthly' },
   { path: '/guides/send-usd-to-turkish-bank-account', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/country-guides', priority: 0.7, changeFrequency: 'weekly' },
-  { path: '/onboarding', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/relocation-quiz', priority: 0.5, changeFrequency: 'monthly' },
   { path: '/concierge', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/about', priority: 0.4, changeFrequency: 'yearly' },

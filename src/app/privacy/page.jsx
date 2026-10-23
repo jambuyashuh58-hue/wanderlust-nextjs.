@@ -28,7 +28,6 @@ export default function PrivacyPolicyPage() {
           <ul>
             <li><strong>Concierge inquiries:</strong> name, email, Instagram handle (optional), nationality, budget range, target timeline, and any message you write, when you submit the &quot;Tell us about your move&quot; form.</li>
             <li><strong>Newsletter signup:</strong> your email address, when you subscribe via the footer or other signup forms on the site.</li>
-            <li><strong>AI itinerary tool:</strong> the trip details you enter (destination cities, trip length, preferences) to generate your itinerary. This is used to build your itinerary and is not required to include personal identifying information.</li>
           </ul>
 
           <h2>Information collected automatically</h2>

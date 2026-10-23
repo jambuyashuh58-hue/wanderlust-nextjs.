@@ -25,13 +25,13 @@ export default function TermsPage() {
           <p>By using movetoistanbul.online (&quot;the site&quot;), you agree to these terms. If you don&apos;t agree, please don&apos;t use the site.</p>
 
           <h2>What the site is</h2>
-          <p>Move to Istanbul provides travel content, an AI-generated itinerary planner, affiliate links to book activities through third-party platforms (Viator, GetYourGuide, and similar), and a paid concierge service for people relocating to Türkiye.</p>
+          <p>Move to Istanbul provides travel content, affiliate links to book activities through third-party platforms (Viator, GetYourGuide, and similar), and a paid concierge service for people relocating to Türkiye.</p>
 
           <h2>Not legal, immigration, or real estate advice</h2>
           <p>We are not licensed immigration lawyers or licensed real estate agents. The concierge service and every guide on this site is guidance and coordination based on our own research and experience — not legal representation, and not a substitute for advice from a licensed professional. For visa applications, residence permits, tax matters, or property transactions, always confirm current requirements with the relevant official source or a licensed professional before you rely on anything here.</p>
 
           <h2>AI-generated content</h2>
-          <p>Itineraries and some content on this site are generated with AI assistance. Prices, opening hours, visa rules, and similar details can change and may be out of date or inaccurate — always verify anything time-sensitive or safety-relevant (prices, hours, entry requirements) directly with the venue or official source before you rely on it.</p>
+          <p>Some content on this site are generated with AI assistance. Prices, opening hours, visa rules, and similar details can change and may be out of date or inaccurate — always verify anything time-sensitive or safety-relevant (prices, hours, entry requirements) directly with the venue or official source before you rely on it.</p>
 
           <h2>Affiliate links</h2>
           <p>This site contains affiliate links. We may earn a commission when you book through them, at no extra cost to you. We don&apos;t control, and aren&apos;t responsible for, the third-party platforms you book through, their pricing, availability, or cancellation policies.</p>

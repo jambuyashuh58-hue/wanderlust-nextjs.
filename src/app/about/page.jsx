@@ -86,9 +86,9 @@ export default async function AboutPage() {
 
         <div className="rounded-2xl border border-border bg-gradient-to-br from-primary/5 to-secondary/5 p-8 text-center">
           <h3 className="text-xl font-bold mb-1.5">Ready to explore?</h3>
-          <p className="text-sm text-muted-foreground mb-5">Start with a personalized recommendation.</p>
-          <Link href="/onboarding" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-primary text-white font-semibold hover:scale-105 transition-transform">
-            <Sparkles className="w-4 h-4" /> Plan My Trip
+          <p className="text-sm text-muted-foreground mb-5">Browse activities and guides for your trip.</p>
+          <Link href="/discover" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-primary text-white font-semibold hover:scale-105 transition-transform">
+            <Sparkles className="w-4 h-4" /> Discover Activities
           </Link>
         </div>
       </div>
